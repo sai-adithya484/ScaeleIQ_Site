@@ -1,0 +1,1810 @@
+/* ============================================================
+   THE AGENTIC ARCHITECTURE — 3D INTERACTIVE LIGHT-MODE SYSTEM
+   ============================================================ */
+
+.arch-section {
+  position: relative;
+  padding: 6.5rem 0;
+  background: radial-gradient(circle at 50% 30%, #F8FAFD 0%, #FFFFFF 70%);
+  overflow: hidden;
+}
+
+/* Subtle architectural grid pattern overlay */
+.arch-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.arch-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+.arch-header {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto 3.5rem auto;
+}
+
+.arch-header__title {
+  color: var(--text-primary);
+  margin-bottom: 0.85rem;
+}
+
+.arch-header__subtitle {
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   3-COLUMN INTERACTIVE GRID (EXPANDED CENTERPIECE: +25-35%)
+   ============================================================ */
+.arch-interactive-grid {
+  display: grid;
+  grid-template-columns: 280px minmax(580px, 1fr) 360px;
+  gap: 3.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+.arch-col {
+  position: relative;
+}
+
+/* ============================================================
+   LEFT COLUMN: LIGHTWEIGHT STEP NAVIGATION
+   ============================================================ */
+.arch-nav-stack {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-xl);
+  padding: 1.35rem 1.15rem;
+  box-shadow: 0 4px 20px rgba(10, 13, 20, 0.03);
+}
+
+.arch-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.5rem 0.85rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0.75rem;
+}
+
+.arch-nav-header__title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.arch-nav-header__count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.arch-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.arch-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.8rem 0.75rem 0.8rem 1rem;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+/* Subtle hover affordance ONLY (no selection change) */
+.arch-nav-item:hover {
+  background: rgba(247, 248, 250, 0.9);
+  border-color: rgba(226, 232, 240, 0.8);
+  transform: translateX(3px);
+}
+
+.arch-nav-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Explicit clicked/selected state */
+.arch-nav-item--selected {
+  background: #FFFFFF;
+  border-color: rgba(0, 180, 216, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 180, 216, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+  transform: translateX(5px);
+}
+
+.arch-nav-indicator {
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 4px 4px 0;
+  opacity: 0;
+  transform: scaleY(0);
+  transition: all 200ms ease;
+}
+
+.arch-nav-indicator--active {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.arch-nav-num-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+
+.arch-nav-item--selected .arch-nav-num-box {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+
+.arch-nav-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.arch-nav-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.arch-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 200ms ease;
+}
+
+.arch-nav-item--selected .arch-nav-title {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.arch-nav-badge {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.1rem 0.35rem;
+  background: #E0F7FA;
+  color: #007791;
+  border-radius: 4px;
+}
+
+.arch-nav-sub {
+  display: block;
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.1rem;
+}
+
+.arch-nav-icon-end {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.arch-nav-arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  color: var(--accent);
+  transition: all 200ms ease;
+}
+
+.arch-nav-arrow--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ============================================================
+   CENTER COLUMN: 3D LIVING ARCHITECTURE SCENE (+25-35% LARGER)
+   ============================================================ */
+.arch-3d-scene {
+  position: relative;
+  width: 100%;
+  min-height: 750px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+/* ---- Floating Data Sources (Top) ---- */
+.arch-sources-deck {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  width: 100%;
+}
+
+.arch-sources-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.arch-source-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: floatNode 3.5s ease-in-out infinite alternate;
+}
+
+.arch-source-node__pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(8px);
+}
+
+.arch-source-node__icon {
+  color: var(--accent);
+}
+
+.arch-source-node__name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.arch-source-stream {
+  width: 1px;
+  height: 22px;
+  background: linear-gradient(180deg, rgba(0, 180, 216, 0.6) 0%, transparent 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.arch-source-particle {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 3px;
+  height: 6px;
+  background: var(--accent-cyan);
+  border-radius: 999px;
+  animation: dropParticle 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.arch-sources-converge-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.arch-converge-arrow {
+  animation: bounceArrow 1.5s ease-in-out infinite;
+}
+
+/* ---- Floating Central Intelligence Core ---- */
+.arch-intelligence-core {
+  position: relative;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.35rem 0 0.95rem 0;
+  padding: 0.42rem 1.05rem;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(0, 180, 216, 0.35);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 22px rgba(0, 180, 216, 0.15);
+  backdrop-filter: blur(10px);
+  animation: floatCore 4s ease-in-out infinite alternate;
+}
+
+.arch-core-gem {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #00B4D8 0%, #0077B6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 0 16px rgba(0, 180, 216, 0.55);
+  animation: spinGem 12s linear infinite;
+}
+
+.arch-core-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   3D PERSPECTIVE VIEWPORT & NESTED DECOUPLED HIERARCHY
+   ============================================================ */
+.arch-perspective-viewport {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  perspective-origin: center center;
+}
+
+/* CAMERA RIG: ONLY controls camera parallax rotation */
+.arch-camera-rig {
+  position: relative;
+  width: 620px;
+  height: 530px;
+  transform-style: preserve-3d;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ARCHITECTURE STACK RACK: Holds the 5 tiers in fixed vertical slots */
+.arch-stack-rack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* ============================================================
+   TWO DISTINCT VISUAL STATES:
+   STATE A: INACTIVE / DEFAULT (MATCHES REFERENCE 2)
+   STATE B: ACTIVE / SELECTED (MATCHES REFERENCE 1)
+   ============================================================ */
+
+.arch-stack-tier {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 92px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  outline: none;
+  /* Smooth physical spring-like pull animation toward viewer */
+  transition:
+    transform 750ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 400ms ease,
+    border-color 350ms ease,
+    box-shadow 400ms ease;
+}
+
+/* ------------------------------------------------------------
+   STATE A: INACTIVE / DEFAULT (REFERENCE 2)
+   Subtle, lightweight, translucent, low contrast, recessed
+   ------------------------------------------------------------ */
+.arch-stack-tier--inactive {
+  opacity: 0.72;
+}
+
+.arch-stack-tier--inactive .arch-glass-surface {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.75);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.025);
+}
+
+.arch-stack-tier--inactive:hover {
+  opacity: 0.92;
+  cursor: pointer;
+}
+
+.arch-stack-tier--inactive:hover .arch-glass-surface {
+  border-color: rgba(0, 180, 216, 0.35);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+}
+
+.arch-glass-num--inactive {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94A3B8;
+  background: #F1F5F9;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  transition: all 300ms ease;
+}
+
+.arch-glass-name--inactive {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #64748B;
+  letter-spacing: -0.01em;
+  transition: all 300ms ease;
+}
+
+.arch-stack-tier--inactive .arch-status-pill--idle {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #94A3B8;
+  background: transparent;
+  padding: 0.15rem 0.4rem;
+}
+
+/* Inactive visualizer window: transparent, quiet, non-competing */
+.arch-vis-window--inactive {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.arch-vis-window--inactive .arch-vis-source-badge,
+.arch-vis-window--inactive .arch-vis-agent-chip,
+.arch-vis-window--inactive .arch-vis-gate-chip,
+.arch-vis-window--inactive .arch-vis-pipe-node--subtle,
+.arch-vis-window--inactive .arch-vis-step-tag--subtle,
+.arch-vis-window--inactive .arch-vis-onto-node {
+  background: rgba(248, 250, 252, 0.65);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  color: #64748B;
+  font-weight: 500;
+}
+
+.arch-vis-line-inactive {
+  width: 24px;
+  height: 1.5px;
+  background: #E2E8F0;
+}
+
+.arch-vis-wire--subtle {
+  stroke: #E2E8F0;
+  stroke-width: 1.5px;
+}
+
+.arch-vis-orch-core--subtle {
+  background: rgba(248, 250, 252, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #64748B;
+}
+
+.arch-vis-orch-core--subtle .arch-vis-orch-icon {
+  color: #94A3B8;
+}
+
+.arch-vis-onto-node--hub-subtle {
+  background: rgba(248, 250, 252, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #64748B;
+}
+
+.arch-vis-gate-check--subtle {
+  color: #94A3B8;
+}
+
+/* ------------------------------------------------------------
+   STATE B: ACTIVE / SELECTED (REFERENCE 1)
+   Elevated in Z-depth, bright white, glowing cyan rim, rich details
+   ------------------------------------------------------------ */
+.arch-stack-tier--selected {
+  opacity: 1 !important;
+}
+
+.arch-stack-tier--selected .arch-glass-surface {
+  background: #FFFFFF;
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(0, 180, 216, 0.85);
+  box-shadow:
+    0 32px 64px -8px rgba(0, 180, 216, 0.3),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(0, 229, 255, 0.6);
+}
+
+.arch-glass-num--selected {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  transition: all 300ms ease;
+}
+
+.arch-glass-name--selected {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  transition: all 300ms ease;
+}
+
+.arch-status-pill--active {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.16rem 0.55rem;
+  border-radius: var(--radius-full);
+  color: #0077B6;
+  background: rgba(0, 180, 216, 0.1);
+  border: 1px solid rgba(0, 180, 216, 0.35);
+  transition: all 200ms ease;
+}
+
+.arch-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #00B4D8;
+  box-shadow: 0 0 6px #00B4D8;
+}
+
+.arch-vis-window--active {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(0, 180, 216, 0.45);
+  box-shadow: 0 2px 10px rgba(0, 180, 216, 0.1);
+}
+
+.arch-vis-wire--active {
+  stroke: rgba(0, 180, 216, 0.7);
+  stroke-width: 1.5;
+}
+
+.arch-vis-orch-core--active {
+  background: var(--accent-light);
+  border: 1px solid rgba(0, 180, 216, 0.4);
+  color: #007791;
+}
+
+.arch-vis-orch-core--active .arch-vis-orch-icon {
+  color: var(--accent);
+}
+
+.arch-vis-onto-node--hub-active {
+  background: var(--accent-light);
+  color: #007791;
+  border: 1px solid rgba(0, 180, 216, 0.4);
+}
+
+.arch-vis-gate-check {
+  color: #10B981;
+}
+
+.arch-vis-step-tag--cyan {
+  background: var(--accent-light);
+  color: #007791;
+  border: 1px solid rgba(0, 180, 216, 0.4);
+}
+
+.arch-vis-pipe-node--done {
+  color: #059669;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+}
+
+.arch-vis-pipe-node--pulse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #FFFFFF;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 10px rgba(0, 180, 216, 0.6);
+}
+
+.arch-vis-pipe-connector--active {
+  background: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   SHARED GLASS SURFACE STRUCTURAL STYLES
+   ------------------------------------------------------------ */
+.arch-glass-surface {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.arch-glass-rim {
+  position: absolute;
+  top: 0;
+  left: 6%;
+  right: 6%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.95), transparent);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.arch-stack-tier--selected .arch-glass-rim {
+  opacity: 1;
+}
+
+.arch-glass-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.arch-glass-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.arch-glass-status-wrap {
+  display: flex;
+  align-items: center;
+}
+
+/* Visualizer Window Base */
+.arch-vis-window {
+  position: relative;
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 0.35rem 0.75rem;
+  transition: all 300ms ease;
+}
+
+/* 01 Ingestion Layout */
+.arch-vis-ingest-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.arch-vis-source-tags {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.arch-vis-source-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.16rem 0.45rem;
+  border-radius: 4px;
+  transition: all 300ms ease;
+}
+
+.arch-vis-flow-stream {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.arch-vis-particle-track {
+  width: 32px;
+  height: 2px;
+  background: var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.arch-vis-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 100%;
+  background: var(--accent);
+  animation: moveTrackParticle 1.2s infinite;
+}
+
+.arch-vis-particle--2 {
+  animation-delay: 0.6s;
+}
+
+.arch-vis-step-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.16rem 0.5rem;
+  border-radius: 4px;
+  transition: all 300ms ease;
+}
+
+/* 02 Orchestration Layout */
+.arch-vis-swarm-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+}
+
+.arch-vis-orch-core {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  transition: all 300ms ease;
+}
+
+.arch-vis-pulse-ring {
+  position: absolute;
+  inset: -3px;
+  border: 1px dashed rgba(0, 180, 216, 0.6);
+  border-radius: 8px;
+  animation: spinRing 12s linear infinite;
+}
+
+.arch-vis-agents-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.arch-vis-agent-chip {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.16rem 0.5rem;
+  border-radius: 4px;
+  transition: all 300ms ease;
+}
+
+/* 03 Ontology Layout */
+.arch-vis-ontology-graph {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.arch-vis-graph-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.arch-vis-wire {
+  transition: stroke 300ms ease;
+}
+
+.arch-vis-onto-node {
+  position: relative;
+  z-index: 2;
+  font-size: 0.58rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  transition: all 300ms ease;
+}
+
+.arch-vis-onto-node--hub {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* 04 Governance Layout */
+.arch-vis-gov-gates {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.35rem;
+}
+
+.arch-vis-gate-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.16rem 0.45rem;
+  border-radius: 4px;
+  transition: all 300ms ease;
+}
+
+/* 05 Pipelines Layout */
+.arch-vis-pipeline-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.arch-vis-pipe-node {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.16rem 0.5rem;
+  border-radius: 4px;
+  transition: all 300ms ease;
+}
+
+.arch-vis-pipe-connector {
+  flex: 1;
+  height: 2px;
+  background: #E2E8F0;
+  margin: 0 0.35rem;
+  transition: background 300ms ease;
+}
+
+/* 3D Platform Extrusion & Shadow */
+.arch-glass-extrusion {
+  position: absolute;
+  bottom: -6px;
+  left: 3px;
+  right: 3px;
+  height: 8px;
+  background: linear-gradient(180deg, rgba(203, 213, 225, 0.45) 0%, rgba(148, 163, 184, 0.25) 100%);
+  border-radius: 0 0 18px 18px;
+  transform: translateZ(-3px);
+  pointer-events: none;
+}
+
+.arch-glass-shadow {
+  position: absolute;
+  inset: 10px;
+  bottom: -18px;
+  background: rgba(15, 23, 42, 0.05);
+  filter: blur(14px);
+  border-radius: 18px;
+  transform: translateZ(-12px);
+  pointer-events: none;
+}
+
+.arch-glass-glow {
+  position: absolute;
+  inset: -16px;
+  background: radial-gradient(circle, rgba(0, 180, 216, 0.22) 0%, transparent 70%);
+  border-radius: 28px;
+  pointer-events: none;
+  animation: pulseGlow 2.5s ease-in-out infinite alternate;
+}
+
+/* ---- Bottom Business Outcome Anchor ---- */
+.arch-outcome-deck {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.arch-outcome-beam {
+  width: 2px;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(0, 180, 216, 0.8) 0%, rgba(0, 229, 255, 0.2) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.arch-outcome-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: #00E5FF;
+  box-shadow: 0 0 8px #00E5FF;
+  animation: beamPulse 1.8s ease-in-out infinite;
+}
+
+.arch-outcome-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.52rem 1.15rem;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(0, 180, 216, 0.4);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 24px rgba(0, 180, 216, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+.arch-outcome-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.arch-outcome-title {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+}
+
+.arch-outcome-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #007791;
+  background: var(--accent-light);
+  padding: 0.18rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+/* ============================================================
+   RIGHT COLUMN: DYNAMIC INFORMATION PANEL
+   ============================================================ */
+.arch-detail-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-xl);
+  padding: 1.85rem 2rem;
+  box-shadow: 0 8px 32px rgba(10, 13, 20, 0.04);
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.arch-detail-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.arch-detail-step-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  font-family: var(--font-display);
+}
+
+.arch-detail-step-current {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.arch-detail-step-sep {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.arch-detail-step-total {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.arch-detail-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #007791;
+  background: var(--accent-light);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+.arch-detail-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+.arch-detail-heading-group {
+  margin-bottom: 0.6rem;
+}
+
+.arch-detail-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.arch-detail-tagline {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.arch-detail-description {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 1.15rem;
+}
+
+/* Mini visualizer slot */
+.arch-detail-vis-slot {
+  margin-bottom: 1.25rem;
+}
+
+/* Mini Visualizer Component Styles */
+.arch-mini-vis {
+  background: #F8FAFD;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 0.9rem;
+  overflow: hidden;
+}
+
+.arch-mini-vis__title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.arch-mini-vis__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.arch-mini-vis__badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.arch-mini-vis__meta {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* 01 Ingestion Mini */
+.arch-mini-ingest-grid {
+  display: grid;
+  grid-template-columns: 105px 36px 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.arch-mini-sources-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.arch-mini-source-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.45rem;
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.arch-mini-source-icon {
+  color: var(--accent);
+}
+
+.arch-mini-pulse-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #10B981;
+}
+
+.arch-mini-ingest-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.arch-mini-stream-line {
+  width: 24px;
+  height: 2px;
+  background: var(--border-subtle);
+  position: relative;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+}
+
+.arch-mini-stream-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--accent);
+  animation: moveParticle 1.2s infinite;
+}
+
+.arch-mini-stream-particle--delay {
+  animation-delay: 0.6s;
+}
+
+.arch-mini-arrow-icon {
+  color: var(--accent);
+}
+
+.arch-mini-target-box {
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 180, 216, 0.35);
+  border-radius: 6px;
+  padding: 0.6rem;
+}
+
+.arch-mini-target-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.arch-mini-cyan-icon {
+  color: var(--accent);
+}
+
+.arch-mini-target-metric {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-bottom: 0.4rem;
+}
+
+.arch-mini-metric-num {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.arch-mini-metric-lbl {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.arch-mini-target-bar {
+  width: 100%;
+  height: 4px;
+  background: #EEF2F6;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.arch-mini-target-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #00B4D8, #00E5FF);
+  border-radius: 999px;
+}
+
+/* 02 Orchestration Mini */
+.arch-mini-orchestrator-layout {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.arch-mini-core-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 180, 216, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 180, 216, 0.12);
+  flex-shrink: 0;
+}
+
+.arch-mini-core-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+}
+
+.arch-mini-core-ring {
+  position: absolute;
+  inset: -4px;
+  border: 1px dashed rgba(0, 180, 216, 0.5);
+  border-radius: 16px;
+  animation: spinRing 12s linear infinite;
+}
+
+.arch-mini-agents-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.arch-mini-agent-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 0.4rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.arch-mini-agent-role {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.arch-mini-agent-status {
+  font-size: 0.58rem;
+  font-weight: 600;
+}
+
+.arch-mini-agent-status--active {
+  color: #007791;
+}
+
+/* 03 Ontology Mini */
+.arch-mini-ontology-canvas {
+  position: relative;
+  width: 100%;
+  height: 85px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.arch-mini-ontology-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.arch-mini-graph-line {
+  stroke: rgba(0, 180, 216, 0.4);
+  stroke-width: 1.5;
+}
+
+.arch-mini-graph-line--subtle {
+  stroke: rgba(226, 232, 240, 0.7);
+  stroke-dasharray: 3 3;
+}
+
+.arch-mini-node {
+  position: absolute;
+  padding: 0.2rem 0.5rem;
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.arch-mini-node--hub {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--accent-light);
+  border-color: rgba(0, 180, 216, 0.5);
+  color: #007791;
+  z-index: 2;
+}
+
+/* 04 Governance Mini */
+.arch-mini-gov-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.arch-mini-gov-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.6rem;
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+}
+
+.arch-mini-gov-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.arch-mini-gov-status {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.arch-mini-success-icon {
+  color: #10B981;
+}
+
+/* 05 Pipeline Mini */
+.arch-mini-pipeline-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 0.65rem 0.5rem;
+}
+
+.arch-mini-pipe-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.arch-mini-pipe-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #F1F5F9;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.arch-mini-pipe-step--done .arch-mini-pipe-dot {
+  background: #ECFDF5;
+  border-color: #A7F3D0;
+  color: #10B981;
+}
+
+.arch-mini-pipe-step--active .arch-mini-pipe-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
+  box-shadow: 0 0 10px rgba(0, 180, 216, 0.6);
+}
+
+.arch-mini-pipe-name {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.arch-mini-pipe-link {
+  flex: 1;
+  height: 2px;
+  background: #E2E8F0;
+  margin: 0 0.25rem 0.85rem 0.25rem;
+}
+
+.arch-mini-pipe-link--active {
+  background: var(--accent);
+}
+
+/* Clean 3-Bullet Capabilities List */
+.arch-detail-capabilities {
+  margin-bottom: 1.25rem;
+}
+
+.arch-detail-cap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.arch-detail-cap-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.arch-detail-check-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Compact Footer: Agent & Metric */
+.arch-detail-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.arch-detail-agent-box {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.arch-detail-agent-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.arch-detail-agent-lbl {
+  display: block;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.arch-detail-agent-val {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.arch-detail-metric-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-md);
+}
+
+.arch-detail-metric-icon {
+  color: var(--accent);
+}
+
+.arch-detail-metric-val {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.arch-detail-metric-lbl {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+@keyframes floatNode {
+  0% {
+    transform: translateY(0px);
+  }
+
+  100% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes dropParticle {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 22px;
+    opacity: 0;
+  }
+}
+
+@keyframes bounceArrow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@keyframes floatCore {
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+
+  100% {
+    transform: translateY(-6px) scale(1.03);
+  }
+}
+
+@keyframes spinGem {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinRing {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes beamPulse {
+  0% {
+    top: -8px;
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 28px;
+    opacity: 0;
+  }
+}
+
+@keyframes moveParticle {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 24px;
+    opacity: 0;
+  }
+}
+
+@keyframes moveTrackParticle {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 32px;
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ============================================================ */
+@media (max-width: 1400px) {
+  .arch-interactive-grid {
+    grid-template-columns: 260px minmax(520px, 1fr) 340px;
+    gap: 2.25rem;
+  }
+
+  .arch-camera-rig {
+    width: 540px;
+    height: 520px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .arch-interactive-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .arch-col--left {
+    order: 2;
+  }
+
+  .arch-col--center {
+    order: 1;
+  }
+
+  .arch-col--right {
+    order: 3;
+  }
+
+  .arch-nav-stack {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .arch-detail-panel {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .arch-camera-rig {
+    width: 540px;
+    height: 520px;
+  }
+}
+
+@media (max-width: 640px) {
+  .arch-section {
+    padding: 4.5rem 0;
+  }
+
+  .arch-3d-scene {
+    min-height: 600px;
+  }
+
+  .arch-camera-rig {
+    width: 330px;
+    height: 480px;
+  }
+
+  .arch-stack-tier {
+    height: 84px;
+  }
+
+  .arch-glass-surface {
+    padding: 0.65rem 0.95rem;
+  }
+
+  .arch-glass-name {
+    font-size: 0.8rem;
+  }
+
+  .arch-sources-row {
+    gap: 0.35rem;
+  }
+
+  .arch-source-node__pill {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .arch-source-node__name {
+    font-size: 0.6rem;
+  }
+
+  .arch-detail-panel {
+    padding: 1.4rem;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+
+  .arch-source-node,
+  .arch-source-particle,
+  .arch-converge-arrow,
+  .arch-intelligence-core,
+  .arch-core-gem,
+  .arch-core-ring,
+  .arch-glass-glow,
+  .arch-outcome-pulse,
+  .arch-detail-live-dot,
+  .arch-mini-stream-particle,
+  .arch-vis-particle,
+  .arch-vis-pulse-ring {
+    animation: none !important;
+  }
+
+  .arch-camera-rig,
+  .arch-stack-tier,
+  .arch-nav-item,
+  .arch-detail-panel {
+    transition: none !important;
+  }
+}

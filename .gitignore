@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Production build outputs
+dist/
+dist-ssr/
+*.local
+
+# Environment variables & secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Testing & Coverage
+coverage/
+playwright-report/
+test-results/
+
+# Documentation & AI Artifacts
+walkthrough.md
+implementation_plan.md
+ASSET_MANIFEST.md
+
+# Local reference, prompt specs & scripts
+reference/
+research/
+download-platform-assets.ps1
+LOVABLE_MASTER_PROMPT.md
+README_FOR_LOVABLE.md
+REFERENCE_URLS.md

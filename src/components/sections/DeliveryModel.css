@@ -1,0 +1,122 @@
+.delivery-model-section {
+  padding: 6rem 0;
+  background-color: var(--bg-primary);
+}
+
+.delivery-model-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.delivery-model__left {
+  display: flex;
+  flex-direction: column;
+}
+
+.delivery-model__heading {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+}
+
+.delivery-model__desc {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+}
+
+.pod-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pod-feature-row {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1.25rem;
+  padding-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.pod-feature-row:hover .pod-feature-row__title {
+  color: var(--accent);
+}
+
+.pod-feature-row__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.pod-feature-row__icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background-color: var(--accent-light);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.pod-feature-row:hover .pod-feature-row__icon-btn {
+  background-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.pod-feature-row__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  transition: color var(--transition-fast);
+}
+
+.pod-feature-row__content {
+  padding-left: calc(36px + 1rem);
+}
+
+.pod-feature-row__short {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.pod-feature-row__full {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.delivery-model__visual-frame {
+  width: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-subtle);
+  background-color: #FFFFFF;
+}
+
+.delivery-model__img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 992px) {
+  .delivery-model-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}

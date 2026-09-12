@@ -1,0 +1,27 @@
+.metric-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metric-stat__value {
+  font-size: clamp(2rem, 3.5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.metric-stat__label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.metric-stat--dark .metric-stat__value {
+  color: #FFFFFF;
+}
+
+.metric-stat--dark .metric-stat__label {
+  color: var(--text-inverse-muted);
+}
