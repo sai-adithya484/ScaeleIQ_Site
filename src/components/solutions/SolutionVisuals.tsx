@@ -3,9 +3,7 @@ import {
   GitMerge,
   ShieldCheck,
   Workflow,
-  Layers,
   CheckCircle2,
-  Cloud,
   Activity,
   Network,
   Lock,
@@ -24,17 +22,19 @@ import {
   Sliders,
   CloudDownload,
   Building2,
-  HardDrive,
 } from 'lucide-react';
 
 /* ============================================================
    VISUAL 1: DIRECT FLOW
    Enterprise Data Migration & Modernization Architecture
-   Matches reference: Sources → Staging Layer (AWS/Azure/GCP) → Target Platforms
+   Matches reference: Sources â†’ Staging Layer (AWS/Azure/GCP) â†’ Target Platforms
+   LEFT â†’ RIGHT flow with real logos from /assets/Logos/
    ============================================================ */
 export const DirectFlowVisual: React.FC = () => {
   const [activeSource, setActiveSource] = useState(0);
   const [activeCloud, setActiveCloud] = useState(0);
+  const [hoveredSource, setHoveredSource] = useState<number | null>(null);
+  const [hoveredTarget, setHoveredTarget] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,10 +51,15 @@ export const DirectFlowVisual: React.FC = () => {
   }, []);
 
   const sources = [
-    { name: 'SAP', badge: 'SAP', badgeClass: 'df-badge--sap' },
-    { name: 'Teradata', badge: 'TD', badgeClass: 'df-badge--tera' },
-    { name: 'Oracle', badge: 'ORA', badgeClass: 'df-badge--oracle' },
-    { name: 'SQL Server', badge: 'SQL', badgeClass: 'df-badge--sql' },
+    { name: 'SAP', logo: '/assets/Logos/sap-logo.png', logoAlt: 'SAP' },
+    { name: 'Teradata', logo: '/assets/Logos/teradata_Logo.png', logoAlt: 'Teradata' },
+    { name: 'Oracle', logo: '/assets/Logos/oracle-logo.png', logoAlt: 'Oracle' },
+    { name: 'SQL Server', logo: '/assets/Logos/sql-server.png', logoAlt: 'SQL Server' },
+  ];
+
+  const targets = [
+    { name: 'Snowflake', logo: '/assets/Logos/Snowflake.png', logoAlt: 'Snowflake' },
+    { name: 'Databricks', logo: '/assets/Logos/Databricks.png', logoAlt: 'Databricks' },
   ];
 
   const pipelineCapabilities = [
@@ -66,31 +71,82 @@ export const DirectFlowVisual: React.FC = () => {
     { name: 'Load', icon: CloudDownload },
   ];
 
+  // ── EXACT COORDINATE MATH ──────────────────────────────────────────────
+  // Stack height = 220px, justify-content: center
+  // 4 cards × 44px + 3 gaps × 14px = 218px → top offset = (220-218)/2 = 1px
+  // Card centers (from top of SVG viewBox = top of connector box):
+  //   Card 0: 1 + 22 = 23
+  //   Card 1: 1 + 44 + 14 + 22 = 81
+  //   Card 2: 1 + 44+14+44+14+22 = 139
+  //   Card 3: 1 + 44+14+44+14+44+14+22 = 197
+  //
+  // Staging box (3 × 66px cards + 2 × 10.4px gaps ≈ 219px) sits centered
+  // in the 220px canvas → center of staging = 110.
+  // Fan entry points around 110 with 12px spacing:
+  //   Path 0: 110-18 = 92,  Path 1: 110-6 = 104,
+  //   Path 2: 110+6 = 116,  Path 3: 110+18 = 128
+  const leftPaths = [
+    { src: 23,  dst: 92  },
+    { src: 81,  dst: 104 },
+    { src: 139, dst: 116 },
+    { src: 197, dst: 128 },
+  ];
+
+  // Target cards: 2 × 44px + 1 gap × 24px = 112px, centered in 220px
+  // Offset = (220-112)/2 = 54 → centers: 54+22=76, 54+22+44+24=144
+  // Staging exit — fan around 110 with 12px spacing (not a single point):
+  //   Path 0: 104 → 76 (Snowflake),  Path 1: 116 → 144 (Databricks)
+  const rightPaths = [
+    { src: 104, dst: 76  },
+    { src: 116, dst: 144 },
+  ];
+
+  const getParticleOpacity = (idx: number, side: 'left' | 'right') => {
+    if (side === 'left' && hoveredSource !== null) return idx === hoveredSource ? 1 : 0.2;
+    if (side === 'right' && hoveredTarget !== null) return idx === hoveredTarget ? 1 : 0.2;
+    return 1;
+  };
+
   return (
     <div className="visual-direct-flow-v2">
-      {/* Top Main Data Flow */}
+
+      {/* ── COLUMN HEADERS above canvas so SVG and cards align exactly ── */}
+      <div className="df-flow-headers">
+        <div className="df-col-header-cell">ENTERPRISE SOURCES</div>
+        <div className="df-connector-header-gap" />
+        <div className="df-col-header-cell df-col-header-cell--center">STAGING LAYER</div>
+        <div className="df-connector-header-gap" />
+        <div className="df-col-header-cell df-col-header-cell--right">TARGET PLATFORMS</div>
+      </div>
+
+      {/* ── FLOW CANVAS — cards + connectors only, no headers ── */}
       <div className="df-flow-canvas">
-        {/* Column 1: Enterprise Sources */}
+
+        {/* Column 1: Enterprise Sources — full-size logo, no badge box, no text */}
         <div className="df-col df-col--sources">
-          <span className="df-col-header">ENTERPRISE SOURCES</span>
           <div className="df-cards-stack">
             {sources.map((src, i) => (
               <div
                 key={src.name}
-                className={`df-source-card-v2 ${i === activeSource ? 'df-source-card-v2--active' : ''}`}
+                className={`df-source-card-v2 ${(i === activeSource || i === hoveredSource) ? 'df-source-card-v2--active' : ''}`}
+                onMouseEnter={() => setHoveredSource(i)}
+                onMouseLeave={() => setHoveredSource(null)}
               >
-                <div className={`df-card-badge ${src.badgeClass}`}>{src.badge}</div>
-                <span className="df-card-name">{src.name}</span>
+                <img
+                  src={src.logo}
+                  alt={src.logoAlt}
+                  className={`df-card-logo df-card-logo--${src.name.toLowerCase().replace(/\s+/g, '-')}`}
+                />
               </div>
             ))}
           </div>
         </div>
 
-        {/* SVG Connector 1: Sources -> Staging */}
+        {/* SVG Connector 1: Sources â†’ Staging â€” paths start from card centers */}
         <div className="df-connector-box">
           <svg viewBox="0 0 90 220" className="df-connector-svg" preserveAspectRatio="none">
             <defs>
-              <filter id="dfGlowL" x="-30%" y="-30%" width="160%" height="160%">
+              <filter id="dfGlowL" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="2.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
@@ -99,109 +155,69 @@ export const DirectFlowVisual: React.FC = () => {
               </filter>
             </defs>
 
-            {/* Connecting paths */}
-            <path d="M 0 22 C 52 22, 38 96, 90 96" className="df-flow-path" />
-            <path d="M 0 78 C 52 78, 38 105, 90 105" className="df-flow-path" />
-            <path d="M 0 134 C 52 134, 38 115, 90 115" className="df-flow-path" />
-            <path d="M 0 190 C 52 190, 38 124, 90 124" className="df-flow-path" />
+            {/* Static path lines */}
+            {leftPaths.map((p, i) => (
+              <path
+                key={i}
+                d={`M 0 ${p.src} C 50 ${p.src}, 40 ${p.dst}, 90 ${p.dst}`}
+                className="df-flow-path"
+                style={{ opacity: hoveredSource !== null && hoveredSource !== i ? 0.15 : 1 }}
+              />
+            ))}
 
-            {/* Terminal node dots */}
-            <circle cx="0" cy="22" r="2.5" className="df-flow-node" />
-            <circle cx="0" cy="78" r="2.5" className="df-flow-node" />
-            <circle cx="0" cy="134" r="2.5" className="df-flow-node" />
-            <circle cx="0" cy="190" r="2.5" className="df-flow-node" />
+            {/* Terminal dot at card center (left edge) */}
+            {leftPaths.map((p, i) => (
+              <circle key={`nl-${i}`} cx="0" cy={p.src} r="2.5" className="df-flow-node"
+                style={{ opacity: hoveredSource !== null && hoveredSource !== i ? 0.15 : 1 }} />
+            ))}
+            {/* Terminal dot at staging entry (right edge) */}
+            {leftPaths.map((p, i) => (
+              <circle key={`nr-${i}`} cx="90" cy={p.dst} r="2.5" className="df-flow-node"
+                style={{ opacity: hoveredSource !== null && hoveredSource !== i ? 0.15 : 1 }} />
+            ))}
 
-            <circle cx="90" cy="96" r="2.5" className="df-flow-node" />
-            <circle cx="90" cy="105" r="2.5" className="df-flow-node" />
-            <circle cx="90" cy="115" r="2.5" className="df-flow-node" />
-            <circle cx="90" cy="124" r="2.5" className="df-flow-node" />
-
-            {/* Glowing cyan particles flowing LEFT to RIGHT */}
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowL)">
-              <animateMotion dur="2.2s" repeatCount="indefinite" path="M 0 22 C 52 22, 38 96, 90 96" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.2s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowL)">
-              <animateMotion dur="2.2s" begin="1.1s" repeatCount="indefinite" path="M 0 22 C 52 22, 38 96, 90 96" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.2s" begin="1.1s" repeatCount="indefinite" />
-            </circle>
-
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowL)">
-              <animateMotion dur="2.0s" begin="0.3s" repeatCount="indefinite" path="M 0 78 C 52 78, 38 105, 90 105" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.0s" begin="0.3s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowL)">
-              <animateMotion dur="2.0s" begin="1.3s" repeatCount="indefinite" path="M 0 78 C 52 78, 38 105, 90 105" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.0s" begin="1.3s" repeatCount="indefinite" />
-            </circle>
-
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowL)">
-              <animateMotion dur="2.1s" begin="0.6s" repeatCount="indefinite" path="M 0 134 C 52 134, 38 115, 90 115" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="0.6s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowL)">
-              <animateMotion dur="2.1s" begin="1.6s" repeatCount="indefinite" path="M 0 134 C 52 134, 38 115, 90 115" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="1.6s" repeatCount="indefinite" />
-            </circle>
-
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowL)">
-              <animateMotion dur="2.3s" begin="0.9s" repeatCount="indefinite" path="M 0 190 C 52 190, 38 124, 90 124" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.3s" begin="0.9s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowL)">
-              <animateMotion dur="2.3s" begin="1.9s" repeatCount="indefinite" path="M 0 190 C 52 190, 38 124, 90 124" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.3s" begin="1.9s" repeatCount="indefinite" />
-            </circle>
+            {/* Glowing cyan particles â€” 2 per path, staggered */}
+            {leftPaths.map((p, i) => {
+              const pathD = `M 0 ${p.src} C 50 ${p.src}, 40 ${p.dst}, 90 ${p.dst}`;
+              const dur = [2.2, 2.0, 2.1, 2.3][i];
+              const offset = i * 0.3;
+              const op = getParticleOpacity(i, 'left');
+              return (
+                <g key={`particles-l-${i}`}>
+                  <circle r="3" fill="#00E5FF" filter="url(#dfGlowL)">
+                    <animateMotion dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" path={pathD} />
+                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" />
+                  </circle>
+                  <circle r="3" fill="#00E5FF" filter="url(#dfGlowL)">
+                    <animateMotion dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" path={pathD} />
+                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" />
+                  </circle>
+                </g>
+              );
+            })}
           </svg>
         </div>
 
-        {/* Column 2: Staging Layer (AWS, Azure, GCP) */}
+        {/* Column 2: Staging Layer — logo only, no text labels */}
         <div className="df-col df-col--staging">
-          <span className="df-col-header df-col-header--center">STAGING LAYER</span>
           <div className="df-staging-box-v2">
-            {/* AWS */}
             <div className={`df-staging-card ${activeCloud === 0 ? 'df-staging-card--active' : ''}`}>
-              <div className="df-cloud-logo df-cloud-logo--aws">
-                <span className="df-aws-word">aws</span>
-                <svg viewBox="0 0 24 8" width="22" height="7" fill="none">
-                  <path d="M 2 2 Q 12 8 22 2" stroke="#FF9900" strokeWidth="1.8" strokeLinecap="round" />
-                  <path d="M 19 1 L 22.5 2.5 L 20 4.5" fill="#FF9900" />
-                </svg>
-              </div>
-              <span className="df-staging-card-title">AWS</span>
+              <img src="/assets/Logos/aws-logo.png" alt="AWS" className="df-staging-logo-only" />
             </div>
-
-            {/* Azure */}
             <div className={`df-staging-card df-staging-card--azure ${activeCloud === 1 ? 'df-staging-card--active' : ''}`}>
-              <div className="df-cloud-logo">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
-                  <path d="M13.05 3.58L6.47 16.27l4.35 4.15 7.42-3.14L13.05 3.58z" fill="#0078D4"/>
-                  <path d="M6.47 16.27l6.58-5.32 5.19 6.34-11.77-1.02z" fill="#50E6FF" opacity="0.85"/>
-                </svg>
-              </div>
-              <span className="df-staging-card-title">Azure</span>
+              <img src="/assets/Logos/azure.png" alt="Azure" className="df-staging-logo-only" />
             </div>
-
-            {/* GCP */}
             <div className={`df-staging-card ${activeCloud === 2 ? 'df-staging-card--active' : ''}`}>
-              <div className="df-cloud-logo">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
-                  <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="#4285F4"/>
-                  <circle cx="12" cy="13.2" r="2.8" fill="#EA4335" />
-                  <circle cx="15.5" cy="14" r="2.2" fill="#FBBC05" />
-                  <circle cx="8.5" cy="14" r="2.2" fill="#34A853" />
-                </svg>
-              </div>
-              <span className="df-staging-card-title">GCP</span>
+              <img src="/assets/Logos/google-cloud.png" alt="GCP" className="df-staging-logo-only" />
             </div>
           </div>
         </div>
 
-        {/* SVG Connector 2: Staging -> Targets */}
+        {/* SVG Connector 2: Staging → Targets */}
         <div className="df-connector-box">
           <svg viewBox="0 0 90 220" className="df-connector-svg" preserveAspectRatio="none">
             <defs>
-              <filter id="dfGlowR" x="-30%" y="-30%" width="160%" height="160%">
+              <filter id="dfGlowR" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="2.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
@@ -210,53 +226,56 @@ export const DirectFlowVisual: React.FC = () => {
               </filter>
             </defs>
 
-            {/* Connecting paths */}
-            <path d="M 0 104 C 38 104, 52 76, 90 76" className="df-flow-path" />
-            <path d="M 0 116 C 38 116, 52 144, 90 144" className="df-flow-path" />
-
-            {/* Terminal node dots */}
-            <circle cx="0" cy="104" r="2.5" className="df-flow-node" />
-            <circle cx="0" cy="116" r="2.5" className="df-flow-node" />
-            <circle cx="90" cy="76" r="2.5" className="df-flow-node" />
-            <circle cx="90" cy="144" r="2.5" className="df-flow-node" />
-
-            {/* Animated Particles flowing LEFT to RIGHT */}
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowR)">
-              <animateMotion dur="2.0s" begin="0.2s" repeatCount="indefinite" path="M 0 104 C 38 104, 52 76, 90 76" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.0s" begin="0.2s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowR)">
-              <animateMotion dur="2.0s" begin="1.2s" repeatCount="indefinite" path="M 0 104 C 38 104, 52 76, 90 76" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.0s" begin="1.2s" repeatCount="indefinite" />
-            </circle>
-
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowR)">
-              <animateMotion dur="2.1s" begin="0.7s" repeatCount="indefinite" path="M 0 116 C 38 116, 52 144, 90 144" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="0.7s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#dfGlowR)">
-              <animateMotion dur="2.1s" begin="1.7s" repeatCount="indefinite" path="M 0 116 C 38 116, 52 144, 90 144" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="1.7s" repeatCount="indefinite" />
-            </circle>
+            {rightPaths.map((p, i) => (
+              <path
+                key={i}
+                d={`M 0 ${p.src} C 40 ${p.src}, 50 ${p.dst}, 90 ${p.dst}`}
+                className="df-flow-path"
+                style={{ opacity: hoveredTarget !== null && hoveredTarget !== i ? 0.15 : 1 }}
+              />
+            ))}
+            {rightPaths.map((p, i) => (
+              <circle key={`nl-${i}`} cx="0" cy={p.src} r="2.5" className="df-flow-node"
+                style={{ opacity: hoveredTarget !== null && hoveredTarget !== i ? 0.15 : 1 }} />
+            ))}
+            {rightPaths.map((p, i) => (
+              <circle key={`nr-${i}`} cx="90" cy={p.dst} r="2.5" className="df-flow-node"
+                style={{ opacity: hoveredTarget !== null && hoveredTarget !== i ? 0.15 : 1 }} />
+            ))}
+            {rightPaths.map((p, i) => {
+              const pathD = `M 0 ${p.src} C 40 ${p.src}, 50 ${p.dst}, 90 ${p.dst}`;
+              const dur = [2.0, 2.1][i];
+              const offset = i * 0.5 + 0.2;
+              const op = getParticleOpacity(i, 'right');
+              return (
+                <g key={`particles-r-${i}`}>
+                  <circle r="3" fill="#00E5FF" filter="url(#dfGlowR)">
+                    <animateMotion dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" path={pathD} />
+                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" />
+                  </circle>
+                  <circle r="3" fill="#00E5FF" filter="url(#dfGlowR)">
+                    <animateMotion dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" path={pathD} />
+                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" />
+                  </circle>
+                </g>
+              );
+            })}
           </svg>
         </div>
 
-        {/* Column 3: Target Platforms (Snowflake, Databricks) */}
+        {/* Column 3: Target Platforms — full-size logo, no wrapper */}
         <div className="df-col df-col--targets">
-          <span className="df-col-header df-col-header--right">TARGET PLATFORMS</span>
           <div className="df-cards-stack df-cards-stack--targets">
-            <div className="df-target-card-v2">
-              <div className="df-card-badge df-badge--snow">
-                <Cloud size={16} />
+            {targets.map((tgt, i) => (
+              <div
+                key={tgt.name}
+                className={`df-target-card-v2 ${i === hoveredTarget ? 'df-target-card-v2--active' : ''}`}
+                onMouseEnter={() => setHoveredTarget(i)}
+                onMouseLeave={() => setHoveredTarget(null)}
+              >
+                <img src={tgt.logo} alt={tgt.logoAlt} className="df-card-logo" />
               </div>
-              <span className="df-card-name">Snowflake</span>
-            </div>
-            <div className="df-target-card-v2">
-              <div className="df-card-badge df-badge--dbr">
-                <Layers size={16} />
-              </div>
-              <span className="df-card-name">Databricks</span>
-            </div>
+            ))}
           </div>
         </div>
       </div>
@@ -284,8 +303,8 @@ export const DirectFlowVisual: React.FC = () => {
 
 /* ============================================================
    VISUAL 2: GOVERN360
-   Radial Governance Diagram — Center hub with orbiting domains
-   Matches reference: Data Governance center → Quality, Lineage,
+   Radial Governance Diagram â€” Center hub with orbiting domains
+   Matches reference: Data Governance center â†’ Quality, Lineage,
    Security, Compliance, Ownership, Policies orbiting around
    ============================================================ */
 export const Govern360Visual: React.FC = () => {
@@ -359,7 +378,7 @@ export const Govern360Visual: React.FC = () => {
       {/* Bottom Metrics */}
       <div className="gov-metrics-row">
         <div className="gov-metric-item">
-          <span className="gov-metric-val">360°</span>
+          <span className="gov-metric-val">360Â°</span>
           <span className="gov-metric-lbl">Enterprise Visibility</span>
         </div>
         <div className="gov-metric-item">
@@ -401,23 +420,23 @@ export const SematIQVisual: React.FC = () => {
       <div className="sem-topology-container">
         {/* SVG Wire connections */}
         <svg className="sem-svg-wires" viewBox="0 0 500 360">
-          {/* Customer → Hub */}
+          {/* Customer â†’ Hub */}
           <line x1="130" y1="60" x2="250" y2="180" className="sem-wire" />
           <line x1="130" y1="60" x2="250" y2="180" className={`sem-wire-pulse ${activeEdge === 0 ? '' : 'sem-wire-pulse--delay1'}`} />
 
-          {/* Account → Hub */}
+          {/* Account â†’ Hub */}
           <line x1="80" y1="280" x2="250" y2="180" className="sem-wire" />
           <line x1="80" y1="280" x2="250" y2="180" className={`sem-wire-pulse sem-wire-pulse--delay2`} />
 
-          {/* Product → Hub */}
+          {/* Product â†’ Hub */}
           <line x1="400" y1="60" x2="250" y2="180" className="sem-wire" />
           <line x1="400" y1="60" x2="250" y2="180" className={`sem-wire-pulse sem-wire-pulse--delay3`} />
 
-          {/* Supplier → Hub */}
+          {/* Supplier â†’ Hub */}
           <line x1="420" y1="280" x2="250" y2="180" className="sem-wire" />
           <line x1="420" y1="280" x2="250" y2="180" className={`sem-wire-pulse`} />
 
-          {/* Order → Hub (bottom center) */}
+          {/* Order â†’ Hub (bottom center) */}
           <line x1="250" y1="340" x2="250" y2="180" className="sem-wire" />
           <line x1="250" y1="340" x2="250" y2="180" className={`sem-wire-pulse sem-wire-pulse--delay1`} />
         </svg>
@@ -504,9 +523,9 @@ export const SematIQVisual: React.FC = () => {
 
 /* ============================================================
    VISUAL 4: CHARLIE
-   AI Copilot — Conversational Q&A → SQL → Answer
-   Matches reference: User question → understanding → SQL generation
-   → execution → answer with chart
+   AI Copilot â€” Conversational Q&A â†’ SQL â†’ Answer
+   Matches reference: User question â†’ understanding â†’ SQL generation
+   â†’ execution â†’ answer with chart
    ============================================================ */
 export const CharlieVisual: React.FC = () => {
   const [step, setStep] = useState(0);
@@ -622,7 +641,7 @@ export const CharlieVisual: React.FC = () => {
       {/* Metrics */}
       <div className="charlie-metrics-row">
         <div className="charlie-metric-item">
-          <span className="charlie-metric-val">2–5s</span>
+          <span className="charlie-metric-val">2â€“5s</span>
           <span className="charlie-metric-lbl">Average Response</span>
         </div>
         <div className="charlie-metric-item">
@@ -645,38 +664,44 @@ export const CharlieVisual: React.FC = () => {
 /* ============================================================
    VISUAL 5: SAP CONNECT
    Enterprise SAP Integration Architecture
-   Matches reference: SAP Systems → SAP Connect → Modern Platforms
+   Matches reference: SAP Systems â†’ SAP Connect â†’ Modern Platforms
    with SAP Modules row at bottom
+   LEFT â†’ RIGHT flow with real logos from /assets/Logos/
    ============================================================ */
 export const SAPConnectVisual: React.FC = () => {
   const [activeSystem, setActiveSystem] = useState(1); // S/4HANA initially active
   const [activePlatform, setActivePlatform] = useState(0);
+  const [hoveredSystem, setHoveredSystem] = useState<number | null>(null);
+  const [hoveredPlatform, setHoveredPlatform] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveSystem((prev) => (prev + 1) % 3);
+      setActiveSystem((prev) => (prev + 1) % 5);
     }, 2400);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActivePlatform((prev) => (prev + 1) % 4);
+      setActivePlatform((prev) => (prev + 1) % 3);
     }, 2000);
     return () => clearInterval(interval);
   }, []);
 
+  // 5 SAP systems â€” all use sap-logo.png + system name label
   const sapSystems = [
-    { name: 'ECC', badge: 'ECC' },
-    { name: 'S/4HANA', badge: 'S/4' },
-    { name: 'BW', badge: 'BW' },
+    { name: 'ECC' },
+    { name: 'S/4HANA' },
+    { name: 'BW' },
+    { name: 'B1' },
+    { name: 'BDC' },
   ];
 
+  // 3 modern platforms with real logos
   const modernPlatforms = [
-    { name: 'Snowflake', badgeClass: 'sap-badge--snow', icon: Cloud },
-    { name: 'Databricks', badgeClass: 'sap-badge--dbr', icon: Layers },
-    { name: 'BigQuery', badgeClass: 'sap-badge--bq', icon: Database },
-    { name: 'Data Lake', badgeClass: 'sap-badge--lake', icon: HardDrive },
+    { name: 'Snowflake', logo: '/assets/Logos/Snowflake.png', logoAlt: 'Snowflake' },
+    { name: 'Databricks', logo: '/assets/Logos/Databricks.png', logoAlt: 'Databricks' },
+    { name: 'BigQuery', logo: '/assets/Logos/BigQuery.png', logoAlt: 'BigQuery' },
   ];
 
   const sapModules = [
@@ -687,31 +712,86 @@ export const SAPConnectVisual: React.FC = () => {
     { name: 'HR', icon: Users },
   ];
 
+  // ── EXACT COORDINATE MATH FOR 5-SYSTEM SAP STACK ──────────────────────
+  // SAP systems stack: 5 cards × 44px + 4 gaps × 10px = 260px total height
+  // Connector SVG viewBox height = 260px, connector box height = 260px
+  // Card centers in 260px viewBox (no justify-content offset, stack is exactly 260px):
+  //   Card 0 (ECC):    22
+  //   Card 1 (S4):     22+44+10 = 76
+  //   Card 2 (BW):     76+44+10 = 130  ← geometric center of 260px = 130 ✓
+  //   Card 3 (B1):     130+44+10 = 184
+  //   Card 4 (BDC):    184+44+10 = 238
+  //
+  // SAP Connect center card is vertically centered in the canvas → y=130
+  // Fan 5 entry points around 130 with 12px spacing:
+  //   Path 0: 130-24 = 106,  Path 1: 130-12 = 118,  Path 2: 130,
+  //   Path 3: 130+12 = 142,  Path 4: 130+24 = 154
+  const sapLeftPaths = [
+    { src: 22,  dst: 106 },
+    { src: 76,  dst: 118 },
+    { src: 130, dst: 130 },
+    { src: 184, dst: 142 },
+    { src: 238, dst: 154 },
+  ];
+
+  // Modern platforms: 3 cards × 44px + 2 gaps × 20px = 172px
+  // Centered in 260px: top offset = (260-172)/2 = 44
+  // Platform centers: 44+22=66, 44+22+44+20=130, 130+44+20=194
+  // SAP Connect exit — fan around 130 with 12px spacing (not a single point):
+  //   Path 0: 118 → 66,  Path 1: 130 → 130,  Path 2: 142 → 194
+  const sapRightPaths = [
+    { src: 118, dst: 66  },
+    { src: 130, dst: 130 },
+    { src: 142, dst: 194 },
+  ];
+
+  const getSystemOp = (idx: number) => {
+    if (hoveredSystem !== null) return idx === hoveredSystem ? 1 : 0.2;
+    return 1;
+  };
+
+  const getPlatformOp = (idx: number) => {
+    if (hoveredPlatform !== null) return idx === hoveredPlatform ? 1 : 0.2;
+    return 1;
+  };
+
   return (
     <div className="visual-sap-connect-v2">
+      {/* ── COLUMN HEADERS above canvas so SVG and cards align exactly ── */}
+      <div className="sap-flow-headers">
+        <div className="sap-col-header-cell">SAP SYSTEMS</div>
+        <div className="sap-connector-header-gap" />
+        <div className="sap-col-header-cell sap-col-header-cell--center">SAP CONNECT</div>
+        <div className="sap-connector-header-gap" />
+        <div className="sap-col-header-cell sap-col-header-cell--right">MODERN PLATFORMS</div>
+      </div>
+
       {/* Top Main Data Flow */}
       <div className="sap-flow-canvas">
         {/* Column 1: SAP Systems */}
         <div className="sap-col sap-col--systems">
-          <span className="sap-col-header">SAP SYSTEMS</span>
           <div className="sap-cards-stack sap-cards-stack--systems">
             {sapSystems.map((sys, i) => (
               <div
                 key={sys.name}
-                className={`sap-system-card-v2 ${i === activeSystem ? 'sap-system-card-v2--active' : ''}`}
+                className={`sap-system-card-v2 ${(i === activeSystem || i === hoveredSystem) ? 'sap-system-card-v2--active' : ''}`}
+                onMouseEnter={() => setHoveredSystem(i)}
+                onMouseLeave={() => setHoveredSystem(null)}
               >
-                <div className="sap-card-badge sap-badge--blue">{sys.badge}</div>
+                <div className="sap-logo-badge">
+                  <img src="/assets/Logos/sap-logo.png" alt="SAP" className="sap-logo-img" />
+                </div>
                 <span className="sap-card-name">{sys.name}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* SVG Connector 1: SAP Systems -> SAP Connect */}
+        {/* SVG Connector 1: SAP Systems → SAP Connect */}
         <div className="sap-connector-box">
-          <svg viewBox="0 0 90 220" className="sap-connector-svg" preserveAspectRatio="none">
+          <svg viewBox="0 0 90 260" className="sap-connector-svg" preserveAspectRatio="none">
             <defs>
-              <filter id="sapGlowL" x="-30%" y="-30%" width="160%" height="160%">
+              <filter id="sapGlowL" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="2.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
@@ -720,49 +800,49 @@ export const SAPConnectVisual: React.FC = () => {
               </filter>
             </defs>
 
-            {/* Connecting paths */}
-            <path d="M 0 44 C 48 44, 42 98, 90 98" className="sap-flow-path" />
-            {/* S/4HANA ACTIVE DIRECT CONNECTION - CRITICAL REQUIREMENT */}
-            <path d="M 0 110 L 90 110" className="sap-flow-path sap-flow-path--s4" />
-            <path d="M 0 176 C 48 176, 42 122, 90 122" className="sap-flow-path" />
+            {/* Static paths */}
+            {sapLeftPaths.map((p, i) => (
+              <path
+                key={i}
+                d={`M 0 ${p.src} C 50 ${p.src}, 40 ${p.dst}, 90 ${p.dst}`}
+                className={`sap-flow-path ${i === 2 ? 'sap-flow-path--s4' : ''}`}
+                style={{ opacity: hoveredSystem !== null && hoveredSystem !== i ? 0.15 : 1 }}
+              />
+            ))}
 
-            {/* Terminal node dots */}
-            <circle cx="0" cy="44" r="2.5" className="sap-flow-node" />
-            <circle cx="0" cy="110" r="2.5" className="sap-flow-node sap-flow-node--s4" />
-            <circle cx="0" cy="176" r="2.5" className="sap-flow-node" />
+            {/* Terminal dots left */}
+            {sapLeftPaths.map((p, i) => (
+              <circle key={`nl-${i}`} cx="0" cy={p.src} r={i === 2 ? 3 : 2.5}
+                className={`sap-flow-node ${i === 2 ? 'sap-flow-node--s4' : ''}`}
+                style={{ opacity: hoveredSystem !== null && hoveredSystem !== i ? 0.15 : 1 }} />
+            ))}
+            {/* Terminal dots right */}
+            {sapLeftPaths.map((p, i) => (
+              <circle key={`nr-${i}`} cx="90" cy={p.dst} r={i === 2 ? 3 : 2.5}
+                className={`sap-flow-node ${i === 2 ? 'sap-flow-node--s4' : ''}`}
+                style={{ opacity: hoveredSystem !== null && hoveredSystem !== i ? 0.15 : 1 }} />
+            ))}
 
-            <circle cx="90" cy="98" r="2.5" className="sap-flow-node" />
-            <circle cx="90" cy="110" r="2.5" className="sap-flow-node sap-flow-node--s4" />
-            <circle cx="90" cy="122" r="2.5" className="sap-flow-node" />
-
-            {/* Animated Particles flowing LEFT to RIGHT */}
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowL)">
-              <animateMotion dur="2.1s" begin="0s" repeatCount="indefinite" path="M 0 44 C 48 44, 42 98, 90 98" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="0s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowL)">
-              <animateMotion dur="2.1s" begin="1.05s" repeatCount="indefinite" path="M 0 44 C 48 44, 42 98, 90 98" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="1.05s" repeatCount="indefinite" />
-            </circle>
-
-            {/* S/4HANA ACTIVE PARTICLES (Vibrant, continuous stream) */}
-            <circle r="3.6" fill="#00E5FF" filter="url(#sapGlowL)">
-              <animateMotion dur="1.8s" begin="0.3s" repeatCount="indefinite" path="M 0 110 L 90 110" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="1.8s" begin="0.3s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.6" fill="#00E5FF" filter="url(#sapGlowL)">
-              <animateMotion dur="1.8s" begin="1.2s" repeatCount="indefinite" path="M 0 110 L 90 110" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="1.8s" begin="1.2s" repeatCount="indefinite" />
-            </circle>
-
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowL)">
-              <animateMotion dur="2.2s" begin="0.6s" repeatCount="indefinite" path="M 0 176 C 48 176, 42 122, 90 122" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.2s" begin="0.6s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowL)">
-              <animateMotion dur="2.2s" begin="1.7s" repeatCount="indefinite" path="M 0 176 C 48 176, 42 122, 90 122" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.2s" begin="1.7s" repeatCount="indefinite" />
-            </circle>
+            {/* Particles â€” staggered Lâ†’R */}
+            {sapLeftPaths.map((p, i) => {
+              const pathD = `M 0 ${p.src} C 50 ${p.src}, 40 ${p.dst}, 90 ${p.dst}`;
+              const dur = [2.1, 2.0, 1.8, 2.2, 2.3][i];
+              const offset = i * 0.25;
+              const r = i === 2 ? 3.6 : 3;
+              const op = getSystemOp(i);
+              return (
+                <g key={`sap-l-particles-${i}`}>
+                  <circle r={r} fill="#00E5FF" filter="url(#sapGlowL)">
+                    <animateMotion dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" path={pathD} />
+                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" />
+                  </circle>
+                  <circle r={r} fill="#00E5FF" filter="url(#sapGlowL)">
+                    <animateMotion dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" path={pathD} />
+                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" />
+                  </circle>
+                </g>
+              );
+            })}
           </svg>
         </div>
 
@@ -773,16 +853,16 @@ export const SAPConnectVisual: React.FC = () => {
               <Network size={22} className="sap-center-icon" />
             </div>
             <span className="sap-center-title">SAP Connect</span>
-            <span className="sap-center-subtitle">Extract · Decode ·</span>
-            <span className="sap-center-subtitle">Transform · Deliver</span>
+            <span className="sap-center-subtitle">Extract Â· Decode Â·</span>
+            <span className="sap-center-subtitle">Transform Â· Deliver</span>
           </div>
         </div>
 
-        {/* SVG Connector 2: SAP Connect -> Modern Platforms */}
+        {/* SVG Connector 2: SAP Connect → Modern Platforms */}
         <div className="sap-connector-box">
-          <svg viewBox="0 0 90 220" className="sap-connector-svg" preserveAspectRatio="none">
+          <svg viewBox="0 0 90 260" className="sap-connector-svg" preserveAspectRatio="none">
             <defs>
-              <filter id="sapGlowR" x="-30%" y="-30%" width="160%" height="160%">
+              <filter id="sapGlowR" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="2.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
@@ -791,80 +871,63 @@ export const SAPConnectVisual: React.FC = () => {
               </filter>
             </defs>
 
-            {/* Connecting paths */}
-            <path d="M 0 96 C 38 96, 52 22, 90 22" className="sap-flow-path" />
-            <path d="M 0 105 C 38 105, 52 78, 90 78" className="sap-flow-path" />
-            <path d="M 0 115 C 38 115, 52 134, 90 134" className="sap-flow-path" />
-            <path d="M 0 124 C 38 124, 52 190, 90 190" className="sap-flow-path" />
+            {/* Static paths */}
+            {sapRightPaths.map((p, i) => (
+              <path
+                key={i}
+                d={`M 0 ${p.src} C 40 ${p.src}, 50 ${p.dst}, 90 ${p.dst}`}
+                className="sap-flow-path"
+                style={{ opacity: hoveredPlatform !== null && hoveredPlatform !== i ? 0.15 : 1 }}
+              />
+            ))}
 
-            {/* Terminal node dots */}
-            <circle cx="0" cy="96" r="2.5" className="sap-flow-node" />
-            <circle cx="0" cy="105" r="2.5" className="sap-flow-node" />
-            <circle cx="0" cy="115" r="2.5" className="sap-flow-node" />
-            <circle cx="0" cy="124" r="2.5" className="sap-flow-node" />
+            {/* Terminal dots */}
+            {sapRightPaths.map((p, i) => (
+              <circle key={`nl-${i}`} cx="0" cy={p.src} r="2.5" className="sap-flow-node"
+                style={{ opacity: hoveredPlatform !== null && hoveredPlatform !== i ? 0.15 : 1 }} />
+            ))}
+            {sapRightPaths.map((p, i) => (
+              <circle key={`nr-${i}`} cx="90" cy={p.dst} r="2.5" className="sap-flow-node"
+                style={{ opacity: hoveredPlatform !== null && hoveredPlatform !== i ? 0.15 : 1 }} />
+            ))}
 
-            <circle cx="90" cy="22" r="2.5" className="sap-flow-node" />
-            <circle cx="90" cy="78" r="2.5" className="sap-flow-node" />
-            <circle cx="90" cy="134" r="2.5" className="sap-flow-node" />
-            <circle cx="90" cy="190" r="2.5" className="sap-flow-node" />
-
-            {/* Animated Particles flowing LEFT to RIGHT */}
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowR)">
-              <animateMotion dur="2.0s" begin="0.2s" repeatCount="indefinite" path="M 0 96 C 38 96, 52 22, 90 22" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.0s" begin="0.2s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowR)">
-              <animateMotion dur="2.0s" begin="1.2s" repeatCount="indefinite" path="M 0 96 C 38 96, 52 22, 90 22" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.0s" begin="1.2s" repeatCount="indefinite" />
-            </circle>
-
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowR)">
-              <animateMotion dur="2.1s" begin="0.5s" repeatCount="indefinite" path="M 0 105 C 38 105, 52 78, 90 78" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="0.5s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowR)">
-              <animateMotion dur="2.1s" begin="1.5s" repeatCount="indefinite" path="M 0 105 C 38 105, 52 78, 90 78" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="1.5s" repeatCount="indefinite" />
-            </circle>
-
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowR)">
-              <animateMotion dur="2.1s" begin="0.8s" repeatCount="indefinite" path="M 0 115 C 38 115, 52 134, 90 134" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="0.8s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowR)">
-              <animateMotion dur="2.1s" begin="1.8s" repeatCount="indefinite" path="M 0 115 C 38 115, 52 134, 90 134" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.1s" begin="1.8s" repeatCount="indefinite" />
-            </circle>
-
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowR)">
-              <animateMotion dur="2.2s" begin="1.1s" repeatCount="indefinite" path="M 0 124 C 38 124, 52 190, 90 190" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.2s" begin="1.1s" repeatCount="indefinite" />
-            </circle>
-            <circle r="3.2" fill="#00E5FF" filter="url(#sapGlowR)">
-              <animateMotion dur="2.2s" begin="2.1s" repeatCount="indefinite" path="M 0 124 C 38 124, 52 190, 90 190" />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="2.2s" begin="2.1s" repeatCount="indefinite" />
-            </circle>
+            {/* Particles Lâ†’R */}
+            {sapRightPaths.map((p, i) => {
+              const pathD = `M 0 ${p.src} C 40 ${p.src}, 50 ${p.dst}, 90 ${p.dst}`;
+              const dur = [2.0, 2.1, 2.2][i];
+              const offset = i * 0.4 + 0.2;
+              const op = getPlatformOp(i);
+              return (
+                <g key={`sap-r-particles-${i}`}>
+                  <circle r="3" fill="#00E5FF" filter="url(#sapGlowR)">
+                    <animateMotion dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" path={pathD} />
+                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" />
+                  </circle>
+                  <circle r="3" fill="#00E5FF" filter="url(#sapGlowR)">
+                    <animateMotion dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" path={pathD} />
+                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" />
+                  </circle>
+                </g>
+              );
+            })}
           </svg>
         </div>
 
         {/* Column 3: Modern Platforms */}
         <div className="sap-col sap-col--platforms">
-          <span className="sap-col-header sap-col-header--right">MODERN PLATFORMS</span>
           <div className="sap-cards-stack sap-cards-stack--platforms">
-            {modernPlatforms.map((p, i) => {
-              const Icon = p.icon;
-              return (
-                <div
-                  key={p.name}
-                  className={`sap-platform-card-v2 ${i === activePlatform ? 'sap-platform-card-v2--active' : ''}`}
-                >
-                  <div className={`sap-card-badge ${p.badgeClass}`}>
-                    <Icon size={16} />
-                  </div>
-                  <span className="sap-card-name">{p.name}</span>
+            {modernPlatforms.map((p, i) => (
+              <div
+                key={p.name}
+                className={`sap-platform-card-v2 ${(i === activePlatform || i === hoveredPlatform) ? 'sap-platform-card-v2--active' : ''}`}
+                onMouseEnter={() => setHoveredPlatform(i)}
+                onMouseLeave={() => setHoveredPlatform(null)}
+              >
+                <div className="sap-target-logo-wrap">
+                  <img src={p.logo} alt={p.logoAlt} className="sap-target-logo-img" />
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -890,13 +953,6 @@ export const SAPConnectVisual: React.FC = () => {
   );
 };
 
-/* ============================================================
-   VISUAL 6: HUB360
-   Centralized Command Center
-   Matches reference: Active Pipelines + System Health stats,
-   3 cloud regions with uptime, animated pipeline bars,
-   bottom control icons + metrics
-   ============================================================ */
 export const Hub360Visual: React.FC = () => {
   const [pipelineCount, setPipelineCount] = useState(142);
 
@@ -916,7 +972,7 @@ export const Hub360Visual: React.FC = () => {
       <div className="hub-top-stats">
         <div className="hub-stat-card">
           <span className="hub-stat-value">{pipelineCount}</span>
-          <span className="hub-stat-change">↑ 12%</span>
+          <span className="hub-stat-change">â†‘ 12%</span>
           <span className="hub-stat-label">Active Pipelines</span>
         </div>
         <div className="hub-stat-card">

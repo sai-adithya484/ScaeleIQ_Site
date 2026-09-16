@@ -388,16 +388,112 @@
   justify-content: center;
 }
 
+/* ── HEADERS ROW above flow canvas ──────────────────────────────────────────
+   Mirrors df-flow-canvas layout so each header sits above its column.
+   ─────────────────────────────────────────────────────── */
+.df-flow-headers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.df-col-header-cell {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94A3B8;
+  white-space: nowrap;
+}
+
+/* Column 1 (sources) and column 3 (targets) have fixed widths matching df-col--sources/targets */
+.df-col-header-cell:first-child {
+  width: 146px;
+  flex-shrink: 0;
+}
+
+.df-col-header-cell:last-child {
+  width: 146px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.df-col-header-cell--center { text-align: center; flex: 1; }
+.df-col-header-cell--right  { text-align: right; }
+
+/* Connector spacer in headers row — matches connector box flex:1 min-width */
+.df-connector-header-gap {
+  flex: 1;
+  min-width: 60px;
+  max-width: 100px;
+}
+
+/* ── FULL-SIZE LOGO in source and target cards (no badge box wrapper) ── */
+.df-card-logo {
+  max-height: 30px;
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.df-card-logo--oracle {
+  transform: scale(2.6);
+  max-height: 28px;
+}
+
+.df-card-logo--sql-server {
+  transform: scale(1.35);
+  max-height: 34px;
+}
+
+/* ── STAGING card: logo only, fills the card, no label ── */
+.df-staging-logo-only {
+  max-height: 36px;
+  max-width: 90%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Staging card: center logo directly since there's no label */
+.df-staging-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .df-cards-stack--targets {
   gap: 24px;
 }
 
-.df-source-card-v2,
+
+.df-source-card-v2 {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center logo since no text label */
+  gap: 0;
+  padding: 0.45rem 0.5rem;
+  height: 44px;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
 .df-target-card-v2 {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.45rem 0.8rem;
+  justify-content: center;
+  gap: 0;
+  padding: 0.45rem 0.5rem;
   height: 44px;
   box-sizing: border-box;
   background: #FFFFFF;
@@ -435,6 +531,104 @@
 .df-badge--sql { background: #B91C1C; }
 .df-badge--snow { background: #00C2CB; }
 .df-badge--dbr { background: #FF3621; }
+
+/* Logo image badges — real PNG logos in source/target cards */
+.df-logo-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 3px;
+  overflow: hidden;
+}
+
+.df-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Staging cloud logo images */
+.df-staging-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 28px;
+}
+
+.df-staging-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Target platform card — logo only, larger */
+.df-target-logo-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.df-target-logo-img {
+  height: 36px;
+  max-width: 100px;
+  object-fit: contain;
+  display: block;
+}
+
+.df-target-card-v2--active {
+  border-color: rgba(0, 180, 216, 0.5);
+  transform: translateX(-2px);
+  box-shadow: 0 4px 14px rgba(0, 180, 216, 0.12);
+}
+
+/* SAP logo badge */
+.sap-logo-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 3px;
+  overflow: hidden;
+}
+
+.sap-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* SAP modern platform target logo */
+.sap-target-logo-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.sap-target-logo-img {
+  height: 36px;
+  max-width: 110px;
+  object-fit: contain;
+  display: block;
+}
 
 .df-card-name {
   font-size: 0.82rem;
@@ -1268,27 +1462,74 @@
   justify-content: space-between;
 }
 
+/* ── HEADERS ROW above SAP flow canvas ──────────────────────────────────────────
+   Mirrors sap-flow-canvas layout so each header sits above its column.
+   ─────────────────────────────────────────────────────── */
+.sap-flow-headers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.sap-col-header-cell {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94A3B8;
+  white-space: nowrap;
+}
+
+.sap-col-header-cell:first-child {
+  width: 146px;
+  flex-shrink: 0;
+}
+
+.sap-col-header-cell:last-child {
+  width: 146px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.sap-col-header-cell--center { text-align: center; flex: 1; }
+.sap-col-header-cell--right  { text-align: right; }
+
+.sap-connector-header-gap {
+  flex: 1;
+  min-width: 60px;
+  max-width: 100px;
+}
+
 .sap-flow-canvas {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  height: 260px;
   position: relative;
 }
 
 .sap-col {
   display: flex;
   flex-direction: column;
+  height: 260px;
   z-index: 2;
 }
 
 .sap-col--systems {
   width: 146px;
   flex-shrink: 0;
+  height: 260px;
 }
 
 .sap-col--center {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 260px;
   flex-shrink: 0;
   z-index: 2;
 }
@@ -1296,6 +1537,7 @@
 .sap-col--platforms {
   width: 146px;
   flex-shrink: 0;
+  height: 260px;
 }
 
 .sap-col-header {
@@ -1312,19 +1554,27 @@
   text-align: right;
 }
 
+.sap-col-header--center {
+  text-align: center;
+}
+
 .sap-cards-stack {
   display: flex;
   flex-direction: column;
-  height: 220px;
+  height: 260px;
   justify-content: center;
 }
 
 .sap-cards-stack--systems {
-  gap: 20px;
+  gap: 10px; /* 5 systems: 5×44 + 4×10 = 260px, matches connector SVG height */
+  height: 260px;
+  justify-content: flex-start; /* cards fill from top, exact coord math applied */
 }
 
 .sap-cards-stack--platforms {
-  gap: 14px;
+  gap: 20px;
+  height: 260px; /* matches connector height for alignment */
+  justify-content: center; /* 3 platforms centered in 260px tall column */
 }
 
 .sap-system-card-v2,
@@ -1439,7 +1689,7 @@
   flex: 1;
   min-width: 60px;
   max-width: 100px;
-  height: 220px;
+  height: 260px;
   display: flex;
   align-items: center;
   position: relative;
