@@ -1,0 +1,199 @@
+/* ============================================================
+   LIVING INFRASTRUCTURE VISUALS
+   Matching Approved Visual Reference Image Exactly
+   1. Data Organization Visual
+   2. Govern360 Visual
+   3. Data Integration & Intelligence Visual
+   ============================================================ */
+
+/* ── 1. COMMON WRAPPER & EQUAL VISUAL WEIGHT ──────────────── */
+
+.liv-vis-wrapper {
+  width: 100%;
+  min-height: 380px;
+  max-height: 420px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.liv-platform-logo-mark {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
+.liv-platform-wordmark {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #0A0D14;
+}
+
+
+/* ── 2. DATA ORGANIZATION VISUAL (Hero_1_DataReady.png STATIC VISUAL) ── */
+
+.liv-vis-wrapper--org-base {
+  width: 100%;
+  min-height: auto;
+  max-height: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+  position: relative;
+  background: transparent;
+  user-select: none;
+}
+
+.liv-hero-image-wrapper {
+  width: 100%;
+  max-width: 950px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.liv-hero-static-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  pointer-events: none;
+  user-select: none;
+  /* Extremely subtle perimeter softening (outermost 2%) so the image melts seamlessly into the background with zero rectangular boundary */
+  -webkit-mask-image: radial-gradient(ellipse 99% 98% at 50% 50%, black 96%, transparent 100%);
+  mask-image: radial-gradient(ellipse 99% 98% at 50% 50%, black 96%, transparent 100%);
+}
+
+
+
+/* ── 3. GOVERN360 VISUAL (Hero_Sec_2.png STATIC VISUAL) ─────── */
+
+.liv-vis-wrapper--gov {
+  width: 100%;
+  min-height: auto;
+  max-height: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+  position: relative;
+  background: transparent;
+  user-select: none;
+}
+
+.liv-gov-image-wrapper {
+  width: 100%;
+  max-width: 950px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.liv-gov-static-img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+
+/* ── 4. DATA INTEGRATION & INTELLIGENCE VISUAL (Hero_Sec_3.png STATIC VISUAL) ── */
+
+.liv-vis-wrapper--intel {
+  width: 100%;
+  min-height: auto;
+  max-height: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  background: transparent;
+  user-select: none;
+}
+
+.liv-intel-image-wrapper {
+  width: 100%;
+  max-width: 950px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transform: scale(1.12) translateX(-16px);
+  transform-origin: center center;
+}
+
+.liv-intel-static-img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  pointer-events: none;
+  user-select: none;
+  -webkit-mask-image: radial-gradient(ellipse 99% 98% at 50% 50%, black 95%, transparent 100%);
+  mask-image: radial-gradient(ellipse 99% 98% at 50% 50%, black 95%, transparent 100%);
+}
+
+@media (max-width: 900px) {
+  .liv-intel-image-wrapper {
+    transform: none;
+    max-width: 100%;
+  }
+}
+
+
+/* ── 5. RESPONSIVE BEHAVIOR ───────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .liv-vis-wrapper {
+    min-height: auto;
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* Data Organization 3D Visual Responsive */
+  .liv-vis-wrapper--org {
+    min-height: 460px;
+    padding: 1rem 0;
+  }
+
+  .liv-3d-perspective-stage {
+    perspective: 900px;
+  }
+
+  .liv-3d-world-rig {
+    transform: scale(0.88);
+  }
+
+  .liv-data-ready-3d-panel {
+    right: -15px;
+    top: -10px;
+  }
+
+  .liv-ready-glass-card {
+    min-width: 175px;
+    padding: 1rem 1.15rem;
+  }
+}

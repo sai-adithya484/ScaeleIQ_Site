@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react';
 import { Hero } from '../components/sections/Hero';
-import { AgentCard } from '../components/cards/AgentCard';
 import { ArchitectureSection } from '../components/sections/architecture/ArchitectureSection';
-import { DeliveryModel } from '../components/sections/DeliveryModel';
 import { CTASection } from '../components/sections/CTASection';
-import { SectionLabel } from '../components/ui/SectionLabel';
-import { RevealAnimation } from '../components/ui/RevealAnimation';
-import { agents } from '../data/agents';
 import { platformCta } from '../data/ctaContent';
 
 export const AiPage: React.FC = () => {
@@ -26,28 +21,6 @@ export const AiPage: React.FC = () => {
 
       {/* The Agentic Architecture 5-Layer Interactive Section */}
       <ArchitectureSection />
-
-      <DeliveryModel />
-
-      <section style={{ padding: '6rem 0', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 3.5rem auto' }}>
-            <RevealAnimation variant="up">
-              <SectionLabel>AGENT ROSTER</SectionLabel>
-              <h2 className="heading-lg">Meet the Autonomous Agents</h2>
-              <p className="body-md">Specialized agents built specifically for enterprise IT modernization workflows.</p>
-            </RevealAnimation>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.75rem' }}>
-            {agents.map((agent) => (
-              <RevealAnimation key={agent.id} variant="up">
-                <AgentCard agent={agent} />
-              </RevealAnimation>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <CTASection config={platformCta} />
     </div>

@@ -1,20 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import {
-  GitMerge,
-  ShieldCheck,
-  Workflow,
-  CheckCircle2,
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import {  ShieldCheck,  CheckCircle2,
   Activity,
   Network,
-  Lock,
-  Eye,
-  FileSearch,
-  BarChart3,
-  RefreshCw,
-  Settings,
-  AlertTriangle,
-  Package,
-  Users,
+  Lock,  RefreshCw,
+  Settings,  Users,
   DollarSign,
   ShoppingCart,
   Database,
@@ -22,6 +11,20 @@ import {
   Sliders,
   CloudDownload,
   Building2,
+  BarChart2,
+  FileText,
+  GitBranch,
+  Sparkles,
+  Link2,
+  Package,
+  Layers,
+  MoreVertical,
+  Cpu,
+  Workflow,
+  Eye,
+  AlertTriangle,
+  Cloud,
+  User,
 } from 'lucide-react';
 
 /* ============================================================
@@ -303,223 +306,762 @@ export const DirectFlowVisual: React.FC = () => {
 
 /* ============================================================
    VISUAL 2: GOVERN360
-   Radial Governance Diagram â€” Center hub with orbiting domains
-   Matches reference: Data Governance center â†’ Quality, Lineage,
-   Security, Compliance, Ownership, Policies orbiting around
+   Rebuilt Radial Governance Visualization
+   Matches Reference: Central Govern360 Node with 6 Surrounding Pillars
+   Top: Quality | Upper-Left: Policies | Upper-Right: Lineage
+   Lower-Left: Ownership | Lower-Right: Security | Bottom: Compliance
+   Bottom Metrics: 360° | 99.98% | 100% | 50%
    ============================================================ */
 export const Govern360Visual: React.FC = () => {
-  const [activeNode, setActiveNode] = useState(0);
+  const [activeNode, setActiveNode] = useState(0); // Default to Quality (index 0)
+  const [isHovering, setIsHovering] = useState(false);
 
+  // Auto-cycle through pillars gently when user is not hovering
   useEffect(() => {
+    if (isHovering) return;
     const interval = setInterval(() => {
       setActiveNode((prev) => (prev + 1) % 6);
-    }, 2000);
+    }, 4200);
     return () => clearInterval(interval);
-  }, []);
+  }, [isHovering]);
 
-  const nodes = [
-    { key: 'quality', label: 'Quality', icon: BarChart3, pos: 'gov-orbit-node--quality' },
-    { key: 'lineage', label: 'Lineage', icon: GitMerge, pos: 'gov-orbit-node--lineage' },
-    { key: 'security', label: 'Security', icon: Lock, pos: 'gov-orbit-node--security' },
-    { key: 'compliance', label: 'Compliance', icon: ShieldCheck, pos: 'gov-orbit-node--compliance' },
-    { key: 'ownership', label: 'Ownership', icon: Users, pos: 'gov-orbit-node--ownership' },
-    { key: 'policies', label: 'Policies', icon: FileSearch, pos: 'gov-orbit-node--policies' },
+  const pillars = [
+    {
+      key: 'quality',
+      title: 'Data Quality',
+      shortLabel: 'Quality',
+      icon: BarChart2,
+      desc: 'Validation rules, automated scoring, anomaly detection, and continuous quality monitoring.',
+      badge: 'Continuous Validation',
+    },
+    {
+      key: 'policies',
+      title: 'Governance Policies',
+      shortLabel: 'Policies',
+      icon: FileText,
+      desc: 'Centralized policy enforcement, compliance retention rules, and enterprise data standards.',
+      badge: 'Policy Enforcement',
+    },
+    {
+      key: 'lineage',
+      title: 'Data Lineage',
+      shortLabel: 'Lineage',
+      icon: GitBranch,
+      desc: 'Automated end-to-end column traceability from source ingestion to downstream consumption.',
+      badge: 'Column-Level Lineage',
+    },
+    {
+      key: 'ownership',
+      title: 'Data Ownership',
+      shortLabel: 'Ownership',
+      icon: Users,
+      desc: 'Domain stewardship, collaborative dataset curation, and business accountability assignment.',
+      badge: 'Domain Stewardship',
+    },
+    {
+      key: 'security',
+      title: 'Data Security',
+      shortLabel: 'Security',
+      icon: Lock,
+      desc: 'Granular attribute-based masking, zero-trust permission auditing, and encryption governance.',
+      badge: 'Zero-Trust Security',
+    },
+    {
+      key: 'compliance',
+      title: 'Compliance & Audit',
+      shortLabel: 'Compliance',
+      icon: ShieldCheck,
+      desc: 'Regulatory readiness, automated audit reporting logs, and friction-free compliance certification.',
+      badge: 'Audit Ready',
+    },
   ];
 
-  // Compute center and node positions for SVG lines
-  const cx = 170, cy = 170, radius = 130;
-  const angleOffset = -90; // start from top
-  const nodePositions = nodes.map((_, i) => {
-    const angle = (angleOffset + i * 60) * (Math.PI / 180);
-    return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+  // Radial geometry (540 x 380 coordinate space)
+  const vbWidth = 540;
+  const vbHeight = 380;
+  const cx = 270;
+  const cy = 190;
+  const rCenter = 58; // radius of center hub
+  const rNode = 26;   // radius of outer node circle
+
+  // Coords strictly following the reference image:
+  // TOP: Quality, UPPER LEFT: Policies, UPPER RIGHT: Lineage,
+  // LOWER LEFT: Ownership, LOWER RIGHT: Security, BOTTOM: Compliance
+  const nodeCoords = [
+    { x: 270, y: 52 },  // Quality (Top)
+    { x: 110, y: 124 }, // Policies (Upper-Left)
+    { x: 430, y: 124 }, // Lineage (Upper-Right)
+    { x: 110, y: 256 }, // Ownership (Lower-Left)
+    { x: 430, y: 256 }, // Security (Lower-Right)
+    { x: 270, y: 328 }, // Compliance (Bottom)
+  ];
+
+  // Mathematical spoke calculation: exact edge-of-center to edge-of-node
+  const spokes = nodeCoords.map((coord) => {
+    const angle = Math.atan2(coord.y - cy, coord.x - cx);
+    const startX = cx + rCenter * Math.cos(angle);
+    const startY = cy + rCenter * Math.sin(angle);
+    const endX = coord.x - rNode * Math.cos(angle);
+    const endY = coord.y - rNode * Math.sin(angle);
+    return {
+      x: coord.x,
+      y: coord.y,
+      d: `M ${startX.toFixed(1)} ${startY.toFixed(1)} L ${endX.toFixed(1)} ${endY.toFixed(1)}`,
+      angleDeg: (angle * 180) / Math.PI,
+    };
   });
 
+  const activePillar = pillars[activeNode];
+
   return (
-    <div className="visual-govern360">
-      <div className="gov-radial-container">
-        {/* SVG Connection Lines */}
-        <svg className="gov-svg-connections" viewBox="0 0 340 340">
-          {nodePositions.map((pos, i) => (
-            <React.Fragment key={i}>
-              <line
-                x1={cx} y1={cy} x2={pos.x} y2={pos.y}
-                className="gov-connection-line"
-              />
-              <line
-                x1={cx} y1={cy} x2={pos.x} y2={pos.y}
-                className={`gov-connection-pulse`}
-                style={{ animationDelay: `${i * 0.4}s` }}
-              />
-            </React.Fragment>
-          ))}
-        </svg>
+    <div
+      className="visual-govern360"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      {/* Primary Radial Governance Card */}
+      <div className="gov-radial-card">
+        {/* Radial Stage Container */}
+        <div className="gov-radial-stage">
+          {/* SVG Connection Network, Concentric Rings & Radar Ticks */}
+          <svg
+            className="gov-svg-connections"
+            viewBox={`0 0 ${vbWidth} ${vbHeight}`}
+            aria-hidden="true"
+          >
+            <defs>
+              <radialGradient id="govCenterAura" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#00B4D8" stopOpacity="0.12" />
+                <stop offset="60%" stopColor="#0284C7" stopOpacity="0.04" />
+                <stop offset="100%" stopColor="#00B4D8" stopOpacity="0" />
+              </radialGradient>
+              <filter id="govGlowCyan" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
 
-        {/* Center Node */}
-        <div className="gov-center-node">
-          <ShieldCheck size={22} color="#007791" />
-          <span className="gov-center-label">Unified</span>
-          <span className="gov-center-title">Data Governance</span>
-        </div>
+            {/* Ambient Cyan Aura behind center */}
+            <circle cx={cx} cy={cy} r="128" fill="url(#govCenterAura)" />
 
-        {/* Orbiting Nodes */}
-        {nodes.map((node, i) => {
-          const Icon = node.icon;
-          return (
-            <div key={node.key} className={`gov-orbit-node ${node.pos}`}>
-              <div className={`gov-orbit-bubble ${i === activeNode ? 'gov-orbit-bubble--active' : ''}`}>
-                <Icon size={22} />
-              </div>
-              <span className="gov-orbit-label">{node.label}</span>
+            {/* Concentric ambient rings matching reference */}
+            <circle cx={cx} cy={cy} r="74" className="gov-ring gov-ring--inner" />
+            <circle cx={cx} cy={cy} r="94" className="gov-ring gov-ring--middle" />
+            <circle cx={cx} cy={cy} r="114" className="gov-ring gov-ring--outer" />
+
+            {/* Subtle radar / compass tick markings */}
+            {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
+              const rad = (deg * Math.PI) / 180;
+              const x1 = cx + 82 * Math.cos(rad);
+              const y1 = cy + 82 * Math.sin(rad);
+              const x2 = cx + 114 * Math.cos(rad);
+              const y2 = cy + 114 * Math.sin(rad);
+              return (
+                <line
+                  key={deg}
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  className="gov-radar-tick"
+                />
+              );
+            })}
+
+            {/* 6 Exact Radial Connections */}
+            {spokes.map((spoke, i) => {
+              const isActive = i === activeNode;
+              return (
+                <g key={pillars[i].key}>
+                  {/* Subtle spoke guideline */}
+                  <path
+                    d={spoke.d}
+                    className={`gov-spoke-path ${isActive ? 'gov-spoke-path--active' : ''}`}
+                  />
+                  {/* Gentle cyan traveling pulse when node is active */}
+                  {isActive && (
+                    <circle r="3" fill="#00B4D8" filter="url(#govGlowCyan)">
+                      <animateMotion
+                        dur="1.6s"
+                        repeatCount="indefinite"
+                        path={spoke.d}
+                      />
+                    </circle>
+                  )}
+                </g>
+              );
+            })}
+          </svg>
+
+          {/* Central Govern360 Hub Node */}
+          <div className="gov-center-node">
+            <div className="gov-center-shield-badge">
+              <ShieldCheck size={20} className="gov-center-shield-icon" />
             </div>
-          );
-        })}
-      </div>
+            <span className="gov-center-tag">UNIFIED</span>
+            <span className="gov-center-title">Data Governance</span>
+            <span className="gov-center-brand">GOVERN360</span>
+            <div className="gov-center-aura" />
+          </div>
 
-      {/* Bottom Metrics */}
-      <div className="gov-metrics-row">
-        <div className="gov-metric-item">
-          <span className="gov-metric-val">360Â°</span>
-          <span className="gov-metric-lbl">Enterprise Visibility</span>
+          {/* 6 Outer Pillar Floating Nodes */}
+          {pillars.map((pillar, i) => {
+            const Icon = pillar.icon;
+            const isActive = i === activeNode;
+            const pos = nodeCoords[i];
+            return (
+              <button
+                key={pillar.key}
+                type="button"
+                className={`gov-node-button ${isActive ? 'gov-node-button--active' : ''}`}
+                style={{
+                  left: `${(pos.x / vbWidth) * 100}%`,
+                  top: `${(pos.y / vbHeight) * 100}%`,
+                }}
+                onClick={() => setActiveNode(i)}
+                onMouseEnter={() => setActiveNode(i)}
+                aria-label={pillar.title}
+              >
+                <div className={`gov-node-circle ${isActive ? 'gov-node-circle--active' : ''}`}>
+                  <Icon size={19} className="gov-node-icon" />
+                </div>
+                <span className={`gov-node-label ${isActive ? 'gov-node-label--active' : ''}`}>
+                  {pillar.shortLabel}
+                </span>
+              </button>
+            );
+          })}
         </div>
-        <div className="gov-metric-item">
-          <span className="gov-metric-val">99.98%</span>
-          <span className="gov-metric-lbl">Data Quality Rate</span>
+
+        {/* Interactive Pillar Contextual Strip */}
+        <div className="gov-active-detail-strip">
+          <div className="gov-active-badge-tag">{activePillar.badge}</div>
+          <div className="gov-active-summary">
+            <span className="gov-active-summary-title">{activePillar.title}:</span>{' '}
+            <span className="gov-active-summary-desc">{activePillar.desc}</span>
+          </div>
         </div>
-        <div className="gov-metric-item">
-          <span className="gov-metric-val">100%</span>
-          <span className="gov-metric-lbl">Compliance Ready</span>
-        </div>
-        <div className="gov-metric-item">
-          <span className="gov-metric-val">50%</span>
-          <span className="gov-metric-lbl">Faster Audit Cycles</span>
+
+        {/* Bottom Metrics Bar (Matches Reference Image) */}
+        <div className="gov-bottom-metrics-bar">
+          <div className="gov-metric-column">
+            <span className="gov-metric-number">360°</span>
+            <span className="gov-metric-caption">Enterprise Visibility</span>
+          </div>
+          <div className="gov-metric-column">
+            <span className="gov-metric-number">99.98%</span>
+            <span className="gov-metric-caption">Data Quality Rate</span>
+          </div>
+          <div className="gov-metric-column">
+            <span className="gov-metric-number">100%</span>
+            <span className="gov-metric-caption">Compliance Ready</span>
+          </div>
+          <div className="gov-metric-column">
+            <span className="gov-metric-number">50%</span>
+            <span className="gov-metric-caption">Faster Audit Cycles</span>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-/* ============================================================
-   VISUAL 3: SEMATIQ
-   Interactive Semantic Knowledge Graph
-   Matches reference: Customer, Account, Product, Supplier, Order
-   nodes connected to central SematIQ hub
-   ============================================================ */
-export const SematIQVisual: React.FC = () => {
-  const [activeEdge, setActiveEdge] = useState(0);
+export const SemantIQVisual: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  // Refs for schema card right-edge port dots
+  const rawPortRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Refs for agent left/right connection ports
+  const agentLeftPortRef = useRef<HTMLDivElement>(null);
+  const agentRightPortRef = useRef<HTMLDivElement>(null);
+  // Refs for entity nodes
+  const entityRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  const [hoveredRaw, setHoveredRaw] = useState<number | null>(null);
+  const [hoveredEntity, setHoveredEntity] = useState<string | null>(null);
+  const [activeSchemaIdx, setActiveSchemaIdx] = useState(0);
+  const [anchors, setAnchors] = useState<any | null>(null); /*
+    rawPoints: { x: number; y: number }[];
+    agentLeft: { x: number; y: number };
+    agentRight: { x: number; y: number };
+    */
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveEdge((prev) => (prev + 1) % 5);
-    }, 2200);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      setActiveSchemaIdx((prev) => (prev + 1) % 4);
+    }, 3800);
+    return () => clearInterval(timer);
   }, []);
 
+  const updateAnchors = useCallback(() => {
+    if (!containerRef.current || !agentLeftPortRef.current || !agentRightPortRef.current) return;
+    const cBox = containerRef.current.getBoundingClientRect();
+    const alp = agentLeftPortRef.current.getBoundingClientRect();
+    const arp = agentRightPortRef.current.getBoundingClientRect();
+
+    const agentLeft = {
+      x: alp.left + alp.width / 2 - cBox.left,
+      y: alp.top + alp.height / 2 - cBox.top,
+    };
+    const agentRight = {
+      x: arp.left + arp.width / 2 - cBox.left,
+      y: arp.top + arp.height / 2 - cBox.top,
+    };
+
+    const rawPoints = rawPortRefs.current.map((el) => {
+      if (!el) return { x: 0, y: 0 };
+      const b = el.getBoundingClientRect();
+      return {
+        x: b.right - cBox.left,
+        y: b.top + b.height / 2 - cBox.top,
+      };
+    });
+
+    const entities: typeof anchors extends null ? never : (typeof anchors)['entities'] = {};
+    Object.keys(entityRefs.current).forEach((k) => {
+      const el = entityRefs.current[k];
+      if (!el) return;
+      const b = el.getBoundingClientRect();
+      entities[k] = {
+        left: { x: b.left - cBox.left, y: b.top + b.height / 2 - cBox.top },
+        right: { x: b.right - cBox.left, y: b.top + b.height / 2 - cBox.top },
+        center: { x: b.left + b.width / 2 - cBox.left, y: b.top + b.height / 2 - cBox.top },
+      };
+    });
+
+    setAnchors({ rawPoints, agentLeft, agentRight, entities } as any);
+  }, []);
+
+  useEffect(() => {
+    updateAnchors();
+    const t1 = setTimeout(updateAnchors, 60);
+    const t2 = setTimeout(updateAnchors, 280);
+    window.addEventListener('resize', updateAnchors);
+    let ro: ResizeObserver | null = null;
+    if (containerRef.current) {
+      ro = new ResizeObserver(() => requestAnimationFrame(updateAnchors));
+      ro.observe(containerRef.current);
+    }
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener('resize', updateAnchors);
+      if (ro) ro.disconnect();
+    };
+  }, [updateAnchors]);
+
+  const rawSchemas = [
+    { id: 'oracle', name: 'Table', source: 'Oracle • ERP', type: 'Table', icon: Database },
+    { id: 'sap', name: 'Table', source: 'SAP • ERP', type: 'Table', icon: Database },
+    { id: 'salesforce', name: 'Object', source: 'Salesforce • CRM', type: 'Object', icon: Cloud },
+    { id: 'finance', name: 'File', source: 'Files • Finance', type: 'File', icon: FileText },
+  ];
+
+  const topCapabilities = [
+    { label: 'Schema Understanding', icon: Database },
+    { label: 'AI-Powered Mapping', icon: Sparkles },
+    { label: 'Business Context', icon: FileText },
+  ];
+
+  const bottomCapabilities = [
+    { label: 'Entity Resolution', icon: Link2 },
+    { label: 'Semantic Layer Automation', icon: Settings },
+    { label: 'Governed Metadata', icon: ShieldCheck },
+  ];
+
+  // Primary entities (left column of graph)
+  const primaryEntities = [
+    { id: 'Customer', name: 'Customer', icon: User, color: '#2563EB', stroke: '#3B82F6', marker: 'url(#arrowBlue)', pulseFill: '#3B82F6' },
+    { id: 'Order', name: 'Order', icon: FileText, color: '#0D9488', stroke: '#0D9488', marker: 'url(#arrowTeal)', pulseFill: '#0D9488' },
+    { id: 'Product', name: 'Product', icon: Package, color: '#EA580C', stroke: '#EA580C', marker: 'url(#arrowOrange)', pulseFill: '#EA580C' },
+  ];
+
+  // Secondary entities (right column of graph)
+  const secondaryEntities = [
+    { id: 'Revenue', name: 'Revenue', icon: BarChart2, color: '#9333EA' },
+    { id: 'Fulfillment', name: 'Fulfillment', icon: Layers, color: '#7C3AED' },
+  ];
+
+  // Relationships between primary and secondary entities
+  const relationships = [
+    { from: 'Customer', to: 'Revenue', color: '#8B5CF6', marker: 'url(#arrowPurple)', dur: '2.1s', offset: '0s' },
+    { from: 'Order', to: 'Revenue', color: '#8B5CF6', marker: 'url(#arrowPurple)', dur: '2.3s', offset: '0.4s' },
+    { from: 'Order', to: 'Fulfillment', color: '#7C3AED', marker: 'url(#arrowViolet)', dur: '2.0s', offset: '0.6s' },
+    { from: 'Product', to: 'Fulfillment', color: '#7C3AED', marker: 'url(#arrowViolet)', dur: '2.2s', offset: '0.2s' },
+  ];
+
+  const isRelActive = (rel: { from: string; to: string }) => {
+    if (!hoveredEntity) return true;
+    return hoveredEntity === rel.from || hoveredEntity === rel.to;
+  };
+
+  const isAgentBranchActive = (entityId: string) => {
+    if (!hoveredEntity) return true;
+    if (hoveredEntity === entityId) return true;
+    if ((hoveredEntity === 'Revenue' || hoveredEntity === 'Fulfillment') && entityId === 'Order') return true;
+    if (hoveredEntity === 'Revenue' && entityId === 'Customer') return true;
+    if (hoveredEntity === 'Fulfillment' && entityId === 'Product') return true;
+    return false;
+  };
+
   return (
-    <div className="visual-sematiq">
-      {/* Topology Container */}
-      <div className="sem-topology-container">
-        {/* SVG Wire connections */}
-        <svg className="sem-svg-wires" viewBox="0 0 500 360">
-          {/* Customer â†’ Hub */}
-          <line x1="130" y1="60" x2="250" y2="180" className="sem-wire" />
-          <line x1="130" y1="60" x2="250" y2="180" className={`sem-wire-pulse ${activeEdge === 0 ? '' : 'sem-wire-pulse--delay1'}`} />
+    <div className="visual-semantiq-v2">
+      {/* 3-Column Header Titles */}
+      <div className="sem-stage-headers">
+        <div className="sem-stage-header-cell sem-stage-header-cell--left">
+          <span className="sem-stage-title">RAW, DISCONNECTED SCHEMAS</span>
+        </div>
+        <div className="sem-stage-header-cell sem-stage-header-cell--center">
+          <span className="sem-stage-title">SEMANTIQ AGENT</span>
+        </div>
+        <div className="sem-stage-header-cell sem-stage-header-cell--right">
+          <span className="sem-stage-title">GOVERNED SEMANTIC GRAPH</span>
+        </div>
+      </div>
 
-          {/* Account â†’ Hub */}
-          <line x1="80" y1="280" x2="250" y2="180" className="sem-wire" />
-          <line x1="80" y1="280" x2="250" y2="180" className={`sem-wire-pulse sem-wire-pulse--delay2`} />
+      {/* Main 3-Column Architecture Canvas */}
+      <div className="sem-canvas-stage" ref={containerRef}>
+        {/* Dynamic SVG Connection Layer — covers the entire canvas */}
+        <svg className="sem-svg-overlay" aria-hidden="true">
+          <defs>
+            <filter id="semGlowCyan" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="semGlowColor" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <marker id="arrowBlue" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 1 L 7 4 L 0 7 z" fill="#3B82F6" />
+            </marker>
+            <marker id="arrowTeal" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 1 L 7 4 L 0 7 z" fill="#0D9488" />
+            </marker>
+            <marker id="arrowOrange" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 1 L 7 4 L 0 7 z" fill="#EA580C" />
+            </marker>
+            <marker id="arrowPurple" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 1 L 7 4 L 0 7 z" fill="#9333EA" />
+            </marker>
+            <marker id="arrowViolet" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 1 L 7 4 L 0 7 z" fill="#7C3AED" />
+            </marker>
+          </defs>
 
-          {/* Product â†’ Hub */}
-          <line x1="400" y1="60" x2="250" y2="180" className="sem-wire" />
-          <line x1="400" y1="60" x2="250" y2="180" className={`sem-wire-pulse sem-wire-pulse--delay3`} />
+          {anchors && (
+            <>
+              {/* 1. Left Schema Cards → Agent Left Port (dashed cyan lines) */}
+              {anchors.rawPoints.map((pt: any, i: any) => {
+                if (pt.x === 0 && pt.y === 0) return null;
+                const isActive = hoveredRaw === i || (hoveredRaw === null && activeSchemaIdx === i);
+                const dx = anchors.agentLeft.x - pt.x;
+                const pathD = `M ${pt.x} ${pt.y} C ${pt.x + dx * 0.5} ${pt.y}, ${anchors.agentLeft.x - dx * 0.3} ${anchors.agentLeft.y}, ${anchors.agentLeft.x} ${anchors.agentLeft.y}`;
+                return (
+                  <g key={`raw-conn-${i}`}>
+                    <path
+                      d={pathD}
+                      className={`sem-flow-curve ${isActive ? 'sem-flow-curve--active' : ''}`}
+                    />
+                    <circle r="3" fill="#00B4D8" filter="url(#semGlowCyan)" opacity={isActive ? 1 : 0.5}>
+                      <animateMotion
+                        dur={`${1.6 + i * 0.2}s`}
+                        begin={`${i * 0.3}s`}
+                        repeatCount="indefinite"
+                        path={pathD}
+                      />
+                      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur={`${1.6 + i * 0.2}s`} begin={`${i * 0.3}s`} repeatCount="indefinite" />
+                    </circle>
+                  </g>
+                );
+              })}
 
-          {/* Supplier â†’ Hub */}
-          <line x1="420" y1="280" x2="250" y2="180" className="sem-wire" />
-          <line x1="420" y1="280" x2="250" y2="180" className={`sem-wire-pulse`} />
+              {/* 2. Agent Right Port → Primary Entities (colored solid lines with arrows) */}
+              {primaryEntities.map((ent, idx) => {
+                const target = anchors.entities[ent.id];
+                if (!target) return null;
+                const isActive = isAgentBranchActive(ent.id);
+                const dx = target.left.x - anchors.agentRight.x;
+                const pathD = `M ${anchors.agentRight.x} ${anchors.agentRight.y} C ${anchors.agentRight.x + dx * 0.5} ${anchors.agentRight.y}, ${target.left.x - dx * 0.4} ${target.left.y}, ${target.left.x} ${target.left.y}`;
+                return (
+                  <g key={`agent-to-${ent.id}`}>
+                    <path
+                      d={pathD}
+                      stroke={ent.stroke}
+                      strokeWidth={isActive ? 2.2 : 1.4}
+                      strokeOpacity={isActive ? 0.9 : 0.2}
+                      fill="none"
+                      markerEnd={ent.marker}
+                    />
+                    {isActive && (
+                      <circle r="3" fill={ent.pulseFill} filter="url(#semGlowColor)">
+                        <animateMotion dur="1.8s" begin={`${idx * 0.35}s`} repeatCount="indefinite" path={pathD} />
+                        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="1.8s" begin={`${idx * 0.35}s`} repeatCount="indefinite" />
+                      </circle>
+                    )}
+                  </g>
+                );
+              })}
 
-          {/* Order â†’ Hub (bottom center) */}
-          <line x1="250" y1="340" x2="250" y2="180" className="sem-wire" />
-          <line x1="250" y1="340" x2="250" y2="180" className={`sem-wire-pulse sem-wire-pulse--delay1`} />
+              {/* 3. Primary → Secondary Entity Relationships (curved arrows) */}
+              {relationships.map((rel) => {
+                const src = anchors.entities[rel.from];
+                const dst = anchors.entities[rel.to];
+                if (!src || !dst) return null;
+                const isActive = isRelActive(rel);
+                const dx = dst.left.x - src.right.x;
+                // const dy = dst.center.y - src.center.y;
+                const pathD = `M ${src.right.x} ${src.center.y} C ${src.right.x + dx * 0.55} ${src.center.y}, ${dst.left.x - dx * 0.35} ${dst.center.y}, ${dst.left.x} ${dst.center.y}`;
+                return (
+                  <g key={`rel-${rel.from}-${rel.to}`}>
+                    <path
+                      d={pathD}
+                      stroke={rel.color}
+                      strokeWidth={isActive ? 2 : 1.2}
+                      strokeOpacity={isActive ? 0.85 : 0.2}
+                      fill="none"
+                      markerEnd={rel.marker}
+                    />
+                    {isActive && (
+                      <circle r="2.8" fill={rel.color} filter="url(#semGlowColor)">
+                        <animateMotion dur={rel.dur} begin={rel.offset} repeatCount="indefinite" path={pathD} />
+                        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur={rel.dur} begin={rel.offset} repeatCount="indefinite" />
+                      </circle>
+                    )}
+                  </g>
+                );
+              })}
+            </>
+          )}
         </svg>
 
-        {/* Entity Nodes */}
-        <div className="sem-entity-node sem-entity-node--customer">
-          <div className={`sem-entity-bubble ${activeEdge === 0 ? 'sem-entity-bubble--active' : ''}`}>
-            Custo-<br/>mer
+        {/* ── LEFT COLUMN: Raw Schema Cards ── */}
+        <div className="sem-col-schemas">
+          <div className="sem-raw-stack">
+            {rawSchemas.map((schema, i) => {
+              const Icon = schema.icon;
+              const isSelected = hoveredRaw === i || (hoveredRaw === null && activeSchemaIdx === i);
+              return (
+                <div
+                  key={schema.id}
+                  className={`sem-schema-card ${isSelected ? 'sem-schema-card--active' : ''}`}
+                  onMouseEnter={() => setHoveredRaw(i)}
+                  onMouseLeave={() => setHoveredRaw(null)}
+                  onClick={() => setActiveSchemaIdx(i)}
+                >
+                  <div className="sem-schema-icon-wrap">
+                    <Icon size={15} />
+                  </div>
+                  <div className="sem-schema-body">
+                    <span className="sem-schema-name">{schema.name}</span>
+                    <span className="sem-schema-source">{schema.source}</span>
+                  </div>
+                  <div className="sem-schema-meta">
+                    <span className="sem-schema-tag">{schema.type}</span>
+                    <MoreVertical size={13} className="sem-schema-more" />
+                  </div>
+                  {/* Anchor Port Dot — right edge */}
+                  <div
+                    ref={(el: any) => { rawPortRefs.current[i] = el; }}
+                    className="sem-schema-port"
+                  />
+                </div>
+              );
+            })}
           </div>
-          <span className="sem-entity-label">Customer</span>
         </div>
 
-        <div className="sem-entity-node sem-entity-node--account">
-          <div className={`sem-entity-bubble ${activeEdge === 1 ? 'sem-entity-bubble--active' : ''}`}>
-            Acct
+        {/* ── CENTER COLUMN: SemantIQ Agent ── */}
+        <div className="sem-col-agent">
+          {/* Top 3 Capability Pills */}
+          <div className="sem-agent-caps-row sem-agent-caps-row--top">
+            {topCapabilities.map((cap) => {
+              const Icon = cap.icon;
+              return (
+                <div key={cap.label} className="sem-cap-pill sem-cap-pill--top">
+                  <Icon size={13} className="sem-cap-icon" />
+                  <span>{cap.label}</span>
+                </div>
+              );
+            })}
           </div>
-          <span className="sem-entity-label">Account</span>
+
+          {/* Central Layered Hexagon */}
+          <div className="sem-agent-hexagon-wrapper">
+            <svg className="sem-hex-background-svg" viewBox="0 0 260 220" aria-hidden="true">
+              <defs>
+                <radialGradient id="hexInnerGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.98" />
+                  <stop offset="60%" stopColor="#F8FAFC" stopOpacity="0.95" />
+                  <stop offset="100%" stopColor="#F0F9FF" stopOpacity="0.92" />
+                </radialGradient>
+                <filter id="hexAuraGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="8" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              {/* Outer glow halo */}
+              <polygon
+                points="65,10 195,10 252,110 195,210 65,210 8,110"
+                fill="rgba(0, 180, 216, 0.08)"
+                filter="url(#hexAuraGlow)"
+              />
+              {/* Outermost thin cyan outline */}
+              <polygon
+                points="65,10 195,10 252,110 195,210 65,210 8,110"
+                fill="none"
+                stroke="rgba(0, 180, 216, 0.22)"
+                strokeWidth="1.5"
+              />
+              {/* Middle dashed concentric hexagon */}
+              <polygon
+                points="75,24 185,24 238,110 185,196 75,196 22,110"
+                fill="none"
+                stroke="rgba(0, 180, 216, 0.38)"
+                strokeWidth="1.5"
+                strokeDasharray="4 4"
+              />
+              {/* Core glass hexagon surface */}
+              <polygon
+                points="80,34 180,34 228,110 180,186 80,186 32,110"
+                fill="url(#hexInnerGrad)"
+                stroke="rgba(0, 180, 216, 0.55)"
+                strokeWidth="2"
+              />
+            </svg>
+
+            {/* Central Agent Content */}
+            <div className="sem-agent-content">
+              <img
+                src="/assets/3DLogos/SCAELE_IQ_LOGO_C.png"
+                alt="SemantIQ Agent"
+                className="sem-agent-3d-logo"
+              />
+              <span className="sem-agent-brand-title">SCAELEIQ</span>
+              <span className="sem-agent-brand-sub">Semantic Agent</span>
+              <span className="sem-agent-brand-caption">Schema • Meaning • Intelligence</span>
+            </div>
+
+            {/* Connection Port Nodes */}
+            <div ref={agentLeftPortRef} className="sem-agent-port sem-agent-port--left" />
+            <div ref={agentRightPortRef} className="sem-agent-port sem-agent-port--right" />
+          </div>
+
+          {/* Bottom 3 Capability Pills */}
+          <div className="sem-agent-caps-row sem-agent-caps-row--bottom">
+            {bottomCapabilities.map((cap) => {
+              const Icon = cap.icon;
+              return (
+                <div key={cap.label} className="sem-cap-pill sem-cap-pill--bottom">
+                  <Icon size={13} className="sem-cap-icon" />
+                  <span>{cap.label}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="sem-entity-node sem-entity-node--product">
-          <div className={`sem-entity-bubble ${activeEdge === 2 ? 'sem-entity-bubble--active' : ''}`}>
-            Prod
+        {/* ── RIGHT COLUMN: Governed Semantic Graph ── */}
+        <div className="sem-col-graph">
+          {/* Primary entities — Customer, Order, Product (left sub-column) */}
+          <div className="sem-graph-primary-col">
+            {primaryEntities.map((ent) => {
+              const Icon = ent.icon;
+              const isHov = hoveredEntity === ent.id;
+              return (
+                <div
+                  key={ent.id}
+                  ref={(el) => { entityRefs.current[ent.id] = el; }}
+                  className={`sem-entity-node sem-entity-node--primary ${isHov ? 'sem-entity-node--hover' : ''}`}
+                  style={{ '--ent-color': ent.color } as React.CSSProperties}
+                  onMouseEnter={() => setHoveredEntity(ent.id)}
+                  onMouseLeave={() => setHoveredEntity(null)}
+                >
+                  <Icon size={20} />
+                  <span className="sem-entity-label">{ent.name}</span>
+                </div>
+              );
+            })}
           </div>
-          <span className="sem-entity-label">Product</span>
-        </div>
 
-        <div className="sem-entity-node sem-entity-node--supplier">
-          <div className={`sem-entity-bubble ${activeEdge === 3 ? 'sem-entity-bubble--active' : ''}`}>
-            Suppl
+          {/* Secondary entities — Revenue, Fulfillment (right sub-column) */}
+          <div className="sem-graph-secondary-col">
+            {secondaryEntities.map((ent) => {
+              const Icon = ent.icon;
+              const isHov = hoveredEntity === ent.id;
+              return (
+                <div
+                  key={ent.id}
+                  ref={(el) => { entityRefs.current[ent.id] = el; }}
+                  className={`sem-entity-node sem-entity-node--secondary ${isHov ? 'sem-entity-node--hover' : ''}`}
+                  style={{ '--ent-color': ent.color } as React.CSSProperties}
+                  onMouseEnter={() => setHoveredEntity(ent.id)}
+                  onMouseLeave={() => setHoveredEntity(null)}
+                >
+                  <Icon size={20} />
+                  <span className="sem-entity-label">{ent.name}</span>
+                </div>
+              );
+            })}
           </div>
-          <span className="sem-entity-label">Supplier</span>
-        </div>
-
-        <div className="sem-entity-node sem-entity-node--order">
-          <div className={`sem-entity-bubble ${activeEdge === 4 ? 'sem-entity-bubble--active' : ''}`}>
-            Order
-          </div>
-          <span className="sem-entity-label">Order</span>
-        </div>
-
-        {/* Central SematIQ Hub */}
-        <div className="sem-hub-node">
-          <div className="sem-hub-circle">
-            <Network size={22} color="#007791" />
-            <span className="sem-hub-name">SematIQ</span>
-          </div>
-          <span className="sem-hub-desc">Unified product catalog across ERP, CRM and supply chain</span>
         </div>
       </div>
 
-      {/* Product Info Box */}
-      <div className="sem-info-box">
-        <div className="sem-info-icon">
-          <Package size={18} />
-        </div>
-        <div>
-          <div className="sem-info-title">Product</div>
-          <div className="sem-info-desc">Unified product catalog across ERP, CRM and supply chain</div>
-        </div>
-      </div>
-
-      {/* Bottom Metrics */}
-      <div className="sem-metrics-row">
-        <div className="sem-metric-item">
-          <span className="sem-metric-val">84+</span>
-          <span className="sem-metric-lbl">Business Entities</span>
-        </div>
-        <div className="sem-metric-item">
-          <span className="sem-metric-val">100%</span>
-          <span className="sem-metric-lbl">Context Consistency</span>
-        </div>
-        <div className="sem-metric-item">
-          <span className="sem-metric-val">3x</span>
-          <span className="sem-metric-lbl">Faster Data Discovery</span>
-        </div>
-        <div className="sem-metric-item">
-          <span className="sem-metric-val">Sub-Second</span>
-          <span className="sem-metric-lbl">Semantic Queries</span>
+      {/* Bottom: Downstream Integrations Strip */}
+      <div className="sem-downstream-strip">
+        <span className="sem-downstream-label">DOWNSTREAM INTEGRATIONS:</span>
+        <div className="sem-downstream-cards">
+          <div className="sem-downstream-card">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="sem-int-svg">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#FF3621" />
+              <path d="M2 12L12 17L22 12" stroke="#FF3621" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M2 17L12 22L22 17" stroke="#FF3621" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span>Databricks</span>
+          </div>
+          <div className="sem-downstream-card">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="sem-int-svg">
+              <rect x="3" y="12" width="4.5" height="9" rx="1.5" fill="#F2C811" />
+              <rect x="9.5" y="8" width="4.5" height="13" rx="1.5" fill="#E8B400" />
+              <rect x="16" y="4" width="4.5" height="17" rx="1.5" fill="#DDA000" />
+            </svg>
+            <span>Power BI</span>
+          </div>
+          <div className="sem-downstream-card">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="sem-int-svg">
+              <circle cx="12" cy="4" r="1.8" fill="#E8762D" />
+              <circle cx="12" cy="20" r="1.8" fill="#1F77B4" />
+              <circle cx="4" cy="12" r="1.8" fill="#1F77B4" />
+              <circle cx="20" cy="12" r="1.8" fill="#E8762D" />
+              <circle cx="8" cy="8" r="1.5" fill="#5A9BD4" />
+              <circle cx="16" cy="8" r="1.5" fill="#D34B37" />
+              <circle cx="8" cy="16" r="1.5" fill="#2CA02C" />
+              <circle cx="16" cy="16" r="1.5" fill="#FF7F0E" />
+              <circle cx="12" cy="12" r="2.2" fill="#E4572E" />
+            </svg>
+            <span>Tableau</span>
+          </div>
+          <div className="sem-downstream-card">
+            <Cpu size={17} color="#2563EB" />
+            <span>LLM / AI Agents</span>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 /* ============================================================
    VISUAL 4: CHARLIE
@@ -661,47 +1203,27 @@ export const CharlieVisual: React.FC = () => {
   );
 };
 
-/* ============================================================
-   VISUAL 5: SAP CONNECT
-   Enterprise SAP Integration Architecture
-   Matches reference: SAP Systems â†’ SAP Connect â†’ Modern Platforms
-   with SAP Modules row at bottom
-   LEFT â†’ RIGHT flow with real logos from /assets/Logos/
-   ============================================================ */
 export const SAPConnectVisual: React.FC = () => {
-  const [activeSystem, setActiveSystem] = useState(1); // S/4HANA initially active
-  const [activePlatform, setActivePlatform] = useState(0);
-  const [hoveredSystem, setHoveredSystem] = useState<number | null>(null);
-  const [hoveredPlatform, setHoveredPlatform] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const sysRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const centerLeftRef = useRef<HTMLDivElement>(null);
+  const centerRightRef = useRef<HTMLDivElement>(null);
+  const platformRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSystem((prev) => (prev + 1) % 5);
-    }, 2400);
-    return () => clearInterval(interval);
-  }, []);
+  const [anchors, setAnchors] = useState<any | null>(null);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActivePlatform((prev) => (prev + 1) % 3);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // 5 SAP systems â€” all use sap-logo.png + system name label
   const sapSystems = [
-    { name: 'ECC' },
-    { name: 'S/4HANA' },
-    { name: 'BW' },
-    { name: 'B1' },
-    { name: 'BDC' },
+    { name: 'ECC', img: '/assets/Logos/sap-logo.png' },
+    { name: 'S/4HANA', img: '/assets/Logos/sap-logo.png' },
+    { name: 'BW', img: '/assets/Logos/sap-logo.png' },
+    { name: 'B1', img: '/assets/Logos/sap-logo.png' },
+    { name: 'BDC', img: '/assets/Logos/sap-logo.png' },
   ];
 
-  // 3 modern platforms with real logos
   const modernPlatforms = [
-    { name: 'Snowflake', logo: '/assets/Logos/Snowflake.png', logoAlt: 'Snowflake' },
-    { name: 'Databricks', logo: '/assets/Logos/Databricks.png', logoAlt: 'Databricks' },
-    { name: 'BigQuery', logo: '/assets/Logos/BigQuery.png', logoAlt: 'BigQuery' },
+    { name: 'Snowflake', img: '/assets/Logos/Snowflake.png' },
+    { name: 'Databricks', img: '/assets/Logos/Databricks.png' },
+    { name: 'BigQuery', img: '/assets/Logos/BigQuery.png' },
   ];
 
   const sapModules = [
@@ -712,220 +1234,138 @@ export const SAPConnectVisual: React.FC = () => {
     { name: 'HR', icon: Users },
   ];
 
-  // ── EXACT COORDINATE MATH FOR 5-SYSTEM SAP STACK ──────────────────────
-  // SAP systems stack: 5 cards × 44px + 4 gaps × 10px = 260px total height
-  // Connector SVG viewBox height = 260px, connector box height = 260px
-  // Card centers in 260px viewBox (no justify-content offset, stack is exactly 260px):
-  //   Card 0 (ECC):    22
-  //   Card 1 (S4):     22+44+10 = 76
-  //   Card 2 (BW):     76+44+10 = 130  ← geometric center of 260px = 130 ✓
-  //   Card 3 (B1):     130+44+10 = 184
-  //   Card 4 (BDC):    184+44+10 = 238
-  //
-  // SAP Connect center card is vertically centered in the canvas → y=130
-  // Fan 5 entry points around 130 with 12px spacing:
-  //   Path 0: 130-24 = 106,  Path 1: 130-12 = 118,  Path 2: 130,
-  //   Path 3: 130+12 = 142,  Path 4: 130+24 = 154
-  const sapLeftPaths = [
-    { src: 22,  dst: 106 },
-    { src: 76,  dst: 118 },
-    { src: 130, dst: 130 },
-    { src: 184, dst: 142 },
-    { src: 238, dst: 154 },
-  ];
+  const updateAnchors = useCallback(() => {
+    if (!containerRef.current || !centerLeftRef.current || !centerRightRef.current) return;
+    const cBox = containerRef.current.getBoundingClientRect();
+    
+    const cl = centerLeftRef.current.getBoundingClientRect();
+    const cr = centerRightRef.current.getBoundingClientRect();
+    
+    const centerLeft = { x: cl.left - cBox.left, y: cl.top + cl.height / 2 - cBox.top };
+    const centerRight = { x: cr.right - cBox.left, y: cr.top + cr.height / 2 - cBox.top };
+    
+    const sysPoints = sysRefs.current.map(el => {
+      if (!el) return { x: 0, y: 0 };
+      const b = el.getBoundingClientRect();
+      return { x: b.right - cBox.left, y: b.top + b.height / 2 - cBox.top };
+    });
+    
+    const platPoints = platformRefs.current.map(el => {
+      if (!el) return { x: 0, y: 0 };
+      const b = el.getBoundingClientRect();
+      return { x: b.left - cBox.left, y: b.top + b.height / 2 - cBox.top };
+    });
+    
+    setAnchors({ sysPoints, platPoints, centerLeft, centerRight });
+  }, []);
 
-  // Modern platforms: 3 cards × 44px + 2 gaps × 20px = 172px
-  // Centered in 260px: top offset = (260-172)/2 = 44
-  // Platform centers: 44+22=66, 44+22+44+20=130, 130+44+20=194
-  // SAP Connect exit — fan around 130 with 12px spacing (not a single point):
-  //   Path 0: 118 → 66,  Path 1: 130 → 130,  Path 2: 142 → 194
-  const sapRightPaths = [
-    { src: 118, dst: 66  },
-    { src: 130, dst: 130 },
-    { src: 142, dst: 194 },
-  ];
-
-  const getSystemOp = (idx: number) => {
-    if (hoveredSystem !== null) return idx === hoveredSystem ? 1 : 0.2;
-    return 1;
-  };
-
-  const getPlatformOp = (idx: number) => {
-    if (hoveredPlatform !== null) return idx === hoveredPlatform ? 1 : 0.2;
-    return 1;
-  };
+  useEffect(() => {
+    updateAnchors();
+    const t = setTimeout(updateAnchors, 100);
+    window.addEventListener('resize', updateAnchors);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('resize', updateAnchors);
+    };
+  }, [updateAnchors]);
 
   return (
-    <div className="visual-sap-connect-v2">
-      {/* ── COLUMN HEADERS above canvas so SVG and cards align exactly ── */}
-      <div className="sap-flow-headers">
-        <div className="sap-col-header-cell">SAP SYSTEMS</div>
-        <div className="sap-connector-header-gap" />
-        <div className="sap-col-header-cell sap-col-header-cell--center">SAP CONNECT</div>
-        <div className="sap-connector-header-gap" />
-        <div className="sap-col-header-cell sap-col-header-cell--right">MODERN PLATFORMS</div>
-      </div>
+    <div className="visual-sap-connect-v2" style={{ position: 'relative' }}>
+      <div className="sap-flow-canvas" ref={containerRef} style={{ position: 'relative', top: '-15px', marginBottom: '-15px' }}>
+        
+        {/* SVG Dynamic Overlay */}
+        <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, overflow: 'visible' }}>
+          <defs>
+            <filter id="sapGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          
+          {anchors && anchors.sysPoints.map((pt: any, i: any) => {
+            if (pt.x === 0) return null;
+            const targetY = anchors.centerLeft.y - 40 + i * 20; 
+            const dx = anchors.centerLeft.x - pt.x;
+            const pathD = `M ${pt.x} ${pt.y} C ${pt.x + dx * 0.5} ${pt.y}, ${anchors.centerLeft.x - dx * 0.3} ${targetY}, ${anchors.centerLeft.x} ${targetY}`;
+            return (
+              <g key={`sys-conn-${i}`}>
+                <path d={pathD} fill="none" stroke="rgba(0, 229, 255, 0.3)" strokeWidth="1.5" />
+                <circle cx={pt.x} cy={pt.y} r="2.5" fill="#00E5FF" />
+                <circle cx={anchors.centerLeft.x} cy={targetY} r="2.5" fill="#00E5FF" />
+                <circle r="3.2" fill="#00E5FF" filter="url(#sapGlow)">
+                  <animateMotion dur="2s" begin={`${i * 0.3}s`} repeatCount="indefinite" path={pathD} />
+                  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="2s" begin={`${i * 0.3}s`} repeatCount="indefinite" />
+                </circle>
+              </g>
+            );
+          })}
+          
+          {anchors && anchors.platPoints.map((pt: any, i: any) => {
+            if (pt.x === 0) return null;
+            const startY = anchors.centerRight.y - 20 + i * 20;
+            const dx = pt.x - anchors.centerRight.x;
+            const pathD = `M ${anchors.centerRight.x} ${startY} C ${anchors.centerRight.x + dx * 0.5} ${startY}, ${pt.x - dx * 0.3} ${pt.y}, ${pt.x} ${pt.y}`;
+            return (
+              <g key={`plat-conn-${i}`}>
+                <path d={pathD} fill="none" stroke="rgba(0, 229, 255, 0.3)" strokeWidth="1.5" />
+                <circle cx={anchors.centerRight.x} cy={startY} r="2.5" fill="#00E5FF" />
+                <circle cx={pt.x} cy={pt.y} r="2.5" fill="#00E5FF" />
+                <circle r="3.2" fill="#00E5FF" filter="url(#sapGlow)">
+                  <animateMotion dur="2s" begin={`${i * 0.4}s`} repeatCount="indefinite" path={pathD} />
+                  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="2s" begin={`${i * 0.4}s`} repeatCount="indefinite" />
+                </circle>
+              </g>
+            );
+          })}
+        </svg>
 
-      {/* Top Main Data Flow */}
-      <div className="sap-flow-canvas">
         {/* Column 1: SAP Systems */}
         <div className="sap-col sap-col--systems">
+          <span className="sap-col-header">SAP SYSTEMS</span>
           <div className="sap-cards-stack sap-cards-stack--systems">
             {sapSystems.map((sys, i) => (
               <div
                 key={sys.name}
-                className={`sap-system-card-v2 ${(i === activeSystem || i === hoveredSystem) ? 'sap-system-card-v2--active' : ''}`}
-                onMouseEnter={() => setHoveredSystem(i)}
-                onMouseLeave={() => setHoveredSystem(null)}
+                ref={(el) => { sysRefs.current[i] = el; }}
+                className="sap-system-card-v2"
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px', background: '#fff', border: '1px solid #E2E8F0', borderRadius: '12px', zIndex: 1, minWidth: '130px' }}
               >
-                <div className="sap-logo-badge">
-                  <img src="/assets/Logos/sap-logo.png" alt="SAP" className="sap-logo-img" />
-                </div>
-                <span className="sap-card-name">{sys.name}</span>
+                <img src={sys.img} alt={sys.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+                <span className="sap-card-name" style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0F172A' }}>{sys.name}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* SVG Connector 1: SAP Systems → SAP Connect */}
-        <div className="sap-connector-box">
-          <svg viewBox="0 0 90 260" className="sap-connector-svg" preserveAspectRatio="none">
-            <defs>
-              <filter id="sapGlowL" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="2.5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* Static paths */}
-            {sapLeftPaths.map((p, i) => (
-              <path
-                key={i}
-                d={`M 0 ${p.src} C 50 ${p.src}, 40 ${p.dst}, 90 ${p.dst}`}
-                className={`sap-flow-path ${i === 2 ? 'sap-flow-path--s4' : ''}`}
-                style={{ opacity: hoveredSystem !== null && hoveredSystem !== i ? 0.15 : 1 }}
-              />
-            ))}
-
-            {/* Terminal dots left */}
-            {sapLeftPaths.map((p, i) => (
-              <circle key={`nl-${i}`} cx="0" cy={p.src} r={i === 2 ? 3 : 2.5}
-                className={`sap-flow-node ${i === 2 ? 'sap-flow-node--s4' : ''}`}
-                style={{ opacity: hoveredSystem !== null && hoveredSystem !== i ? 0.15 : 1 }} />
-            ))}
-            {/* Terminal dots right */}
-            {sapLeftPaths.map((p, i) => (
-              <circle key={`nr-${i}`} cx="90" cy={p.dst} r={i === 2 ? 3 : 2.5}
-                className={`sap-flow-node ${i === 2 ? 'sap-flow-node--s4' : ''}`}
-                style={{ opacity: hoveredSystem !== null && hoveredSystem !== i ? 0.15 : 1 }} />
-            ))}
-
-            {/* Particles â€” staggered Lâ†’R */}
-            {sapLeftPaths.map((p, i) => {
-              const pathD = `M 0 ${p.src} C 50 ${p.src}, 40 ${p.dst}, 90 ${p.dst}`;
-              const dur = [2.1, 2.0, 1.8, 2.2, 2.3][i];
-              const offset = i * 0.25;
-              const r = i === 2 ? 3.6 : 3;
-              const op = getSystemOp(i);
-              return (
-                <g key={`sap-l-particles-${i}`}>
-                  <circle r={r} fill="#00E5FF" filter="url(#sapGlowL)">
-                    <animateMotion dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" path={pathD} />
-                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" />
-                  </circle>
-                  <circle r={r} fill="#00E5FF" filter="url(#sapGlowL)">
-                    <animateMotion dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" path={pathD} />
-                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" />
-                  </circle>
-                </g>
-              );
-            })}
-          </svg>
-        </div>
-
         {/* Column 2: SAP Connect Center Card */}
-        <div className="sap-col sap-col--center">
-          <div className="sap-connect-center-card">
-            <div className="sap-center-icon-wrap">
-              <Network size={22} className="sap-center-icon" />
+        <div className="sap-col sap-col--center" style={{ zIndex: 1 }}>
+          <div className="sap-connect-center-card" style={{ position: 'relative', padding: '2.5rem 2rem', background: '#fff', border: '1px solid rgba(0, 229, 255, 0.3)', borderRadius: '16px', boxShadow: '0 8px 30px rgba(0, 229, 255, 0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '180px' }}>
+            <div ref={centerLeftRef} style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: '1px', height: '100px' }} />
+            <div ref={centerRightRef} style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', width: '1px', height: '60px' }} />
+            <div className="sap-center-icon-wrap" style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#E0F7FA', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+              <Network size={26} className="sap-center-icon" color="#00B4D8" />
             </div>
-            <span className="sap-center-title">SAP Connect</span>
-            <span className="sap-center-subtitle">Extract Â· Decode Â·</span>
-            <span className="sap-center-subtitle">Transform Â· Deliver</span>
+            <span className="sap-center-title" style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>SAP Connect</span>
+            <span className="sap-center-subtitle" style={{ fontSize: '0.85rem', color: '#64748B', fontWeight: 500 }}>Extract · Decode ·</span>
+            <span className="sap-center-subtitle" style={{ fontSize: '0.85rem', color: '#64748B', fontWeight: 500 }}>Transform · Deliver</span>
           </div>
-        </div>
-
-        {/* SVG Connector 2: SAP Connect → Modern Platforms */}
-        <div className="sap-connector-box">
-          <svg viewBox="0 0 90 260" className="sap-connector-svg" preserveAspectRatio="none">
-            <defs>
-              <filter id="sapGlowR" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="2.5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* Static paths */}
-            {sapRightPaths.map((p, i) => (
-              <path
-                key={i}
-                d={`M 0 ${p.src} C 40 ${p.src}, 50 ${p.dst}, 90 ${p.dst}`}
-                className="sap-flow-path"
-                style={{ opacity: hoveredPlatform !== null && hoveredPlatform !== i ? 0.15 : 1 }}
-              />
-            ))}
-
-            {/* Terminal dots */}
-            {sapRightPaths.map((p, i) => (
-              <circle key={`nl-${i}`} cx="0" cy={p.src} r="2.5" className="sap-flow-node"
-                style={{ opacity: hoveredPlatform !== null && hoveredPlatform !== i ? 0.15 : 1 }} />
-            ))}
-            {sapRightPaths.map((p, i) => (
-              <circle key={`nr-${i}`} cx="90" cy={p.dst} r="2.5" className="sap-flow-node"
-                style={{ opacity: hoveredPlatform !== null && hoveredPlatform !== i ? 0.15 : 1 }} />
-            ))}
-
-            {/* Particles Lâ†’R */}
-            {sapRightPaths.map((p, i) => {
-              const pathD = `M 0 ${p.src} C 40 ${p.src}, 50 ${p.dst}, 90 ${p.dst}`;
-              const dur = [2.0, 2.1, 2.2][i];
-              const offset = i * 0.4 + 0.2;
-              const op = getPlatformOp(i);
-              return (
-                <g key={`sap-r-particles-${i}`}>
-                  <circle r="3" fill="#00E5FF" filter="url(#sapGlowR)">
-                    <animateMotion dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" path={pathD} />
-                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset}s`} repeatCount="indefinite" />
-                  </circle>
-                  <circle r="3" fill="#00E5FF" filter="url(#sapGlowR)">
-                    <animateMotion dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" path={pathD} />
-                    <animate attributeName="opacity" values={`0;${op};${op};0`} keyTimes="0;0.1;0.9;1" dur={`${dur}s`} begin={`${offset + dur / 2}s`} repeatCount="indefinite" />
-                  </circle>
-                </g>
-              );
-            })}
-          </svg>
         </div>
 
         {/* Column 3: Modern Platforms */}
         <div className="sap-col sap-col--platforms">
+          <span className="sap-col-header sap-col-header--right">MODERN PLATFORMS</span>
           <div className="sap-cards-stack sap-cards-stack--platforms">
             {modernPlatforms.map((p, i) => (
               <div
                 key={p.name}
-                className={`sap-platform-card-v2 ${(i === activePlatform || i === hoveredPlatform) ? 'sap-platform-card-v2--active' : ''}`}
-                onMouseEnter={() => setHoveredPlatform(i)}
-                onMouseLeave={() => setHoveredPlatform(null)}
+                ref={(el) => { platformRefs.current[i] = el; }}
+                className="sap-platform-card-v2"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px 20px', background: '#fff', border: '1px solid #E2E8F0', borderRadius: '12px', zIndex: 1, minWidth: '150px' }}
               >
-                <div className="sap-target-logo-wrap">
-                  <img src={p.logo} alt={p.logoAlt} className="sap-target-logo-img" />
-                </div>
+                <img src={p.img} alt={p.name} style={{ height: '28px', objectFit: 'contain' }} />
               </div>
             ))}
           </div>
@@ -951,8 +1391,7 @@ export const SAPConnectVisual: React.FC = () => {
       </div>
     </div>
   );
-};
-
+}
 export const Hub360Visual: React.FC = () => {
   const [pipelineCount, setPipelineCount] = useState(142);
 

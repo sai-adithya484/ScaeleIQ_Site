@@ -8,7 +8,8 @@ export const Footer: React.FC = () => {
       <div className="footer__container">
         {/* Brand */}
         <Link to="/" className="footer__brand" aria-label="ScaeleIQ Home">
-          <img src="/assets/ScaeleIQ_Logo.png" alt="ScaeleIQ" className="footer__logo-img" />
+          <img src="/assets/Logo__NBG.png" alt="ScaeleIQ" className="footer__logo-mark" />
+          <span className="footer__wordmark">ScaeleIQ</span>
         </Link>
 
         {/* Links */}

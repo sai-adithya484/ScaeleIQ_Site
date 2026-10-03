@@ -5,7 +5,7 @@ import { RevealAnimation } from '../ui/RevealAnimation';
 import {
   DirectFlowVisual,
   Govern360Visual,
-  SematIQVisual,
+  SemantIQVisual,
   CharlieVisual,
   SAPConnectVisual,
   Hub360Visual,
@@ -53,52 +53,41 @@ export const solutionsData: SolutionItem[] = [
   },
   {
     id: 'govern360',
-    category: 'ENTERPRISE DATA GOVERNANCE & COMPLIANCE',
+    category: 'AI-POWERED DATA GOVERNANCE',
     title: 'Govern360',
     subtitle: 'Discover. Govern. Trust.\nAcross Your Data Ecosystem.',
     description:
-      'A unified data governance platform to ensure data quality, lineage, security and compliance across the enterprise.',
+      'An AI-powered Data Governance Platform that brings together data discovery, governance, metadata management, quality monitoring, and observability into a unified experience.',
     points: [
-      'End-to-end data lineage',
-      'SOC2, HIPAA & GDPR',
-      'Automated quality monitoring',
-      'Data catalog & ownership',
-      'Policy & access management',
-      'Compliance reporting',
+      'Data Profiling — intelligent structural and completeness analysis',
+      'Business Glossary — consistent definitions for KPIs and metrics',
+      'Data Dictionary — column-level documentation and lineage',
+      'Data Quality — validation rules, quality scoring, and tracking',
+      'Data Observability — pipeline health, freshness, and anomaly alerts',
     ],
     ctaLabel: 'Explore Govern360',
     ctaHref: '/demo',
-    metrics: [
-      { value: '360°', label: 'Enterprise Visibility' },
-      { value: '99.98%', label: 'Data Quality Rate' },
-      { value: '100%', label: 'Compliance Ready' },
-      { value: '50%', label: 'Faster Audit Cycles' },
-    ],
+    metrics: [],
     visualType: 'govern360',
   },
   {
-    id: 'sematiq',
-    category: 'SEMANTIC ONTOLOGY & KNOWLEDGE GRAPH',
-    title: 'SematIQ',
-    subtitle: 'Turn Data Into\nShared Understanding.',
+    id: 'semantiq',
+    category: 'SEMANTIC LAYER AUTOMATION · AI AGENT',
+    title: 'SemantIQ',
+    subtitle: 'Turn Scattered Schemas Into\nOne Shared Meaning.',
     description:
-      'Build a unified semantic layer by connecting business concepts, entities and relationships into an active knowledge graph for AI and enterprise users.',
+      'An always-on AI agent that reads schema, sample data, and usage patterns to infer real business meaning — automating the semantic layer that every AI initiative needs.',
     points: [
-      'Automated entity mapping',
-      'Cross-domain reconciliation',
-      'Enterprise business glossary',
-      'Context discovery',
-      'Semantic graph queries',
-      'AI-ready data foundation',
+      'Automated entity & relationship discovery',
+      'Business glossary & metric standardization',
+      'Continuous sync & schema drift detection',
+      'Natural-language to semantic query mapping',
+      'Governance & version control',
+      'Multi-source schema unification',
     ],
-    ctaLabel: 'Explore SematIQ',
+    ctaLabel: 'Explore SemantIQ',
     ctaHref: '/demo',
-    metrics: [
-      { value: '84+', label: 'Business Entities' },
-      { value: '100%', label: 'Context Consistency' },
-      { value: '3x', label: 'Faster Data Discovery' },
-      { value: 'Sub-Second', label: 'Semantic Queries' },
-    ],
+    metrics: [],
     visualType: 'sematiq',
   },
   {
@@ -128,16 +117,16 @@ export const solutionsData: SolutionItem[] = [
   },
   {
     id: 'sap-connect',
-    category: 'ENTERPRISE ERP MODERNIZATION',
+    category: 'SAP DATA INTEGRATION SOLUTION',
     title: 'SAP Connect',
-    subtitle: '',
+    subtitle: 'One Connector Platform.\nFour Proven Extraction Paths.',
     description:
-      'Directly unlock, decode, and modernize complex SAP ERP data (ECC, S/4HANA, BW) with native connectors that extract business logic with zero production ERP overhead.',
+      'Extract data from any SAP system — ECC, S/4HANA, or BW — into Snowflake, Databricks, or the lakehouse of your choice, using four purpose-built extraction methods.',
     points: [
-      'Native SAP ECC & S/4HANA integration',
-      'Automated BAPI & CDS view extraction',
-      'Transparent cluster/pool table decoding',
-      'Near real-time delta synchronization',
+      'Direct DB Connect — native JDBC/ODBC, SQL pushdown, bulk extraction',
+      'OData Services — metadata-driven discovery, filtering, pagination',
+      'CDS Views — semantic extraction preserving business logic & auth checks',
+      'CDC Connector — log-based change data capture, near real-time freshness',
     ],
     ctaLabel: 'Deploy SAP Connect',
     ctaHref: '/demo',
@@ -184,7 +173,7 @@ export const SolutionSection: React.FC<SolutionSectionProps> = ({ solution, isRe
       case 'govern360':
         return <Govern360Visual />;
       case 'sematiq':
-        return <SematIQVisual />;
+        return <SemantIQVisual />;
       case 'charlie':
         return <CharlieVisual />;
       case 'sap-connect':

@@ -16,9 +16,8 @@ export const platformCta: CtaConfig = {
 };
 
 export const homeCta: CtaConfig = {
-  kicker: 'The $1.5 trillion IT services industry is being rewritten.',
-  heading: 'We’re writing the first chapter: the IT modernization platform built for the Agentic era.',
-  description: 'Deploy specialized AI agents and forward-deployed engineers to accelerate your transformation today.',
-  primaryButton: { label: 'Start your transformation', href: '/demo' },
+  heading: 'Enterprise data modernization — measured in weeks, not quarters.',
+  description: 'Deploy AI agents and domain experts to modernize your data infrastructure. Governance, intelligence, and integration — all from one platform.',
+  primaryButton: { label: 'Request a demo', href: '/demo' },
   secondaryButton: { label: 'Contact sales', href: '/contact' },
 };

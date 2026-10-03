@@ -70,9 +70,10 @@ export const Navbar: React.FC = () => {
   return (
     <header className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__container">
-        {/* Brand Logo */}
+        {/* Brand Logo + Wordmark Lockup */}
         <Link to="/" className="navbar__brand" aria-label="ScaeleIQ Home">
-          <img src="/assets/ScaeleIQ_Logo.png" alt="ScaeleIQ" className="navbar__logo-img" />
+          <img src="/assets/Logo__NBG.png" alt="ScaeleIQ" className="navbar__logo-mark" />
+          <span className="navbar__wordmark">SCAELEIQ</span>
         </Link>
 
         {/* Desktop Navigation Links with Smooth Traveling Active Underline */}
