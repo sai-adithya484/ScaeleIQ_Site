@@ -46,7 +46,17 @@
   border-radius: 6px;
 }
 
-.navbar__brand:hover .navbar__logo-mark {
+.navbar__logo-full {
+  height: 150px;
+  width: auto;
+  max-width: 185px;
+  object-fit: contain;
+  display: block;
+  transition: transform var(--transition-fast);
+}
+
+.navbar__brand:hover .navbar__logo-mark,
+.navbar__brand:hover .navbar__logo-full {
   transform: scale(1.04);
 }
 

@@ -278,6 +278,14 @@
   flex-wrap: wrap;
 }
 
+/* Centered vertical connector from sources deck into the architecture */
+.arch-sources-converge-line {
+  width: 2px;
+  height: 16px;
+  background: linear-gradient(180deg, rgba(0, 180, 216, 0.5) 0%, rgba(0, 229, 255, 0.2) 100%);
+  margin: 0.15rem auto 0 auto;
+}
+
 .arch-source-node {
   display: flex;
   flex-direction: column;
@@ -432,6 +440,12 @@
     opacity 400ms ease,
     border-color 350ms ease,
     box-shadow 400ms ease;
+}
+
+/* Enforce pointer cursor on every descendant of a tier — fixes cursor flicker */
+.arch-stack-tier *,
+.arch-stack-tier:hover * {
+  cursor: pointer;
 }
 
 /* ------------------------------------------------------------
@@ -798,7 +812,7 @@
   inset: -3px;
   border: 1px dashed rgba(0, 180, 216, 0.6);
   border-radius: 8px;
-  animation: spinRing 12s linear infinite;
+  /* spinRing animation removed — static only, element removed from TSX */
 }
 
 .arch-vis-agents-row {
@@ -941,7 +955,7 @@
 
 .arch-outcome-beam {
   width: 2px;
-  height: 28px;
+  height: 36px;
   background: linear-gradient(180deg, rgba(0, 180, 216, 0.8) 0%, rgba(0, 229, 255, 0.2) 100%);
   position: relative;
   overflow: hidden;

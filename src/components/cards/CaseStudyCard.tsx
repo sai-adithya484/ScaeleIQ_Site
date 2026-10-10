@@ -1,116 +1,133 @@
-import React, { useRef, useCallback } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import {
+  ArrowRight,
+  Zap,
+  Database,
+  Server,
+  TrendingUp,
+  Calendar,
+  BarChart2,
+  Cpu,
+  ShieldCheck,
+  Clock,
+  Users,
+  ShieldAlert,
+  CheckCircle2,
+} from 'lucide-react';
 import { CaseStudy } from '../../data/caseStudies';
 import './CaseStudyCard.css';
 
 interface CaseStudyCardProps {
   caseStudy: CaseStudy;
-  compact?: boolean;
 }
 
-export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({ caseStudy, compact = false }) => {
-  const cardRef = useRef<HTMLAnchorElement>(null);
-  const rafRef = useRef<number | null>(null);
+const renderMetricIcon = (iconName?: string) => {
+  switch (iconName) {
+    case 'Zap':
+      return <Zap size={14} strokeWidth={2.2} />;
+    case 'Database':
+      return <Database size={14} strokeWidth={2.2} />;
+    case 'Server':
+      return <Server size={14} strokeWidth={2.2} />;
+    case 'TrendingUp':
+      return <TrendingUp size={14} strokeWidth={2.2} />;
+    case 'Calendar':
+      return <Calendar size={14} strokeWidth={2.2} />;
+    case 'BarChart2':
+    case 'BarChart3':
+      return <BarChart2 size={14} strokeWidth={2.2} />;
+    case 'Cpu':
+      return <Cpu size={14} strokeWidth={2.2} />;
+    case 'ShieldCheck':
+      return <ShieldCheck size={14} strokeWidth={2.2} />;
+    case 'Clock':
+      return <Clock size={14} strokeWidth={2.2} />;
+    case 'Users':
+      return <Users size={14} strokeWidth={2.2} />;
+    case 'ShieldAlert':
+      return <ShieldAlert size={14} strokeWidth={2.2} />;
+    case 'CheckCircle2':
+      return <CheckCircle2 size={14} strokeWidth={2.2} />;
+    default:
+      return <Zap size={14} strokeWidth={2.2} />;
+  }
+};
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    const card = cardRef.current;
-    if (!card) return;
-
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-
-    rafRef.current = requestAnimationFrame(() => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const cx = rect.width / 2;
-      const cy = rect.height / 2;
-
-      // Normalise to -1 … +1
-      const nx = (x - cx) / cx;
-      const ny = (y - cy) / cy;
-
-      // Max ±3deg tilt
-      const rotateY = nx * 3;
-      const rotateX = -ny * 3;
-
-      // Spotlight as percentage for CSS
-      const pctX = (x / rect.width) * 100;
-      const pctY = (y / rect.height) * 100;
-
-      card.style.setProperty('--rotate-x', `${rotateX}deg`);
-      card.style.setProperty('--rotate-y', `${rotateY}deg`);
-      card.style.setProperty('--mouse-x', `${pctX}%`);
-      card.style.setProperty('--mouse-y', `${pctY}%`);
-      card.style.setProperty('--tilt-active', '1');
-    });
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    const card = cardRef.current;
-    if (!card) return;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-
-    card.style.setProperty('--rotate-x', '0deg');
-    card.style.setProperty('--rotate-y', '0deg');
-    card.style.setProperty('--mouse-x', '50%');
-    card.style.setProperty('--mouse-y', '50%');
-    card.style.setProperty('--tilt-active', '0');
-  }, []);
-
+export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({ caseStudy }) => {
   return (
     <Link
-      ref={cardRef}
       to={`/case-studies/${caseStudy.slug}`}
-      className={`case-study-card ${compact ? 'case-study-card--compact' : ''}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        '--rotate-x': '0deg',
-        '--rotate-y': '0deg',
-        '--mouse-x': '50%',
-        '--mouse-y': '50%',
-        '--tilt-active': '0',
-      } as React.CSSProperties}
+      className="case-study-card"
+      aria-label={`${caseStudy.company}: ${caseStudy.headline}`}
     >
-      {/* Cursor spotlight */}
-      <span className="case-study-card__spotlight" aria-hidden="true" />
-
-      <div className="case-study-card__header">
-        <div className="case-study-card__tags">
-          {caseStudy.industry.map((ind) => (
-            <span key={ind} className="case-study-card__tag">
-              {ind}
-            </span>
-          ))}
-        </div>
-        <span className="case-study-card__arrow">
-          <ArrowUpRight size={18} />
-        </span>
+      {/* Subtle atmospheric visual in top-right */}
+      <div className="case-study-card__visual-wrap" aria-hidden="true">
+        <img
+          src={caseStudy.visual}
+          alt=""
+          className="case-study-card__visual"
+          loading="lazy"
+        />
       </div>
 
-      <div className="case-study-card__company">{caseStudy.company}</div>
-      <h3 className="case-study-card__headline">{caseStudy.headline}</h3>
+      {/* Card Header: Client Logo with slug modifier */}
+      <div className="case-study-card__header">
+        <div className="case-study-card__logo-wrap">
+          <img
+            src={caseStudy.logo}
+            alt={caseStudy.company}
+            className={`case-study-card__logo case-study-card__logo--${caseStudy.slug}`}
+            loading="lazy"
+          />
+        </div>
+      </div>
 
-      {/* Spacer so footer always sticks to bottom */}
+      {/* Category Pills */}
+      <div className="case-study-card__tags">
+        {caseStudy.industry.slice(0, 2).map((tag) => (
+          <span key={tag} className="case-study-card__tag">
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* Case Study Title */}
+      <h3 className="case-study-card__title">{caseStudy.headline}</h3>
+
+      {/* Short Source-Derived Description */}
+      <p className="case-study-card__description">{caseStudy.summary}</p>
+
+      {/* Flexible Spacer ensuring uniform height & bottom pinning */}
       <div className="case-study-card__spacer" />
 
-      {!compact && (
+      {/* Bottom Row: 3 Outcome Metrics + Circular Action Arrow */}
+      <div className="case-study-card__bottom">
         <div className="case-study-card__metrics">
-          {caseStudy.metrics.map((m, idx) => (
+          {caseStudy.metrics.slice(0, 3).map((metric, idx) => (
             <div key={idx} className="case-study-card__metric">
-              <div className="case-study-card__metric-val">{m.value}</div>
-              <div className="case-study-card__metric-lbl">{m.label}</div>
+              <div
+                className="case-study-card__metric-icon"
+                style={{
+                  backgroundColor: metric.iconBg || 'rgba(2, 132, 199, 0.1)',
+                  color: metric.iconColor || '#0284C7',
+                }}
+                aria-hidden="true"
+              >
+                {renderMetricIcon(metric.icon)}
+              </div>
+              <div className="case-study-card__metric-info">
+                <span className="case-study-card__metric-val">{metric.value}</span>
+                <span className="case-study-card__metric-lbl">{metric.label}</span>
+              </div>
             </div>
           ))}
         </div>
-      )}
 
-      <div className="case-study-card__footer">
-        <span className="case-study-card__cta-text">Learn more</span>
-        <span className="case-study-card__cta-arrow" aria-hidden="true">
-          <ArrowUpRight size={15} />
-        </span>
+        {/* Action Button */}
+        <div className="case-study-card__arrow-btn" aria-hidden="true">
+          <ArrowRight size={17} strokeWidth={2.4} />
+        </div>
       </div>
     </Link>
   );

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {  ShieldCheck,  CheckCircle2,
+import {
+  ShieldCheck, CheckCircle2,
   Activity,
   Network,
-  Lock,  RefreshCw,
-  Settings,  Users,
+  Lock, RefreshCw,
+  Settings, Users,
   DollarSign,
   ShoppingCart,
   Database,
@@ -89,8 +90,8 @@ export const DirectFlowVisual: React.FC = () => {
   //   Path 0: 110-18 = 92,  Path 1: 110-6 = 104,
   //   Path 2: 110+6 = 116,  Path 3: 110+18 = 128
   const leftPaths = [
-    { src: 23,  dst: 92  },
-    { src: 81,  dst: 104 },
+    { src: 23, dst: 92 },
+    { src: 81, dst: 104 },
     { src: 139, dst: 116 },
     { src: 197, dst: 128 },
   ];
@@ -100,7 +101,7 @@ export const DirectFlowVisual: React.FC = () => {
   // Staging exit — fan around 110 with 12px spacing (not a single point):
   //   Path 0: 104 → 76 (Snowflake),  Path 1: 116 → 144 (Databricks)
   const rightPaths = [
-    { src: 104, dst: 76  },
+    { src: 104, dst: 76 },
     { src: 116, dst: 144 },
   ];
 
@@ -948,9 +949,9 @@ export const SemantIQVisual: React.FC = () => {
                 alt="SemantIQ Agent"
                 className="sem-agent-3d-logo"
               />
-              <span className="sem-agent-brand-title">SCAELEIQ</span>
-              <span className="sem-agent-brand-sub">Semantic Agent</span>
-              <span className="sem-agent-brand-caption">Schema • Meaning • Intelligence</span>
+              <span className="sem-agent-brand-title">Semantic Agent</span>
+              {/* <span className="sem-agent-brand-sub">Semantic Agent</span> */}
+              {/* <span className="sem-agent-brand-caption">Schema • Meaning • Intelligence</span> */}
             </div>
 
             {/* Connection Port Nodes */}
@@ -1237,25 +1238,25 @@ export const SAPConnectVisual: React.FC = () => {
   const updateAnchors = useCallback(() => {
     if (!containerRef.current || !centerLeftRef.current || !centerRightRef.current) return;
     const cBox = containerRef.current.getBoundingClientRect();
-    
+
     const cl = centerLeftRef.current.getBoundingClientRect();
     const cr = centerRightRef.current.getBoundingClientRect();
-    
+
     const centerLeft = { x: cl.left - cBox.left, y: cl.top + cl.height / 2 - cBox.top };
     const centerRight = { x: cr.right - cBox.left, y: cr.top + cr.height / 2 - cBox.top };
-    
+
     const sysPoints = sysRefs.current.map(el => {
       if (!el) return { x: 0, y: 0 };
       const b = el.getBoundingClientRect();
       return { x: b.right - cBox.left, y: b.top + b.height / 2 - cBox.top };
     });
-    
+
     const platPoints = platformRefs.current.map(el => {
       if (!el) return { x: 0, y: 0 };
       const b = el.getBoundingClientRect();
       return { x: b.left - cBox.left, y: b.top + b.height / 2 - cBox.top };
     });
-    
+
     setAnchors({ sysPoints, platPoints, centerLeft, centerRight });
   }, []);
 
@@ -1272,7 +1273,7 @@ export const SAPConnectVisual: React.FC = () => {
   return (
     <div className="visual-sap-connect-v2" style={{ position: 'relative' }}>
       <div className="sap-flow-canvas" ref={containerRef} style={{ position: 'relative', top: '-15px', marginBottom: '-15px' }}>
-        
+
         {/* SVG Dynamic Overlay */}
         <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, overflow: 'visible' }}>
           <defs>
@@ -1284,10 +1285,10 @@ export const SAPConnectVisual: React.FC = () => {
               </feMerge>
             </filter>
           </defs>
-          
+
           {anchors && anchors.sysPoints.map((pt: any, i: any) => {
             if (pt.x === 0) return null;
-            const targetY = anchors.centerLeft.y - 40 + i * 20; 
+            const targetY = anchors.centerLeft.y - 40 + i * 20;
             const dx = anchors.centerLeft.x - pt.x;
             const pathD = `M ${pt.x} ${pt.y} C ${pt.x + dx * 0.5} ${pt.y}, ${anchors.centerLeft.x - dx * 0.3} ${targetY}, ${anchors.centerLeft.x} ${targetY}`;
             return (
@@ -1302,7 +1303,7 @@ export const SAPConnectVisual: React.FC = () => {
               </g>
             );
           })}
-          
+
           {anchors && anchors.platPoints.map((pt: any, i: any) => {
             if (pt.x === 0) return null;
             const startY = anchors.centerRight.y - 20 + i * 20;

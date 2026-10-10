@@ -2,7 +2,7 @@
   width: 100%;
   border-top: 1px solid var(--border-subtle);
   background-color: var(--bg-primary);
-  padding: 2.25rem 0;
+  padding: 0.75rem 0;
   margin-top: auto;
 }
 
@@ -36,7 +36,17 @@
   transition: transform var(--transition-fast);
 }
 
-.footer__brand:hover .footer__logo-mark {
+.footer__logo-full {
+  height: 120px;
+  width: auto;
+  max-width: 165px;
+  object-fit: contain;
+  display: block;
+  transition: transform var(--transition-fast);
+}
+
+.footer__brand:hover .footer__logo-mark,
+.footer__brand:hover .footer__logo-full {
   transform: scale(1.04);
 }
 

@@ -1,0 +1,554 @@
+/* ============================================================
+   SCAELEIQ AI AGENTS SHOWCASE SECTION
+   Exact recreation of the reference visual source of truth
+   ============================================================ */
+
+.ai-agents-section {
+  position: relative;
+  width: 100%;
+  padding: 108px 0 128px 0;
+  background: radial-gradient(circle at 50% 20%, #ffffff 0%, #f7faff 45%, #ecf4fd 100%);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Atmospheric decorative elements */
+.ai-agents-bg-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Subtle curved background shapes near top corners */
+.ai-agents-bg-decor__corner {
+  position: absolute;
+  top: -80px;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(199, 226, 255, 0.42) 0%, rgba(225, 240, 255, 0.12) 55%, transparent 72%);
+  filter: blur(24px);
+}
+
+.ai-agents-bg-decor__corner--left {
+  left: -120px;
+}
+
+.ai-agents-bg-decor__corner--right {
+  right: -120px;
+}
+
+/* Restrained subtle dotted details near the edges */
+.ai-agents-bg-decor__dots {
+  position: absolute;
+  top: 36px;
+  width: 240px;
+  height: 160px;
+  background-image: radial-gradient(rgba(14, 165, 233, 0.22) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, transparent 80%);
+}
+
+.ai-agents-bg-decor__dots--left {
+  left: 32px;
+}
+
+.ai-agents-bg-decor__dots--right {
+  right: 32px;
+}
+
+/* Container */
+.ai-agents-container {
+  position: relative;
+  z-index: 1;
+  width: min(94vw, 1540px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 2.5vw, 2.5rem);
+  padding-right: clamp(1rem, 2.5vw, 2.5rem);
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------
+   Section Header
+   ------------------------------------------------------------ */
+
+.ai-agents-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.ai-agents-eyebrow-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ai-agents-eyebrow {
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #0099ff;
+  line-height: 1;
+}
+
+.ai-agents-eyebrow-line {
+  display: inline-block;
+  width: 44px;
+  height: 1.5px;
+  background: linear-gradient(90deg, #0099ff 0%, rgba(0, 153, 255, 0.15) 100%);
+  border-radius: 2px;
+}
+
+.ai-agents-heading {
+  font-family: var(--font-heading, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: clamp(2.35rem, 3.2vw, 3.125rem);
+  font-weight: 700;
+  color: #091a32;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.ai-agents-subtitle {
+  font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: clamp(1.05rem, 1.2vw, 1.1875rem);
+  color: #526071;
+  max-width: 710px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.56;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .ai-agents-subtitle__br {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   3-Column Equal Cards Grid
+   ------------------------------------------------------------ */
+
+.ai-agents-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+/* ------------------------------------------------------------
+   Agent Card
+   ------------------------------------------------------------ */
+
+.ai-agent-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 600px;
+  height: 100%;
+  border-radius: 24px;
+  border: 1.5px solid rgba(205, 225, 248, 0.85);
+  background: linear-gradient(180deg, #ffffff 0%, #fafcff 45%, #f2f7fe 100%);
+  padding: 34px 32px 0 32px;
+  box-shadow:
+    0 16px 40px -12px rgba(12, 44, 90, 0.06),
+    0 2px 6px rgba(12, 44, 90, 0.02);
+  transition:
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Soft ambient lighting near lower card illustrations */
+.ai-agent-card__ambient-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+}
+
+.ai-agent-card__ambient-glow--docu {
+  background: radial-gradient(ellipse at 50% 100%, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+}
+
+.ai-agent-card__ambient-glow--summarization {
+  background: radial-gradient(ellipse at 50% 100%, rgba(124, 58, 237, 0.14) 0%, transparent 70%);
+}
+
+.ai-agent-card__ambient-glow--forecast {
+  background: radial-gradient(ellipse at 50% 100%, rgba(6, 182, 212, 0.16) 0%, transparent 70%);
+}
+
+/* Card Hover States */
+.ai-agent-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 24px 50px -10px rgba(12, 44, 90, 0.11),
+    0 4px 12px rgba(12, 44, 90, 0.04);
+}
+
+.ai-agent-card--docu:hover {
+  border-color: rgba(56, 189, 248, 0.9);
+}
+
+.ai-agent-card--summarization:hover {
+  border-color: rgba(167, 139, 250, 0.9);
+}
+
+.ai-agent-card--forecast:hover {
+  border-color: rgba(45, 212, 191, 0.9);
+}
+
+/* ------------------------------------------------------------
+   Card Header
+   ------------------------------------------------------------ */
+
+.ai-agent-card__header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Large rounded-square icon tile */
+.ai-agent-card__icon-tile {
+  width: 78px;
+  height: 78px;
+  min-width: 78px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.ai-agent-card__icon-tile--docu {
+  background: linear-gradient(135deg, #eef7fe 0%, #d8edfd 100%);
+  border: 1.5px solid rgba(186, 224, 253, 0.9);
+  box-shadow:
+    0 4px 14px rgba(2, 132, 199, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.ai-agent-card__icon-tile--summarization {
+  background: linear-gradient(135deg, #f5f0fe 0%, #e6d9fc 100%);
+  border: 1.5px solid rgba(216, 180, 254, 0.9);
+  box-shadow:
+    0 4px 14px rgba(124, 58, 237, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.ai-agent-card__icon-tile--forecast {
+  background: linear-gradient(135deg, #e4f9fa 0%, #cbf3f6 100%);
+  border: 1.5px solid rgba(165, 243, 252, 0.9);
+  box-shadow:
+    0 4px 14px rgba(8, 145, 178, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.ai-agent-card__tile-svg {
+  display: block;
+}
+
+/* Vertical divider between tile and title */
+.ai-agent-card__divider-v {
+  width: 1px;
+  height: 48px;
+  background: rgba(226, 232, 240, 0.9);
+  flex-shrink: 0;
+}
+
+/* Stacked title */
+.ai-agent-card__title-box {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.14;
+  justify-content: center;
+  min-width: 0;
+}
+
+.ai-agent-card__title-main {
+  font-family: var(--font-heading, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: clamp(23px, 1.7vw, 28px);
+  font-weight: 700;
+  color: #091a32;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.ai-agent-card__title-agent {
+  font-family: var(--font-heading, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: clamp(23px, 1.7vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ai-agent-card__title-agent--docu {
+  color: #0284c7;
+}
+
+.ai-agent-card__title-agent--summarization {
+  color: #6366f1;
+}
+
+.ai-agent-card__title-agent--forecast {
+  color: #0891b2;
+}
+
+/* Circular arrow control on far right */
+.ai-agent-card__arrow-btn {
+  margin-left: auto;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1.5px solid;
+  box-shadow: 0 2px 6px rgba(12, 44, 90, 0.04);
+  transition:
+    transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.ai-agent-card__arrow-btn--docu {
+  border-color: rgba(186, 215, 248, 0.85);
+  color: #0284c7;
+}
+
+.ai-agent-card__arrow-btn--summarization {
+  border-color: rgba(216, 180, 254, 0.85);
+  color: #6366f1;
+}
+
+.ai-agent-card__arrow-btn--forecast {
+  border-color: rgba(165, 243, 252, 0.85);
+  color: #0891b2;
+}
+
+.ai-agent-card:hover .ai-agent-card__arrow-btn {
+  transform: translateX(3px);
+  box-shadow: 0 4px 12px rgba(12, 44, 90, 0.09);
+}
+
+/* ------------------------------------------------------------
+   Description
+   ------------------------------------------------------------ */
+
+.ai-agent-card__description {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 15.5px;
+  color: #526071;
+  line-height: 1.55;
+  margin: 22px 0 18px 0;
+  min-height: 48px;
+}
+
+/* Horizontal Divider */
+.ai-agent-card__divider-h {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 1px;
+  background: rgba(226, 232, 240, 0.85);
+  margin-bottom: 18px;
+}
+
+/* ------------------------------------------------------------
+   Capability List
+   ------------------------------------------------------------ */
+
+.ai-agent-card__capabilities {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.ai-agent-card__cap-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 14.75px;
+  font-weight: 500;
+  color: #334155;
+  line-height: 1.35;
+}
+
+.ai-agent-card__cap-icon {
+  flex-shrink: 0;
+}
+
+.ai-agent-card__cap-icon--docu {
+  color: #0284c7;
+}
+
+.ai-agent-card__cap-icon--summarization {
+  color: #6366f1;
+}
+
+.ai-agent-card__cap-icon--forecast {
+  color: #0891b2;
+}
+
+.ai-agent-card__cap-text {
+  color: #334155;
+}
+
+/* ------------------------------------------------------------
+   Bottom 3D Illustration
+   ------------------------------------------------------------ */
+
+.ai-agent-card__vis-container {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  width: calc(100% + 64px);
+  margin-left: -32px;
+  margin-right: -32px;
+  margin-bottom: 0;
+  line-height: 0;
+  overflow: hidden;
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+  padding-top: 14px;
+}
+
+/* Top soft fade to blend seamlessly into the card background */
+.ai-agent-card__vis-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 38px;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.5) 45%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ai-agent-card__vis-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+}
+
+.ai-agent-card:hover .ai-agent-card__vis-image {
+  transform: scale(1.018);
+}
+
+/* ------------------------------------------------------------
+   Responsive Styles
+   ------------------------------------------------------------ */
+
+/* Tablet (2 cols or single column) */
+@media (max-width: 1180px) {
+  .ai-agents-grid {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 26px;
+  }
+
+  .ai-agent-card {
+    min-height: auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .ai-agents-section {
+    padding: 72px 0 84px 0;
+  }
+
+  .ai-agents-header {
+    margin-bottom: 40px;
+  }
+
+  .ai-agents-heading {
+    font-size: 2.15rem;
+  }
+
+  .ai-agents-subtitle {
+    font-size: 1rem;
+    padding: 0 8px;
+  }
+
+  .ai-agents-grid {
+    margin-top: 36px;
+    gap: 20px;
+  }
+
+  .ai-agent-card {
+    padding: 28px 24px 0 24px;
+  }
+
+  .ai-agent-card__vis-container {
+    width: calc(100% + 48px);
+    margin-left: -24px;
+    margin-right: -24px;
+  }
+
+  .ai-agent-card__icon-tile {
+    width: 68px;
+    height: 68px;
+    min-width: 68px;
+    border-radius: 18px;
+  }
+
+  .ai-agent-card__title-main,
+  .ai-agent-card__title-agent {
+    font-size: 24px;
+  }
+
+  .ai-agent-card__arrow-btn {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ai-agent-card,
+  .ai-agent-card__arrow-btn,
+  .ai-agent-card__vis-image {
+    transition: none !important;
+    transform: none !important;
+  }
+}

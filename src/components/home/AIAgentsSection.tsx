@@ -1,26 +1,65 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Database, Code2, Network, ShieldCheck, Terminal, Activity, Cpu } from 'lucide-react';
+import { Database, Code2, Network, ShieldCheck, Terminal, Activity, BrainCircuit, LucideIcon } from 'lucide-react';
 import { RevealAnimation } from '../ui/RevealAnimation';
 import { OglOrb } from './OglOrb';
 import './AIAgentsSection.css';
 
-/* ─── Agent definitions ──────────────────────────────────────────────── */
-const AGENTS = [
+/*
+  COORDINATE SYSTEM — SVG viewBox 0 0 1200 720
+  Central orb center: (600, 360)  radius: 185
+
+  Card positions (CSS absolute) — width: 320px, height: 160px:
+    top-left  : left:80px  top:20px   -> dock right edge at SVG (400, 100)
+    top-right : right:80px top:20px   -> dock left  edge at SVG (800, 100)
+    mid-left  : left:-30px top:290px  -> dock right edge at SVG (290, 370)  [increased distance!]
+    mid-right : right:-30px top:290px -> dock left  edge at SVG (910, 370)  [increased distance!]
+    bot-left  : left:80px  top:540px  -> dock right edge at SVG (400, 620)
+    bot-right : right:80px top:540px  -> dock left  edge at SVG (800, 620)
+
+  Orb perimeter points & smooth Bezier curves:
+    pipeline     : ox=454, oy=246 -> dx=400, dy=100 : M 454 246 C 445 200, 425 150, 400 100
+    semantic     : ox=746, oy=246 -> dx=800, dy=100 : M 746 246 C 755 200, 775 150, 800 100
+    integration  : ox=420, oy=322 -> dx=290, dy=370 : M 420 322 C 375 322, 335 370, 290 370 [curved into dot!]
+    observability: ox=780, oy=322 -> dx=910, dy=370 : M 780 322 C 825 322, 865 370, 910 370 [curved into dot!]
+    governance   : ox=454, oy=474 -> dx=400, dy=620 : M 454 474 C 445 520, 425 570, 400 620
+    legacy       : ox=746, oy=474 -> dx=800, dy=620 : M 746 474 C 755 520, 775 570, 800 620
+*/
+
+interface AgentDef {
+  id: string;
+  title: string;
+  role: string;
+  desc: string;
+  icon: LucideIcon;
+  color: string;
+  glowColor?: string;
+  colorRgb: string;
+  glowRgb?: string;
+  position: 'top-left' | 'top-right' | 'mid-left' | 'mid-right' | 'bot-left' | 'bot-right';
+  ox: number;
+  oy: number;
+  dx: number;
+  dy: number;
+  path: string;
+}
+
+const AGENTS: AgentDef[] = [
   {
     id: 'pipeline',
     title: 'Autonomous Pipeline Agent',
     role: 'INGESTION & MIGRATION',
     desc: 'Autonomous data pipeline architect. Instantly connects to source systems, optimizes schemas, and deploys high-volume data pipelines in real-time.',
     icon: Database,
-    color: '#0EA5E9',
-    colorRgb: '14, 165, 233',
+    color: '#06B6D4',
+    glowColor: '#22D3EE',
+    colorRgb: '6, 182, 212',
+    glowRgb: '34, 211, 238',
     position: 'top-left',
-    // SVG connector from Orb perimeter to card dock
-    ox: 426.3,
-    oy: 219.9,
-    dx: 320,
+    ox: 454,
+    oy: 246,
+    dx: 400,
     dy: 100,
-    path: 'M 426.3 219.9 C 375 210, 360 120, 320 100',
+    path: 'M 454 246 C 445 200, 425 150, 400 100',
   },
   {
     id: 'semantic',
@@ -29,43 +68,49 @@ const AGENTS = [
     desc: 'The structural engineer of your ecosystem. Translates technical metadata into business-ready semantic layers, ensuring a unified truth across teams.',
     icon: Network,
     color: '#7C3AED',
+    glowColor: '#A855F7',
     colorRgb: '124, 58, 237',
+    glowRgb: '168, 85, 247',
     position: 'top-right',
-    ox: 733.7,
-    oy: 219.9,
-    dx: 840,
+    ox: 746,
+    oy: 246,
+    dx: 800,
     dy: 100,
-    path: 'M 733.7 219.9 C 785 210, 800 120, 840 100',
+    path: 'M 746 246 C 755 200, 775 150, 800 100',
   },
   {
     id: 'integration',
     title: 'Integration & Connector Agent',
     role: 'SYSTEM INTEGRATION',
-    desc: 'Generates production-grade integration code. Builds, tests, and deploys certified connectors between SAP, Salesforce, Oracle, and cloud platforms in hours.',
+    desc: 'Builds and deploys production-ready connectors across SAP, Salesforce, Oracle, and cloud platforms.',
     icon: Code2,
     color: '#0D9488',
+    glowColor: '#10B981',
     colorRgb: '13, 148, 136',
+    glowRgb: '16, 185, 129',
     position: 'mid-left',
-    ox: 385,
-    oy: 340,
-    dx: 320,
-    dy: 340,
-    path: 'M 385 340 L 320 340',
+    ox: 420,
+    oy: 322,
+    dx: 290,
+    dy: 370,
+    path: 'M 420 322 C 375 322, 335 370, 290 370',
   },
   {
     id: 'observability',
     title: 'Observability & Resilience Agent',
     role: 'MONITORING & HEALING',
-    desc: 'Autonomous system watchdog. Continuously profiles pipeline throughput, auto-tunes indexing, and self-heals failing tasks before downstream dashboards are affected.',
+    desc: 'Continuously monitors pipelines, auto-tunes performance, and self-heals failures before downstream impact.',
     icon: Activity,
     color: '#E11D48',
+    glowColor: '#F43F5E',
     colorRgb: '225, 29, 72',
+    glowRgb: '244, 63, 94',
     position: 'mid-right',
-    ox: 775,
-    oy: 340,
-    dx: 840,
-    dy: 340,
-    path: 'M 775 340 L 840 340',
+    ox: 780,
+    oy: 322,
+    dx: 910,
+    dy: 370,
+    path: 'M 780 322 C 825 322, 865 370, 910 370',
   },
   {
     id: 'governance',
@@ -74,48 +119,49 @@ const AGENTS = [
     desc: 'Zero-latency quality assurance. Monitors data pipelines 24/7, validates master data integrity, and triggers self-healing protocols before downstream impact.',
     icon: ShieldCheck,
     color: '#EA580C',
+    glowColor: '#FB923C',
     colorRgb: '234, 88, 12',
+    glowRgb: '251, 146, 60',
     position: 'bot-left',
-    ox: 426.3,
-    oy: 460.1,
-    dx: 320,
-    dy: 580,
-    path: 'M 426.3 460.1 C 375 470, 360 560, 320 580',
+    ox: 454,
+    oy: 474,
+    dx: 400,
+    dy: 620,
+    path: 'M 454 474 C 445 520, 425 570, 400 620',
   },
   {
     id: 'legacy',
     title: 'Legacy Modernization Assistant',
     role: 'LEGACY MODERNIZATION',
-    desc: 'Legacy modernization specialist. Deconstructs complex stored procedures, ETL scripts, and proprietary mainframes, unlocking siloed historical data without disruption.',
+    desc: 'Modernizes complex stored procedures, ETL scripts, and proprietary frameworks while preserving historical data.',
     icon: Terminal,
-    color: '#2563EB',
-    colorRgb: '37, 99, 235',
+    color: '#3B82F6',
+    glowColor: '#60A5FA',
+    colorRgb: '59, 130, 246',
+    glowRgb: '96, 165, 250',
     position: 'bot-right',
-    ox: 733.7,
-    oy: 460.1,
-    dx: 840,
-    dy: 580,
-    path: 'M 733.7 460.1 C 785 470, 800 560, 840 580',
+    ox: 746,
+    oy: 474,
+    dx: 800,
+    dy: 620,
+    path: 'M 746 474 C 755 520, 775 570, 800 620',
   },
 ];
 
 export const AIAgentsSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   const [hoveredAgent, setHoveredAgent] = useState<string | null>(null);
+  const [orbHovered, setOrbHovered] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) {
-          setInView(true);
-          obs.unobserve(el);
-        }
+        if (e.isIntersecting) { setInView(true); obs.unobserve(el); }
       },
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -124,8 +170,6 @@ export const AIAgentsSection: React.FC = () => {
   return (
     <section className="oas-section" ref={sectionRef}>
       <div className="container">
-
-        {/* ── Section Header ─────────────────────────────────────────── */}
         <RevealAnimation variant="up">
           <div className="oas-header">
             <div className="oas-eyebrow">
@@ -140,130 +184,175 @@ export const AIAgentsSection: React.FC = () => {
           </div>
         </RevealAnimation>
 
-        {/* ── Ecosystem Orchestration Stage ───────────────────────────── */}
-        <div className={`oas-stage ${inView ? 'oas-stage--in' : ''}`} ref={stageRef}>
+        <div className={`oas-stage ${inView ? 'oas-stage--in' : ''}`}>
 
-          {/* SVG Connector Layer */}
           <svg
             className="oas-connectors"
-            viewBox="0 0 1160 680"
+            viewBox="0 0 1200 720"
             preserveAspectRatio="none"
             aria-hidden="true"
           >
             <defs>
-              {AGENTS.map((a) => (
-                <React.Fragment key={a.id}>
-                  <filter id={`glow-${a.id}`} x="-60%" y="-60%" width="220%" height="220%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </React.Fragment>
-              ))}
+              {AGENTS.map((a) => {
+                const glowCol = a.glowColor || a.color;
+                return (
+                  <React.Fragment key={a.id}>
+                    <filter id={`eglow-${a.id}`} x="-100%" y="-100%" width="300%" height="300%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                    <linearGradient
+                      id={`lg-${a.id}`}
+                      x1={a.ox} y1={a.oy}
+                      x2={a.dx} y2={a.dy}
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop offset="0%" stopColor={a.color} stopOpacity="1" />
+                      <stop offset="100%" stopColor={glowCol} stopOpacity="0.85" />
+                    </linearGradient>
+                  </React.Fragment>
+                );
+              })}
             </defs>
 
             {AGENTS.map((agent) => {
-              const isHovered = hoveredAgent === agent.id;
-              const isOtherHovered = hoveredAgent !== null && !isHovered;
-              const opacity = isOtherHovered ? 0.2 : isHovered ? 1.0 : 0.65;
+              const agentActive = hoveredAgent === agent.id;
+              const isActive = agentActive || orbHovered;
+              const anyHovered = hoveredAgent !== null || orbHovered;
+              const faded = anyHovered && !isActive;
+              const glowCol = agent.glowColor || agent.color;
 
               return (
-                <g key={agent.id} style={{ opacity, transition: 'opacity 0.3s ease' }}>
-                  {/* Subtle wide glow line */}
+                <g
+                  key={agent.id}
+                  style={{
+                    opacity: faded ? 0.2 : 1,
+                    transition: 'opacity 0.3s ease',
+                  }}
+                >
+                  {/* Invisible wide hit area for easy line hovering */}
                   <path
                     d={agent.path}
                     fill="none"
-                    stroke={agent.color}
-                    strokeWidth={isHovered ? 5 : 2.5}
-                    strokeOpacity={isHovered ? 0.35 : 0.12}
-                    className="oas-connector-glow"
+                    stroke="transparent"
+                    strokeWidth={28}
+                    style={{ cursor: 'pointer', pointerEvents: 'stroke' }}
+                    onMouseEnter={() => setHoveredAgent(agent.id)}
+                    onMouseLeave={() => setHoveredAgent(null)}
                   />
-                  {/* Main connector path */}
+
+                  {/* Single glow layer — ONLY active on hover, zero glow when resting */}
+                  <path
+                    d={agent.path}
+                    fill="none"
+                    stroke={glowCol}
+                    strokeWidth={isActive ? 8 : 0}
+                    strokeOpacity={isActive ? 0.75 : 0}
+                    strokeLinecap="round"
+                    filter={isActive ? `url(#eglow-${agent.id})` : undefined}
+                    style={{
+                      transition: 'stroke-opacity 0.25s ease, stroke-width 0.25s ease',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Clean primary connector — crisp colored line when resting, enhanced on hover */}
                   <path
                     d={agent.path}
                     fill="none"
                     stroke={agent.color}
-                    strokeWidth={isHovered ? 2.2 : 1.5}
-                    strokeOpacity={isHovered ? 1 : 0.6}
-                    strokeDasharray="5 7"
+                    strokeWidth={isActive ? 2.4 : 1.8}
+                    strokeOpacity={isActive ? 1 : 0.85}
+                    strokeLinecap="round"
+                    pathLength="1"
                     className={`oas-connector oas-connector--${agent.id} ${inView ? 'oas-connector--in' : ''}`}
+                    style={{ cursor: 'pointer', pointerEvents: 'stroke' }}
+                    onMouseEnter={() => setHoveredAgent(agent.id)}
+                    onMouseLeave={() => setHoveredAgent(null)}
                   />
-                  {/* Start endpoint on Orb perimeter */}
+
+                  {/* Orb-side dot ONLY — card-side dot is the HTML dock-dot element */}
                   <circle
-                    cx={agent.ox}
-                    cy={agent.oy}
-                    r={isHovered ? 5.5 : 4}
-                    fill={agent.color}
-                    fillOpacity={isHovered ? 1 : 0.8}
-                    filter={isHovered ? `url(#glow-${agent.id})` : undefined}
-                  />
-                  {/* Destination endpoint at card dock */}
-                  <circle
-                    cx={agent.dx}
-                    cy={agent.dy}
-                    r={isHovered ? 6 : 4.5}
+                    cx={agent.ox} cy={agent.oy}
+                    r={isActive ? 7.5 : 5.5}
                     fill={agent.color}
                     fillOpacity={1}
-                    filter={`url(#glow-${agent.id})`}
+                    filter={isActive ? `url(#eglow-${agent.id})` : undefined}
+                    style={{ transition: 'r 0.25s ease', cursor: 'pointer', pointerEvents: 'all' }}
+                    onMouseEnter={() => setHoveredAgent(agent.id)}
+                    onMouseLeave={() => setHoveredAgent(null)}
                   />
                 </g>
               );
             })}
           </svg>
 
-          {/* ── CENTRAL ORCHESTRATION ENGINE (OGL ORB CORE) ───────────── */}
-          <div className={`oas-orb-cell ${inView ? 'oas-orb-cell--in' : ''}`}>
+          <div
+            className={`oas-orb-cell ${inView ? 'oas-orb-cell--in' : ''}`}
+            onMouseEnter={() => setOrbHovered(true)}
+            onMouseLeave={() => setOrbHovered(false)}
+          >
             <div className="oas-orb-wrap">
-              {/* Outer orbit rings */}
+              <div className={`oas-orb-ambient-halo ${orbHovered ? 'oas-orb-ambient-halo--active' : ''}`} />
+              <div className="oas-chroma-fields" aria-hidden="true">
+                {AGENTS.map((agent) => {
+                  const active = hoveredAgent === agent.id || orbHovered;
+                  const rgb = agent.glowRgb || agent.colorRgb;
+                  return (
+                    <div
+                      key={`cf-${agent.id}`}
+                      className={`oas-chroma-field oas-chroma-field--${agent.position} ${active ? 'oas-chroma-field--active' : ''}`}
+                      style={{
+                        background: `radial-gradient(circle, rgba(${rgb},${active ? '0.62' : '0.30'}) 0%, rgba(${rgb},0) 70%)`,
+                      }}
+                    />
+                  );
+                })}
+              </div>
               <div className="oas-orb-ring oas-orb-ring--outer" />
               <div className="oas-orb-ring oas-orb-ring--inner" />
-
-              {/* The WebGL OGL Animated Orb Canvas */}
               <OglOrb
                 hue={208}
-                hoverIntensity={2}
+                hoverIntensity={0.65}
                 rotateOnHover={true}
-                forceHoverState={false}
+                forceHoverState={orbHovered}
                 className="oas-orb-canvas"
               />
-
-              {/* Central Intelligence Layer Content */}
-              <div className="oas-orb-content">
+              <div className={`oas-orb-content ${orbHovered ? 'oas-orb-content--active' : ''}`}>
                 <div className="oas-orb-icon-badge">
-                  <div className="oas-chip-pin oas-chip-pin--left-1" />
-                  <div className="oas-chip-pin oas-chip-pin--left-2" />
-                  <div className="oas-chip-pin oas-chip-pin--right-1" />
-                  <div className="oas-chip-pin oas-chip-pin--right-2" />
-                  <Cpu size={22} className="oas-chip-icon" />
+                  <BrainCircuit size={28} className="oas-chip-icon" />
                 </div>
                 <h3 className="oas-orb-title">
                   ScaeleIQ<br />
                   Orchestration Engine
                 </h3>
                 <span className="oas-orb-tag">CENTRAL INTELLIGENCE LAYER</span>
+                <div className="oas-orb-divider" />
                 <p className="oas-orb-desc">
-                  <strong>The Central Nervous System.</strong> Orchestrates the entire autonomous
-                  agent workforce, optimizing workflows, assigning migration tasks based on real-time
-                  load, and resolving data bottlenecks autonomously.
+                  <strong>The Central Nervous System.</strong><br />
+                  Orchestrates workflows, assigns tasks,<br />
+                  and resolves bottlenecks autonomously.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* ── SIX SURROUNDING AGENT CARDS ──────────────────────────── */}
           {AGENTS.map((agent, i) => {
             const Icon = agent.icon;
-            const isHovered = hoveredAgent === agent.id;
+            const isAgentHovered = hoveredAgent === agent.id;
+            const isActive = isAgentHovered || orbHovered;
+            const anyHovered = hoveredAgent !== null || orbHovered;
+            const isFaded = anyHovered && !isActive;
+
             return (
               <div
                 key={agent.id}
-                className={`oas-card oas-card--${agent.position} ${inView ? 'oas-card--in' : ''} ${
-                  isHovered ? 'oas-card--hovered' : ''
-                }`}
+                className={`oas-card oas-card--${agent.position} ${inView ? 'oas-card--in' : ''} ${isActive ? 'oas-card--hovered' : ''} ${isFaded ? 'oas-card--faded' : ''}`}
                 style={{
-                  animationDelay: `${0.2 + i * 0.08}s`,
+                  transitionDelay: inView ? '0s' : `${0.2 + i * 0.08}s`,
                   ['--agent-color' as string]: agent.color,
                   ['--agent-rgb' as string]: agent.colorRgb,
                 }}
@@ -272,9 +361,13 @@ export const AIAgentsSection: React.FC = () => {
               >
                 <div
                   className="oas-card__icon-wrap"
-                  style={{ background: `rgba(${agent.colorRgb}, 0.09)` }}
+                  style={{
+                    background: `rgba(${agent.colorRgb}, 0.10)`,
+                    border: `1px solid rgba(${agent.colorRgb}, 0.22)`,
+                    boxShadow: isActive ? `0 0 18px rgba(${agent.glowRgb || agent.colorRgb}, 0.35)` : 'none',
+                  }}
                 >
-                  <Icon size={19} style={{ color: agent.color }} />
+                  <Icon size={22} style={{ color: agent.color }} />
                 </div>
                 <div className="oas-card__body">
                   <span className="oas-card__role" style={{ color: agent.color }}>
@@ -283,22 +376,19 @@ export const AIAgentsSection: React.FC = () => {
                   <h4 className="oas-card__title">{agent.title}</h4>
                   <p className="oas-card__desc">{agent.desc}</p>
                 </div>
-
-                {/* Dock point indicator on card edge facing the Orb */}
                 <div
                   className="oas-card__dock-dot"
                   style={{
                     backgroundColor: agent.color,
-                    boxShadow: isHovered
-                      ? `0 0 12px 3px rgba(${agent.colorRgb}, 0.7)`
-                      : `0 0 6px 1px rgba(${agent.colorRgb}, 0.4)`,
+                    boxShadow: `0 0 ${isActive ? '18px 6px' : '8px 2px'} rgba(${agent.glowRgb || agent.colorRgb}, ${isActive ? '0.95' : '0.55'})`,
+                    transform: isActive ? 'translateY(-50%) scale(1.45)' : 'translateY(-50%)',
                   }}
                 />
               </div>
             );
           })}
-        </div>
 
+        </div>
       </div>
     </section>
   );

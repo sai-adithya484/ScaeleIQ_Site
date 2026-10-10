@@ -142,7 +142,7 @@ export const ArchitectureScene3D: React.FC<ArchitectureScene3DProps> = ({
               <div className={`arch-vis-orch-core ${isSelected ? 'arch-vis-orch-core--active' : 'arch-vis-orch-core--subtle'}`}>
                 <Cpu size={13} className="arch-vis-orch-icon" />
                 <span>ORCHESTRATOR</span>
-                {isSelected && <div className="arch-vis-pulse-ring" />}
+                {/* Rotating dotted outline removed — was arch-vis-pulse-ring */}
               </div>
               <div className="arch-vis-agents-row">
                 <span className="arch-vis-agent-chip">Discovery</span>
@@ -264,6 +264,8 @@ export const ArchitectureScene3D: React.FC<ArchitectureScene3DProps> = ({
           <ArrowDown size={14} className="arch-converge-arrow" />
           <span>DATA ENTERING SYSTEM</span>
         </div>
+        {/* Thin centered connector from source row into the intelligence engine */}
+        <div className="arch-sources-converge-line" />
       </div>
 
       {/* ============================================================
@@ -275,6 +277,8 @@ export const ArchitectureScene3D: React.FC<ArchitectureScene3DProps> = ({
         </div>
         <span className="arch-core-title">ScaeleIQ Intelligence Engine</span>
       </div>
+      {/* Connector from intelligence engine down into the viewport */}
+      <div className="arch-sources-converge-line" style={{ marginBottom: '0.4rem' }} />
 
       {/* ============================================================
           3D PERSPECTIVE VIEWPORT
@@ -301,8 +305,12 @@ export const ArchitectureScene3D: React.FC<ArchitectureScene3DProps> = ({
                     transform: isSelected
                       ? 'translateZ(95px) scale(1.05)'
                       : 'translateZ(0px) scale(1)',
+                    cursor: 'pointer',
                   }}
-                  onClick={() => onSelectLayer(index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectLayer(index);
+                  }}
                   tabIndex={0}
                   role="button"
                   aria-pressed={isSelected}
@@ -314,8 +322,8 @@ export const ArchitectureScene3D: React.FC<ArchitectureScene3DProps> = ({
                     }
                   }}
                 >
-                  {/* Physical Glass Surface Plate */}
-                  <div className="arch-glass-surface">
+                  {/* Physical Glass Surface Plate — pointer events pass through to tier */}
+                  <div className="arch-glass-surface" style={{ pointerEvents: 'none' }}>
                     {/* Illuminated Cyan Rim Light (active only) */}
                     <div className="arch-glass-rim" />
 
@@ -348,13 +356,13 @@ export const ArchitectureScene3D: React.FC<ArchitectureScene3DProps> = ({
                     {renderInternalVisualization(index, isSelected)}
                   </div>
 
-                  {/* 3D Glass Side Depth Bevel */}
+                  {/* 3D Glass Side Depth Bevel — decorative, no pointer events */}
                   <div className="arch-glass-extrusion" />
 
-                  {/* Ground Shadow */}
+                  {/* Ground Shadow — decorative, no pointer events */}
                   <div className="arch-glass-shadow" />
 
-                  {/* Cyan Ambient Spotlight Aura (active only) */}
+                  {/* Cyan Ambient Spotlight Aura (active only) — decorative */}
                   {isSelected && <div className="arch-glass-glow" />}
                 </div>
               );

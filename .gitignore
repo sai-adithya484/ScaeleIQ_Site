@@ -43,6 +43,9 @@ ASSET_MANIFEST.md
 # Local reference, prompt specs & scripts
 reference/
 research/
+DOCS/
+resorces/
+public/assets/dump/
 download-platform-assets.ps1
 LOVABLE_MASTER_PROMPT.md
 README_FOR_LOVABLE.md

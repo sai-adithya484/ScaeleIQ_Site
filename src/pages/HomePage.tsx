@@ -11,7 +11,6 @@ import {
   Database,
   ShieldCheck,
   Cpu,
-  ArrowUpRight,
   Sliders,
   Zap,
   BookOpen,
@@ -358,89 +357,51 @@ export const HomePage: React.FC = () => {
           </RevealAnimation>
 
           <div className="home-clients__grid">
-            {/* Client 1: Abbott */}
-            <RevealAnimation variant="up" delayMs={100}>
-              <div className="client-card">
-                <div className="client-card__visual">
-                  <span className="client-card__pill">
-                    <span className="client-card__pill-icon">🏥</span>
-                    HEALTHCARE &amp; LIFE SCIENCES
-                  </span>
+            {[
+              {
+                id: 'abbott',
+                name: 'Abbott',
+                logo: '/assets/Logos/Abbott_Logo_1.png',
+              },
+              {
+                id: 'fospha',
+                name: 'FOSPHA',
+                logo: '/assets/Logos/Fospha-logo-1.png',
+              },
+              {
+                id: 'shi',
+                name: 'SHI',
+                logo: '/assets/Logos/SHI_International_id1CAW25_E_1.png',
+              },
+              {
+                id: 'bluechip',
+                name: 'BlueChip Informatics',
+                logo: '/assets/Logos/BCinformaticslogo-2.png',
+              },
+              {
+                id: 'crmit',
+                name: 'CRMIT',
+                logo: '/assets/Logos/CRMIT_logo.png',
+              },
+              {
+                id: 'palni',
+                name: 'Palni',
+                logo: '/assets/Logos/palni_logo.png',
+              },
+            ].map((client, index) => (
+              <RevealAnimation key={client.name} variant="up" delayMs={60 + index * 40}>
+                <div className="client-card" title={client.name}>
                   <div className="client-card__logo-area">
                     <img
-                      src="/assets/Logos/Abbott_Logo_1.png"
-                      alt="Abbott"
-                      className="client-brand-logo client-brand-logo--abbott"
+                      src={client.logo}
+                      alt={client.name}
+                      className={`client-brand-logo client-brand-logo--${client.id}`}
+                      loading="lazy"
                     />
                   </div>
-                  <p className="client-card__desc">
-                    Modernizing data platforms to power diagnostics, research, and patient outcomes.
-                  </p>
                 </div>
-                <div className="client-card__footer">
-                  <h3 className="client-card__name">Abbott</h3>
-                  <span className="client-card__link">
-                    Learn more <ArrowUpRight size={14} />
-                  </span>
-                </div>
-              </div>
-            </RevealAnimation>
-
-            {/* Client 2: Fospha */}
-            <RevealAnimation variant="up" delayMs={200}>
-              <div className="client-card">
-                <div className="client-card__visual">
-                  <span className="client-card__pill">
-                    <span className="client-card__pill-icon">📦</span>
-                    COMMERCIAL &amp; FLEET
-                  </span>
-                  <div className="client-card__logo-area">
-                    <img
-                      src="/assets/Logos/Fospha-logo-1.png"
-                      alt="Fospha"
-                      className="client-brand-logo client-brand-logo--fospha"
-                    />
-                  </div>
-                  <p className="client-card__desc">
-                    Unifying global fleet data to drive operational efficiency and growth.
-                  </p>
-                </div>
-                <div className="client-card__footer">
-                  <h3 className="client-card__name">Fospha</h3>
-                  <span className="client-card__link">
-                    Learn more <ArrowUpRight size={14} />
-                  </span>
-                </div>
-              </div>
-            </RevealAnimation>
-
-            {/* Client 3: SHI */}
-            <RevealAnimation variant="up" delayMs={300}>
-              <div className="client-card">
-                <div className="client-card__visual">
-                  <span className="client-card__pill">
-                    <span className="client-card__pill-icon">🌐</span>
-                    GLOBAL IT SOLUTIONS
-                  </span>
-                  <div className="client-card__logo-area">
-                    <img
-                      src="/assets/Logos/SHI_International_id1CAW25_E_1.png"
-                      alt="SHI"
-                      className="client-brand-logo client-brand-logo--shi"
-                    />
-                  </div>
-                  <p className="client-card__desc">
-                    Building a connected data foundation to accelerate enterprise transformation.
-                  </p>
-                </div>
-                <div className="client-card__footer">
-                  <h3 className="client-card__name">SHI</h3>
-                  <span className="client-card__link">
-                    Learn more <ArrowUpRight size={14} />
-                  </span>
-                </div>
-              </div>
-            </RevealAnimation>
+              </RevealAnimation>
+            ))}
           </div>
         </div>
       </section>

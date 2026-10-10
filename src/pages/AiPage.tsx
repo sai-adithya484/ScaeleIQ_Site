@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Hero } from '../components/sections/Hero';
 import { ArchitectureSection } from '../components/sections/architecture/ArchitectureSection';
+import { AIAgentsShowcase } from '../components/sections/AIAgentsShowcase';
 import { CTASection } from '../components/sections/CTASection';
 import { platformCta } from '../data/ctaContent';
 
@@ -21,6 +22,9 @@ export const AiPage: React.FC = () => {
 
       {/* The Agentic Architecture 5-Layer Interactive Section */}
       <ArchitectureSection />
+
+      {/* AI Agents Showcase */}
+      <AIAgentsShowcase />
 
       <CTASection config={platformCta} />
     </div>
