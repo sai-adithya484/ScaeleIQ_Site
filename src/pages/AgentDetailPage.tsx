@@ -46,13 +46,15 @@ export const AgentDetailPage: React.FC = () => {
           <div className="agent-hero-grid-pattern" />
         </div>
 
-        <div className="container agent-hero-container">
-          {/* Back Link */}
+        {/* Back link in its own constrained wrapper */}
+        <div className="agent-back-link-wrap">
           <Link to="/ai#ai-agents" className="agent-back-link">
             <ArrowLeft size={16} aria-hidden="true" />
             <span>Back to AI Agents</span>
           </Link>
+        </div>
 
+        <div className="agent-hero-container">
           <div className="agent-hero-grid">
             {/* Left Column: Headings & CTAs */}
             <div className="agent-hero-content">
@@ -68,6 +70,8 @@ export const AgentDetailPage: React.FC = () => {
               <p className="agent-hero-subtitle">{agent.subtitle}</p>
 
               <p className="agent-hero-description">{agent.cardDescription}</p>
+
+              <div className="agent-hero-divider" aria-hidden="true" />
 
               <div className="agent-hero-cta-group">
                 <Link to="/demo" className="agent-btn agent-btn--primary">
@@ -96,7 +100,7 @@ export const AgentDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Large Premium HD Visualization */}
+            {/* Right Column: Large Premium HD Visualization — bleeds to edge */}
             <div className="agent-hero-media">
               <div className="agent-hero-card-frame">
                 <img
