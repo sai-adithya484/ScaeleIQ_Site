@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   FileText,
   Search,
@@ -10,8 +11,10 @@ import {
   TrendingUp,
   Target,
   ArrowRight,
+  CheckCircle2,
   LucideIcon,
 } from 'lucide-react';
+import { AI_AGENTS_DATA } from '../../data/aiAgentsData';
 import './AIAgentsShowcase.css';
 
 /* -------------------------------------------------------------
@@ -45,21 +48,17 @@ const DocuTileIcon: React.FC = () => (
         <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#0369a1" floodOpacity="0.28" />
       </filter>
     </defs>
-    {/* Back document sheet */}
     <path
       d="M17 5 h11 l6 6 v18 a2.5 2.5 0 0 1 -2.5 2.5 h-14.5 a2.5 2.5 0 0 1 -2.5 -2.5 v-21.5 a2.5 2.5 0 0 1 2.5 -2.5 z"
       fill="url(#docuBackGrad)"
     />
     <path d="M28 5 v6 h6 z" fill="#7dd3fc" opacity="0.9" />
-
-    {/* Front document sheet */}
     <g filter="url(#docuTileShadow)">
       <path
         d="M10 11 h12 l6 6 v17 a2.5 2.5 0 0 1 -2.5 2.5 h-15.5 a2.5 2.5 0 0 1 -2.5 -2.5 v-20.5 a2.5 2.5 0 0 1 2.5 -2.5 z"
         fill="url(#docuFrontGrad)"
       />
       <path d="M22 11 v6 h6 z" fill="url(#docuFlapGrad)" />
-      {/* Document content lines */}
       <rect x="13" y="22.5" width="9" height="2.2" rx="1.1" fill="#ffffff" opacity="0.95" />
       <rect x="13" y="27" width="13" height="2.2" rx="1.1" fill="#ffffff" opacity="0.95" />
     </g>
@@ -94,19 +93,16 @@ const SummaryTileIcon: React.FC = () => (
         <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#5b21b6" floodOpacity="0.28" />
       </filter>
     </defs>
-    {/* Main document */}
     <g filter="url(#sumTileShadow)">
       <path
         d="M10 8 h14 l6 6 v19 a2.5 2.5 0 0 1 -2.5 2.5 h-17.5 a2.5 2.5 0 0 1 -2.5 -2.5 v-22.5 a2.5 2.5 0 0 1 2.5 -2.5 z"
         fill="url(#sumDocGrad)"
       />
       <path d="M24 8 v6 h6 z" fill="url(#sumFlapGrad)" />
-      {/* Document content lines */}
       <rect x="13.5" y="18" width="6" height="2.2" rx="1.1" fill="#f5f3ff" opacity="0.9" />
       <rect x="13.5" y="22" width="11" height="2.2" rx="1.1" fill="#f5f3ff" opacity="0.9" />
       <rect x="13.5" y="26" width="8" height="2.2" rx="1.1" fill="#f5f3ff" opacity="0.9" />
     </g>
-    {/* Overlapping Sparkle Star at bottom right */}
     <path
       d="M30 22 C30 25.5 32.5 28 36 28 C32.5 28 30 30.5 30 34 C30 30.5 27.5 28 24 28 C27.5 28 30 25.5 30 22 Z"
       fill="url(#sumSparkleGrad)"
@@ -143,7 +139,6 @@ const ForecastTileIcon: React.FC = () => (
       </filter>
     </defs>
     <g filter="url(#fcTileShadow)">
-      {/* 3 ascending rounded vertical bars */}
       <rect x="9" y="24" width="6.5" height="12" rx="3.25" fill="url(#fcBar1)" />
       <rect x="18.5" y="16.5" width="6.5" height="19.5" rx="3.25" fill="url(#fcBar2)" />
       <rect x="28" y="8" width="6.5" height="28" rx="3.25" fill="url(#fcBar3)" />
@@ -151,77 +146,20 @@ const ForecastTileIcon: React.FC = () => (
   </svg>
 );
 
-/* -------------------------------------------------------------
-   Agent Data Definitions
-   ------------------------------------------------------------- */
+const TILE_ICONS: Record<string, React.FC> = {
+  docu: DocuTileIcon,
+  incident: SummaryTileIcon,
+  forecast: ForecastTileIcon,
+};
 
-interface AgentCapability {
-  icon: LucideIcon;
-  text: string;
-}
-
-interface AgentCardConfig {
-  id: string;
-  titlePrimary: string;
-  titleSecondary: string;
-  accentClass: 'docu' | 'summarization' | 'forecast';
-  TileIcon: React.FC;
-  description: string;
-  capabilities: AgentCapability[];
-  visSrc: string;
-  visAlt: string;
-}
-
-const AGENTS: AgentCardConfig[] = [
-  {
-    id: 'docu',
-    titlePrimary: 'DOCU',
-    titleSecondary: 'Agent',
-    accentClass: 'docu',
-    TileIcon: DocuTileIcon,
-    description: 'An agent focused on document-centric workflows and information access.',
-    capabilities: [
-      { icon: FileText, text: 'Work with diverse documents' },
-      { icon: Search, text: 'Access information faster' },
-      { icon: Layers, text: 'Simplify document workflows' },
-    ],
-    visSrc: '/assets/ai-agents/docu-agent-vis.png',
-    visAlt: 'DOCU Agent document workflows 3D visualization',
-  },
-  {
-    id: 'summarization',
-    titlePrimary: 'Summarization',
-    titleSecondary: 'Agent',
-    accentClass: 'summarization',
-    TileIcon: SummaryTileIcon,
-    description: 'An agent designed to turn lengthy information into concise, readable summaries.',
-    capabilities: [
-      { icon: List, text: 'Convert complex content to clear summaries' },
-      { icon: Sparkles, text: 'Extract key insights quickly' },
-      { icon: Files, text: 'Support faster decision making' },
-    ],
-    visSrc: '/assets/ai-agents/summary-agent-vis.png',
-    visAlt: 'Summarization Agent concise extraction 3D visualization',
-  },
-  {
-    id: 'forecast',
-    titlePrimary: 'Forecast',
-    titleSecondary: 'Agent',
-    accentClass: 'forecast',
-    TileIcon: ForecastTileIcon,
-    description: 'An agent focused on forecasting trends and supporting forward-looking analysis.',
-    capabilities: [
-      { icon: BarChart2, text: 'Identify trends and patterns' },
-      { icon: TrendingUp, text: 'Support data-driven planning' },
-      { icon: Target, text: 'Enable proactive decision making' },
-    ],
-    visSrc: '/assets/ai-agents/forecast-agent-vis.png',
-    visAlt: 'Forecast Agent trend forecasting 3D visualization',
-  },
-];
+const CARD_CAP_ICONS: Record<string, LucideIcon[]> = {
+  docu: [FileText, Search, Layers],
+  incident: [List, Sparkles, Files],
+  forecast: [BarChart2, TrendingUp, Target],
+};
 
 /* -------------------------------------------------------------
-   Main Section Component
+   Main Showcase Component
    ------------------------------------------------------------- */
 
 export const AIAgentsShowcase: React.FC = () => {
@@ -241,25 +179,25 @@ export const AIAgentsShowcase: React.FC = () => {
 
       <div className="ai-agents-container">
         {/* Section Header */}
-        <div className="ai-agents-header">
+        <header className="ai-agents-header">
           <div className="ai-agents-eyebrow-row">
-            <span className="ai-agents-eyebrow">AI AGENTS</span>
+            <span className="ai-agents-eyebrow">SNOWFLAKE-NATIVE AI AGENTS</span>
             <span className="ai-agents-eyebrow-line" aria-hidden="true" />
           </div>
           <h2 id="ai-agents-heading" className="ai-agents-heading">
-            Intelligence for Every Workflow
+            Purpose-Built AI Agents. Governed by Design.
           </h2>
           <p className="ai-agents-subtitle">
-            Explore specialized AI agents designed to support document workflows,{' '}
-            <br className="ai-agents-subtitle__br" />
-            summarization, and forecasting.
+            Specialized domain agents engineered for deep contextual workflows within your Snowflake data cloud — fully observable, auditable, and secure.
           </p>
-        </div>
+        </header>
 
-        {/* 3 Equal Cards */}
-        <div className="ai-agents-grid">
-          {AGENTS.map((agent) => {
-            const { TileIcon } = agent;
+        {/* 3 Equal Cards Overview Row */}
+        <div className="ai-agents-grid" role="region" aria-label="Available AI Agents">
+          {AI_AGENTS_DATA.map((agent) => {
+            const TileIcon = TILE_ICONS[agent.id] || DocuTileIcon;
+            const capIcons = CARD_CAP_ICONS[agent.id] || [FileText, Search, Layers];
+
             return (
               <article
                 key={agent.id}
@@ -292,17 +230,23 @@ export const AIAgentsShowcase: React.FC = () => {
                     </span>
                   </div>
 
-                  <div
+                  {/* Circular Interactive Arrow Button linking directly to dedicated agent page */}
+                  <Link
+                    to={agent.route}
                     className={`ai-agent-card__arrow-btn ai-agent-card__arrow-btn--${agent.accentClass}`}
-                    aria-hidden="true"
+                    aria-label={`Explore dedicated page for ${agent.fullName}`}
                   >
-                    <ArrowRight size={20} />
-                  </div>
+                    <ArrowRight
+                      size={20}
+                      className="ai-agent-card__arrow-icon"
+                      aria-hidden="true"
+                    />
+                  </Link>
                 </div>
 
                 {/* Description */}
                 <p className="ai-agent-card__description">
-                  {agent.description}
+                  {agent.cardDescription}
                 </p>
 
                 {/* Horizontal Divider */}
@@ -310,29 +254,35 @@ export const AIAgentsShowcase: React.FC = () => {
 
                 {/* Capability List */}
                 <ul className="ai-agent-card__capabilities">
-                  {agent.capabilities.map((cap, idx) => {
-                    const CapIcon = cap.icon;
+                  {agent.cardCapabilities.map((capText, idx) => {
+                    const CapIcon = capIcons[idx] || CheckCircle2;
                     return (
                       <li key={idx} className="ai-agent-card__cap-item">
                         <CapIcon
                           size={17}
                           className={`ai-agent-card__cap-icon ai-agent-card__cap-icon--${agent.accentClass}`}
                         />
-                        <span className="ai-agent-card__cap-text">{cap.text}</span>
+                        <span className="ai-agent-card__cap-text">{capText}</span>
                       </li>
                     );
                   })}
                 </ul>
 
-                {/* 3D Illustration at bottom of card */}
-                <div className="ai-agent-card__vis-container" aria-hidden="true">
+                {/* Ultra-HD 3D Visualization at bottom of card */}
+                <Link
+                  to={agent.route}
+                  className="ai-agent-card__vis-container"
+                  aria-label={`Learn more about ${agent.fullName}`}
+                >
                   <img
-                    src={agent.visSrc}
-                    alt={agent.visAlt}
+                    src={agent.cardImage}
+                    alt={`${agent.fullName} 3D visualization`}
                     className="ai-agent-card__vis-image"
                     loading="lazy"
+                    width={1774}
+                    height={887}
                   />
-                </div>
+                </Link>
               </article>
             );
           })}

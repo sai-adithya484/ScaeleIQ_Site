@@ -17,6 +17,7 @@ import { DemoPage } from './pages/DemoPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { DataPage } from './pages/DataPage';
 import { AiPage } from './pages/AiPage';
+import { AgentDetailPage } from './pages/AgentDetailPage';
 import { SolutionsPage } from './pages/SolutionsPage';
 
 // Scroll to top helper
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
             <Route path="/platform" element={<PlatformPage />} />
             <Route path="/data" element={<DataPage />} />
             <Route path="/ai" element={<AiPage />} />
+            <Route path="/ai/agents/:agentId" element={<AgentDetailPage />} />
             <Route path="/solutions" element={<SolutionsPage />} />
             <Route path="/case-studies" element={<CaseStudiesPage />} />
             <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
