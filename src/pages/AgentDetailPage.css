@@ -506,44 +506,35 @@
 .agent-pipeline-card__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .agent-pipeline-card__step {
+  display: inline-block;
   font-family: var(--font-heading, sans-serif);
   font-size: 11.5px;
   font-weight: 700;
   color: var(--agent-accent);
   background: var(--agent-accent-light);
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
-}
-
-.agent-pipeline-card__service {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--font-mono, monospace);
-  font-size: 11.5px;
-  color: #64748b;
-  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .agent-pipeline-card__title {
   font-family: var(--font-heading, sans-serif);
-  font-size: 15.5px;
+  font-size: 16px;
   font-weight: 700;
   color: #091a32;
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
   line-height: 1.35;
 }
 
 .agent-pipeline-card__desc {
   font-family: var(--font-sans, sans-serif);
-  font-size: 13.5px;
+  font-size: 14px;
   color: #526071;
-  line-height: 1.55;
+  line-height: 1.6;
   margin: 0;
 }
 

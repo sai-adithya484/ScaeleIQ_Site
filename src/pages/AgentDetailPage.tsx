@@ -202,10 +202,6 @@ export const AgentDetailPage: React.FC = () => {
                   <span className={`agent-pipeline-card__step agent-pipeline-card__step--${agent.accentClass}`}>
                     {stg.step}
                   </span>
-                  <span className="agent-pipeline-card__service">
-                    <Database size={13} aria-hidden="true" />
-                    {stg.service}
-                  </span>
                 </div>
                 <h3 className="agent-pipeline-card__title">{stg.title}</h3>
                 <p className="agent-pipeline-card__desc">{stg.description}</p>
