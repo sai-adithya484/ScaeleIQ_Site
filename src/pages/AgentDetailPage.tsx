@@ -46,23 +46,21 @@ export const AgentDetailPage: React.FC = () => {
           <div className="agent-hero-grid-pattern" />
         </div>
 
-        {/* Back link in its own constrained wrapper */}
-        <div className="agent-back-link-wrap">
+        <div className="container agent-hero-container">
+          {/* Back link aligned to the left of the container, matching Case Studies */}
           <Link to="/ai#ai-agents" className="agent-back-link">
             <ArrowLeft size={16} aria-hidden="true" />
             <span>Back to AI Agents</span>
           </Link>
-        </div>
 
-        <div className="agent-hero-container">
           <div className="agent-hero-grid">
             {/* Left Column: Headings & CTAs */}
             <div className="agent-hero-content">
-              <div className="agent-hero-eyebrow-row">
+              <div className="agent-hero-eyebrow-block">
                 <span className={`agent-hero-badge agent-hero-badge--${agent.accentClass}`}>
                   SNOWFLAKE-NATIVE AI AGENT
                 </span>
-                <span className="agent-hero-tagline">{agent.heroTagline}</span>
+                <p className="agent-hero-tagline">{agent.heroTagline}</p>
               </div>
 
               <h1 className="agent-hero-title">{agent.fullName}</h1>
@@ -82,36 +80,18 @@ export const AgentDetailPage: React.FC = () => {
                   Explore Capabilities
                 </a>
               </div>
-
-              {/* Quick Trust Badges */}
-              <div className="agent-hero-trust-row">
-                <span className="agent-trust-pill">
-                  <Shield size={14} aria-hidden="true" />
-                  Snowflake Horizon Governed
-                </span>
-                <span className="agent-trust-pill">
-                  <Database size={14} aria-hidden="true" />
-                  Zero Data Egress
-                </span>
-                <span className="agent-trust-pill">
-                  <CheckCircle2 size={14} aria-hidden="true" />
-                  Deterministic Lineage
-                </span>
-              </div>
             </div>
 
-            {/* Right Column: Large Premium HD Visualization — bleeds to edge */}
+            {/* Right Column: Frameless 3D HD Visualization matching reference */}
             <div className="agent-hero-media">
-              <div className="agent-hero-card-frame">
-                <img
-                  src={agent.heroImage}
-                  alt={`${agent.fullName} 3D architectural render`}
-                  className="agent-hero-image"
-                  width={1774}
-                  height={887}
-                  loading="eager"
-                />
-              </div>
+              <img
+                src={agent.heroImage}
+                alt={`${agent.fullName} 3D architectural render`}
+                className="agent-hero-image"
+                width={1774}
+                height={887}
+                loading="eager"
+              />
             </div>
           </div>
         </div>
