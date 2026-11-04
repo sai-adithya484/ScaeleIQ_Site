@@ -1,0 +1,177 @@
+/* ============================================================
+   DATA PAGE — Dedicated Hero Section
+   Modeled on Approved Living Data Infrastructure Reference
+   ============================================================ */
+
+.data-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: calc(76px + clamp(1.5rem, 3vw, 3rem));
+  padding-bottom: clamp(3.5rem, 5.5vw, 5.5rem);
+  text-align: center;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-color: #FFFFFF;
+}
+
+/* Background image layer using Frosted Blue Wave Gradient */
+.data-hero__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.data-hero__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Large, subtle white translucent radial backdrop behind central content */
+.data-hero__backdrop {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(92vw, 1150px);
+  height: min(72vh, 600px);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.72) 35%,
+    rgba(255, 255, 255, 0.4) 60%,
+    rgba(255, 255, 255, 0.12) 80%,
+    transparent 100%
+  );
+  filter: blur(45px);
+  pointer-events: none;
+}
+
+.data-hero__container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.data-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Eyebrow: cyan, uppercase, bold, letter-spaced */
+.data-hero__eyebrow {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: clamp(0.78rem, 1.2vw, 0.875rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  white-space: nowrap;
+}
+
+/* Main heading: large, heavy, dark navy/black, centered */
+.data-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 5.6vw, 4.85rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #0A0D14;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  max-width: 1180px;
+}
+
+/* Description: medium-sized, muted grey, comfortable line height */
+.data-hero__desc {
+  font-family: var(--font-sans);
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 860px;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+/* Buttons container */
+.data-hero__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* Custom button refinement for Data Hero to match reference */
+.data-hero__actions .btn {
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  min-width: 190px;
+}
+
+/* Secondary Button (Request Demo): white translucent with subtle border */
+.data-hero__btn-secondary {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #111827 !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.data-hero__btn-secondary:hover {
+  background-color: #FFFFFF !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .data-hero {
+    min-height: auto;
+    padding-top: calc(76px + 2.5rem);
+    padding-bottom: 3.5rem;
+  }
+
+  .data-hero__title {
+    font-size: clamp(2.2rem, 8vw, 3rem);
+  }
+
+  .data-hero__desc {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .data-hero__actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .data-hero__actions .btn {
+    width: 100%;
+  }
+
+  .data-hero__backdrop {
+    width: 95vw;
+    height: 80%;
+  }
+}
+

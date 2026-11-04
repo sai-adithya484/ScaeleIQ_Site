@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import { Hero } from '../components/sections/Hero';
+import { Button } from '../components/ui/Button';
+import { RevealAnimation } from '../components/ui/RevealAnimation';
 import { FeaturePanel } from '../components/sections/FeaturePanel';
 import { CTASection } from '../components/sections/CTASection';
 import { livingInfrastructurePanels } from '../data/homeContent';
 import { platformCta } from '../data/ctaContent';
+import './DataPage.css';
 
 export const DataPage: React.FC = () => {
   useEffect(() => {
@@ -12,14 +14,45 @@ export const DataPage: React.FC = () => {
 
   return (
     <div className="page-wrapper data-page">
-      <Hero
-        eyebrow="ENTERPRISE DATA"
-        title="Living Data Infrastructure"
-        description="Autonomous schema mapping, continuous forensic governance, and zero-downtime cutover for complex enterprise data estates."
-        primaryButton={{ label: 'Explore Platform', to: '/platform' }}
-        secondaryButton={{ label: 'Request Demo', to: '/demo' }}
-        imageSrc="/assets/platform.webp"
-      />
+      {/* ═══════════════ DATA HERO ═══════════════ */}
+      <section className="data-hero">
+        {/* Background Image: Frosted Blue Wave Gradient */}
+        <div className="data-hero__bg" aria-hidden="true">
+          <img
+            src="/assets/Frosted Blue Wave Gradient.png"
+            alt=""
+            className="data-hero__bg-img"
+            fetchPriority="high"
+          />
+          {/* Central soft white translucent radial backdrop */}
+          <div className="data-hero__backdrop" />
+        </div>
+
+        <div className="container data-hero__container">
+          <RevealAnimation variant="up">
+            <div className="data-hero__inner">
+              <span className="data-hero__eyebrow">ENTERPRISE DATA</span>
+
+              <h1 className="data-hero__title">
+                Living Data Infrastructure
+              </h1>
+
+              <p className="data-hero__desc">
+                Autonomous schema mapping, continuous forensic governance, and zero-downtime cutover for complex enterprise data estates.
+              </p>
+
+              <div className="data-hero__actions">
+                <Button to="/platform" variant="primary" size="lg" className="data-hero__btn-primary">
+                  Explore Platform
+                </Button>
+                <Button to="/demo" variant="secondary" size="lg" className="data-hero__btn-secondary">
+                  Request Demo
+                </Button>
+              </div>
+            </div>
+          </RevealAnimation>
+        </div>
+      </section>
 
       <section style={{ padding: '4rem 0' }}>
         <div className="container">

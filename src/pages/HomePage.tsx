@@ -73,19 +73,27 @@ export const HomePage: React.FC = () => {
 
       {/* ═══════════════ 1. HERO ═══════════════ */}
       <section className="home-hero">
-        <div className="container">
+        <div className="home-hero__content">
           <RevealAnimation variant="up">
             <div className="home-hero__inner">
               <span className="home-hero__eyebrow">ENTERPRISE DATA MODERNIZATION</span>
+
               <h1 className="home-hero__title">
-                The Autonomous Data Modernization Platform
+                The Autonomous Data<br className="home-hero__title-br" />
+                Modernization Platform
               </h1>
+
               <p className="home-hero__desc">
                 Deploy specialized AI agents and domain intelligence to modernize legacy data stacks, automate governance, and unify enterprise semantics — in weeks, not quarters.
               </p>
+
               <div className="home-hero__actions">
-                <Button to="/demo" variant="primary" size="lg">Request a demo</Button>
-                <Button to="/solutions" variant="secondary" size="lg">Explore solutions</Button>
+                <Button to="/demo" variant="primary" size="lg" className="home-hero__btn-primary">
+                  Request a demo
+                </Button>
+                <Button to="/solutions" variant="secondary" size="lg" className="home-hero__btn-secondary">
+                  Explore solutions
+                </Button>
               </div>
             </div>
           </RevealAnimation>

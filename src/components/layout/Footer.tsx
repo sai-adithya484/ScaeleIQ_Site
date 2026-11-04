@@ -6,9 +6,12 @@ export const Footer: React.FC = () => {
   return (
     <footer className="footer">
       <div className="footer__container">
-        {/* Brand Full Logo */}
+        {/* Brand Wordmark */}
         <Link to="/" className="footer__brand" aria-label="ScaeleIQ Home">
-          <img src="/assets/3DLogos/Glossy_Logo.png" alt="ScaeleIQ" className="footer__logo-full" />
+          <span className="footer__wordmark">
+            <span className="footer__wordmark-primary">SCAELE</span>
+            <span className="footer__wordmark-accent">IQ</span>
+          </span>
         </Link>
 
         {/* Links */}

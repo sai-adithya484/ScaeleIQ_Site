@@ -13,6 +13,12 @@ export const Navbar: React.FC = () => {
     width: 0,
     opacity: 0,
   });
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoverIndicatorStyle, setHoverIndicatorStyle] = useState<{ left: number; width: number; opacity: number }>({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
 
   const location = useLocation();
   const navRef = useRef<HTMLElement>(null);
@@ -49,6 +55,23 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('resize', updateIndicator);
   }, [activeIndex, location.pathname]);
 
+  // Calculate moving indicator position for hovered item
+  useEffect(() => {
+    if (hoveredIndex !== null && linksRef.current[hoveredIndex] && navRef.current) {
+      const linkEl = linksRef.current[hoveredIndex]!;
+      const navRect = navRef.current.getBoundingClientRect();
+      const linkRect = linkEl.getBoundingClientRect();
+
+      setHoverIndicatorStyle({
+        left: linkRect.left - navRect.left,
+        width: linkRect.width,
+        opacity: 1,
+      });
+    } else {
+      setHoverIndicatorStyle((prev) => ({ ...prev, opacity: 0 }));
+    }
+  }, [hoveredIndex]);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -70,35 +93,56 @@ export const Navbar: React.FC = () => {
   return (
     <header className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__container">
-        {/* Brand Full Logo */}
+        {/* Brand Wordmark */}
         <Link to="/" className="navbar__brand" aria-label="ScaeleIQ Home">
-          <img src="/assets/3DLogos/Glossy_Logo.png" alt="ScaeleIQ" className="navbar__logo-full" />
+          <span className="navbar__wordmark">
+            <span className="navbar__wordmark-primary">SCAELE</span>
+            <span className="navbar__wordmark-accent">IQ</span>
+          </span>
         </Link>
 
-        {/* Desktop Navigation Links with Smooth Traveling Active Underline */}
-        <nav ref={navRef} className="navbar__nav">
+        {/* Desktop Navigation Links with Active and Hovered Underlines */}
+        <nav
+          ref={navRef}
+          className="navbar__nav"
+          onMouseLeave={() => setHoveredIndex(null)}
+        >
           {navigationItems.map((item, index) => {
             const isActive = index === activeIndex;
+            const isHovered = index === hoveredIndex;
             return (
               <Link
                 key={item.href}
                 ref={(el) => (linksRef.current[index] = el)}
                 to={item.href}
-                className={`navbar__link ${isActive ? 'navbar__link--active' : ''}`}
+                className={`navbar__link ${isActive ? 'navbar__link--active' : ''} ${isHovered ? 'navbar__link--hovered' : ''}`}
+                onMouseEnter={() => setHoveredIndex(index)}
               >
                 {item.label}
               </Link>
             );
           })}
 
-          {/* Single Shared Animated Underline (Smoothly travels when switching active section) */}
+          {/* Selected / Active Section Underline (Solid Dark Anchor) */}
           <span
-            className="navbar__indicator"
+            className="navbar__indicator navbar__indicator--active"
             style={{
               transform: `translateX(${indicatorStyle.left}px)`,
               width: `${indicatorStyle.width}px`,
               opacity: indicatorStyle.opacity,
             }}
+            aria-hidden="true"
+          />
+
+          {/* Hovered Section Underline (Distinct Cyan Accent with Subtle Luminous Glow) */}
+          <span
+            className="navbar__indicator navbar__indicator--hover"
+            style={{
+              transform: `translateX(${hoverIndicatorStyle.left}px)`,
+              width: `${hoverIndicatorStyle.width}px`,
+              opacity: hoverIndicatorStyle.opacity,
+            }}
+            aria-hidden="true"
           />
         </nav>
 
