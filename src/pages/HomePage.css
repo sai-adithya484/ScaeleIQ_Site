@@ -47,7 +47,8 @@
 .home-hero__eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
+  font-family: var(--font-sans);
   font-size: clamp(0.78rem, 1.1vw, 0.875rem);
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -62,23 +63,23 @@
 .home-hero__eyebrow::after {
   content: '';
   display: inline-block;
-  width: 32px;
+  width: 46px;
   height: 2px;
   vertical-align: middle;
 }
 
 .home-hero__eyebrow::before {
-  background: linear-gradient(90deg, rgba(0, 180, 216, 0.15), var(--accent));
+  background: linear-gradient(90deg, rgba(0, 180, 216, 0), var(--accent));
 }
 
 .home-hero__eyebrow::after {
-  background: linear-gradient(90deg, var(--accent), rgba(0, 180, 216, 0.15));
+  background: linear-gradient(90deg, var(--accent), rgba(0, 180, 216, 0));
 }
 
-/* Heading: large, heavy, dark navy, arranged across exactly two lines */
+/* Heading: large, heavy, dark navy, arranged across exactly two lines using reference font-display */
 .home-hero__title {
   font-family: var(--font-display);
-  font-size: clamp(2.65rem, 4.4vw, 4.35rem);
+  font-size: clamp(2.75rem, 4.4vw, 4.4rem);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.03em;
@@ -93,10 +94,10 @@
 
 /* Description: medium-sized, comfortable line height, muted dark-grey */
 .home-hero__desc {
-  font-size: clamp(1.08rem, 1.5vw, 1.25rem);
+  font-size: clamp(0.98rem, 1.25vw, 1.125rem);
   line-height: 1.6;
   color: var(--text-secondary);
-  max-width: 520px;
+  max-width: clamp(520px, 44vw, 640px);
   margin-bottom: 2.25rem;
   text-align: left;
 }
@@ -190,7 +191,7 @@
   }
 
   .home-hero__desc {
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-bottom: 2rem;
   }
 

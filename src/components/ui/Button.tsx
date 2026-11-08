@@ -7,6 +7,8 @@ export interface ButtonProps {
   children: React.ReactNode;
   to?: string;
   href?: string;
+  target?: string;
+  rel?: string;
   variant?: 'primary' | 'secondary' | 'outline' | 'dark-outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   showArrow?: boolean;
@@ -20,6 +22,8 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   to,
   href,
+  target,
+  rel,
   variant = 'primary',
   size = 'md',
   showArrow = true,
@@ -53,8 +57,11 @@ export const Button: React.FC<ButtonProps> = ({
   }
 
   if (href) {
+    const isAnchor = href.startsWith('#');
+    const resolvedTarget = target ?? (isAnchor ? undefined : '_blank');
+    const resolvedRel = rel ?? (isAnchor ? undefined : 'noopener noreferrer');
     return (
-      <a href={href} className={classes} target="_blank" rel="noopener noreferrer" onClick={onClick}>
+      <a href={href} className={classes} target={resolvedTarget} rel={resolvedRel} onClick={onClick}>
         {content}
       </a>
     );

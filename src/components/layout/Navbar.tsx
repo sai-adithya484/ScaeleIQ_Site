@@ -90,8 +90,10 @@ export const Navbar: React.FC = () => {
     setMobileMenuOpen(false);
   }, [location]);
 
+  const isDarkHero = location.pathname === '/about';
+
   return (
-    <header className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`}>
+    <header className={`navbar ${isScrolled ? 'navbar--scrolled' : ''} ${isDarkHero && !isScrolled ? 'navbar--transparent-dark' : ''}`}>
       <div className="navbar__container">
         {/* Brand Wordmark */}
         <Link to="/" className="navbar__brand" aria-label="ScaeleIQ Home">

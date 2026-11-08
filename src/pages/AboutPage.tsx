@@ -1,143 +1,281 @@
 import React, { useEffect } from 'react';
-import { leadershipTeam } from '../data/leadership';
-import { companyValues } from '../data/values';
-import { investors } from '../data/investors';
-import { pressMentions } from '../data/press';
-import { LeadershipCard } from '../components/cards/LeadershipCard';
-import { ValueCard } from '../components/cards/ValueCard';
-import { PressCard } from '../components/cards/PressCard';
-import { SectionLabel } from '../components/ui/SectionLabel';
+import { Link } from 'react-router-dom';
 import { RevealAnimation } from '../components/ui/RevealAnimation';
-import { CTASection } from '../components/sections/CTASection';
-import { homeCta } from '../data/ctaContent';
-import { ArrowUpRight } from 'lucide-react';
+import {
+  Layers,
+  Sparkles,
+  BarChart3,
+  Zap,
+  Users,
+  Shield,
+  ArrowUpRight
+} from 'lucide-react';
+import './AboutPage.css';
 
 export const AboutPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'About ScaeleIQ: Leadership, Mission & Investors';
+    document.title = 'Company — SCAELEIQ';
   }, []);
 
   return (
     <div className="page-wrapper about-page">
-      {/* Header */}
-      <section style={{ paddingTop: 'calc(72px + 4rem)', paddingBottom: '3.5rem' }}>
-        <div className="container">
+      {/* ═══════════════ 1. HERO ═══════════════ */}
+      <section className="about-hero">
+        <div className="about-hero__content">
           <RevealAnimation variant="up">
-            <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-              <SectionLabel>OUR MISSION</SectionLabel>
-              <h1 className="heading-xl" style={{ marginBottom: '1.25rem' }}>
-                Engineering the Future of Data Modernization
+            <div className="about-hero__inner">
+              <span className="about-hero__eyebrow">OUR COMPANY</span>
+
+              <h1 className="about-hero__title">
+                Engineering Real<br />
+                Business <br className="about-hero__title-mobile-br" />Transformation<br />
+                <span className="about-hero__title-accent">with Data and AI</span>
               </h1>
-              <p className="body-lg">
-                We are building the intelligent operating system for enterprise system transformation, uniting autonomous agent swarms with human domain experts.
+
+              <p className="about-hero__desc">
+                SCAELEIQ modernizes enterprise data foundations and operationalizes AI to solve complex business challenges at scale.
               </p>
             </div>
           </RevealAnimation>
         </div>
       </section>
 
-      {/* Leadership Section */}
-      <section style={{ padding: '4rem 0', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
+      {/* ═══════════════ 2. WHO WE ARE ═══════════════ */}
+      <section className="about-who">
         <div className="container">
           <RevealAnimation variant="up">
-            <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 3.5rem auto' }}>
-              <SectionLabel>LEADERSHIP</SectionLabel>
-              <h2 className="heading-lg">Our Leadership Team</h2>
-            </div>
-          </RevealAnimation>
+            <div className="about-who__grid">
+              {/* Left Column */}
+              <div className="about-who__left">
+                <span className="about-eyebrow">WHO WE ARE</span>
+                <h2 className="about-who__title">
+                  A Modern Engineering Partner for the Data and AI Era
+                </h2>
+                <div className="about-who__accent-line" />
+              </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            {leadershipTeam.map((leader) => (
-              <RevealAnimation key={leader.name} variant="up">
-                <LeadershipCard leader={leader} />
-              </RevealAnimation>
-            ))}
-          </div>
-        </div>
-      </section>
+              {/* Vertical Divider */}
+              <div className="about-who__divider" aria-hidden="true" />
 
-      {/* Values Section */}
-      <section style={{ padding: '5rem 0' }}>
-        <div className="container">
-          <RevealAnimation variant="up">
-            <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 3.5rem auto' }}>
-              <SectionLabel>OUR PRINCIPLES</SectionLabel>
-              <h2 className="heading-lg">Our Values</h2>
-            </div>
-          </RevealAnimation>
+              {/* Right Column */}
+              <div className="about-who__right">
+                <p className="about-who__desc">
+                  We help enterprises turn their data into a strategic asset — by modernizing data platforms, building intelligent data products, and deploying autonomous AI systems that deliver measurable business value.
+                </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            {companyValues.map((val) => (
-              <RevealAnimation key={val.id} variant="up">
-                <ValueCard value={val} />
-              </RevealAnimation>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Investors Section */}
-      <section style={{ padding: '4rem 0', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <div className="container">
-          <RevealAnimation variant="up">
-            <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 3rem auto' }}>
-              <SectionLabel>BACKING & CAPITAL</SectionLabel>
-              <h2 className="heading-lg">Backed by Leading Investors</h2>
-            </div>
-          </RevealAnimation>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
-            {investors.map((inv) => (
-              <RevealAnimation key={inv.name} variant="up">
-                <a
-                  href={inv.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid var(--border-card)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '2rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    textDecoration: 'none',
-                    minHeight: '140px',
-                    boxShadow: 'var(--shadow-sm)',
-                    transition: 'all var(--transition-normal)',
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>{inv.name}</div>
-                    <ArrowUpRight size={16} color="#868C98" />
+                <div className="about-who__highlights">
+                  <div className="about-who__highlight-item">
+                    <div className="about-who__icon-wrap">
+                      <Layers size={22} />
+                    </div>
+                    <span className="about-who__highlight-label">
+                      Modernize Data Platforms
+                    </span>
                   </div>
-                  <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>{inv.category}</div>
-                </a>
-              </RevealAnimation>
-            ))}
+
+                  <div className="about-who__highlight-item">
+                    <div className="about-who__icon-wrap">
+                      <Sparkles size={22} />
+                    </div>
+                    <span className="about-who__highlight-label">
+                      Operationalize AI at Scale
+                    </span>
+                  </div>
+
+                  <div className="about-who__highlight-item">
+                    <div className="about-who__icon-wrap">
+                      <BarChart3 size={22} />
+                    </div>
+                    <span className="about-who__highlight-label">
+                      Deliver Business Impact
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </RevealAnimation>
+        </div>
+      </section>
+
+      {/* ═══════════════ 3. LEADERSHIP ═══════════════ */}
+      <section className="about-leadership">
+        <div className="container">
+          <RevealAnimation variant="up">
+            <div className="about-leadership__header">
+              <div className="about-leadership__title-wrap">
+                <span className="about-eyebrow">LEADERSHIP</span>
+                <h2 className="about-leadership__title">Our Leadership Team</h2>
+              </div>
+              <p className="about-leadership__supporting">
+                A focused leadership team with deep expertise in enterprise technology, data, and AI.
+              </p>
+            </div>
+          </RevealAnimation>
+
+          <div className="about-leadership__grid">
+            {/* Card 1: Ramakrishna S */}
+            <RevealAnimation variant="up" delayMs={50}>
+              <div className="about-leader-card">
+                <div className="about-leader-card__avatar">
+                  <span className="about-leader-card__initials">RS</span>
+                </div>
+                <div className="about-leader-card__divider" aria-hidden="true" />
+                <div className="about-leader-card__info">
+                  <h3 className="about-leader-card__name">Ramakrishna S</h3>
+                  <span className="about-leader-card__role">FOUNDER</span>
+                </div>
+              </div>
+            </RevealAnimation>
+
+            {/* Card 2: Warner Burzer */}
+            <RevealAnimation variant="up" delayMs={100}>
+              <div className="about-leader-card">
+                <div className="about-leader-card__avatar">
+                  <span className="about-leader-card__initials">WB</span>
+                </div>
+                <div className="about-leader-card__divider" aria-hidden="true" />
+                <div className="about-leader-card__info">
+                  <h3 className="about-leader-card__name">Warner Burzer</h3>
+                  <span className="about-leader-card__role">CTO</span>
+                </div>
+              </div>
+            </RevealAnimation>
+
+            {/* Card 3: Jeff Mario */}
+            <RevealAnimation variant="up" delayMs={150}>
+              <div className="about-leader-card">
+                <div className="about-leader-card__avatar">
+                  <span className="about-leader-card__initials">JM</span>
+                </div>
+                <div className="about-leader-card__divider" aria-hidden="true" />
+                <div className="about-leader-card__info">
+                  <h3 className="about-leader-card__name">Jeff Mario</h3>
+                  <span className="about-leader-card__role">CRO</span>
+                </div>
+              </div>
+            </RevealAnimation>
           </div>
         </div>
       </section>
 
-      {/* Press Section */}
-      <section style={{ padding: '5rem 0' }}>
-        <div className="container" style={{ maxWidth: '840px' }}>
+      {/* ═══════════════ 4. OUR PRINCIPLES ═══════════════ */}
+      <section className="about-principles">
+        <div className="container">
           <RevealAnimation variant="up">
-            <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 3rem auto' }}>
-              <SectionLabel>IN THE NEWS</SectionLabel>
-              <h2 className="heading-lg">Press & Media</h2>
+            <div className="about-principles__header">
+              <span className="about-eyebrow">OUR PRINCIPLES</span>
+              <h2 className="about-principles__title">The Values That Guide Us</h2>
             </div>
           </RevealAnimation>
 
-          {pressMentions.map((press) => (
-            <RevealAnimation key={press.id} variant="up">
-              <PressCard press={press} />
-            </RevealAnimation>
-          ))}
+          <RevealAnimation variant="up" delayMs={100}>
+            <div className="about-principles__row">
+              {/* Value 1 */}
+              <div className="about-principle-item">
+                <div className="about-principle-item__icon-wrap">
+                  <Zap size={26} />
+                </div>
+                <div className="about-principle-item__content">
+                  <h3 className="about-principle-item__title">Innovation First</h3>
+                  <p className="about-principle-item__desc">
+                    We build for what's next, not just what's now.
+                  </p>
+                </div>
+              </div>
+
+              <div className="about-principles__divider" aria-hidden="true" />
+
+              {/* Value 2 */}
+              <div className="about-principle-item">
+                <div className="about-principle-item__icon-wrap">
+                  <Users size={26} />
+                </div>
+                <div className="about-principle-item__content">
+                  <h3 className="about-principle-item__title">Customer Obsession</h3>
+                  <p className="about-principle-item__desc">
+                    Real problems. Real impact. That's our focus.
+                  </p>
+                </div>
+              </div>
+
+              <div className="about-principles__divider" aria-hidden="true" />
+
+              {/* Value 3 */}
+              <div className="about-principle-item">
+                <div className="about-principle-item__icon-wrap">
+                  <Shield size={26} />
+                </div>
+                <div className="about-principle-item__content">
+                  <h3 className="about-principle-item__title">Trust & Integrity</h3>
+                  <p className="about-principle-item__desc">
+                    We do what's right, always.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </RevealAnimation>
         </div>
       </section>
 
-      <CTASection config={homeCta} />
+      {/* ═══════════════ 5. SCAELEIQ AT A GLANCE ═══════════════ */}
+      <section className="about-glance-section">
+        <div className="container">
+          <RevealAnimation variant="large">
+            <div className="about-glance-panel">
+              {/* Left Side */}
+              <div className="about-glance-panel__left">
+                <span className="about-eyebrow">SCAELEIQ AT A GLANCE</span>
+                <h2 className="about-glance-panel__title">
+                  A Focused, High-Impact Technology Company
+                </h2>
+              </div>
+
+              {/* Right Side: Non-numeric descriptors */}
+              <div className="about-glance-panel__metrics">
+                <div className="about-glance-metric">
+                  <span className="about-glance-metric__value">Enterprise</span>
+                  <span className="about-glance-metric__label">Focused</span>
+                </div>
+
+                <div className="about-glance-panel__divider" aria-hidden="true" />
+
+                <div className="about-glance-metric">
+                  <span className="about-glance-metric__value">AI</span>
+                  <span className="about-glance-metric__label">Intelligent Execution</span>
+                </div>
+
+                <div className="about-glance-panel__divider" aria-hidden="true" />
+
+                <div className="about-glance-metric">
+                  <span className="about-glance-metric__value">Business</span>
+                  <span className="about-glance-metric__label">Impact</span>
+                </div>
+              </div>
+            </div>
+          </RevealAnimation>
+        </div>
+      </section>
+
+      {/* ═══════════════ 6. FINAL CTA ═══════════════ */}
+      <section className="about-cta-section">
+        <div className="container">
+          <RevealAnimation variant="large">
+            <div className="about-cta-card">
+              <div className="about-cta-card__content">
+                <span className="about-cta-card__eyebrow">LET'S CONNECT</span>
+                <h2 className="about-cta-card__heading">Build What's Next Together</h2>
+                <p className="about-cta-card__desc">
+                  Partner with SCAELEIQ to modernize your data, operationalize AI, and drive lasting business impact.
+                </p>
+                <Link to="/contact" className="about-cta-card__btn">
+                  <span>Get in Touch</span>
+                  <ArrowUpRight size={18} />
+                </Link>
+              </div>
+            </div>
+          </RevealAnimation>
+        </div>
+      </section>
     </div>
   );
 };

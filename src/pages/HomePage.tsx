@@ -84,7 +84,7 @@ export const HomePage: React.FC = () => {
               </h1>
 
               <p className="home-hero__desc">
-                Deploy specialized AI agents and domain intelligence to modernize legacy data stacks, automate governance, and unify enterprise semantics — in weeks, not quarters.
+                Deploy specialized AI agents to modernize legacy data stacks, automate governance, and unify enterprise semantics in weeks, not quarters.
               </p>
 
               <div className="home-hero__actions">

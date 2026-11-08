@@ -18,6 +18,56 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
+/* Transparent Dark Hero Variant (for pages with dark hero backgrounds like /about) */
+.navbar--transparent-dark:not(.navbar--scrolled) {
+  background-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.navbar--transparent-dark:not(.navbar--scrolled) .navbar__wordmark-primary {
+  background: linear-gradient(135deg, #86EFAC 0%, #22C55E 45%, #16A34A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 5px rgba(134, 239, 172, 0.85)) drop-shadow(0 0 14px rgba(34, 197, 94, 0.65)) drop-shadow(0 0 24px rgba(22, 163, 74, 0.45));
+}
+
+.navbar--transparent-dark:not(.navbar--scrolled) .navbar__wordmark-accent {
+  background: linear-gradient(135deg, #60A5FA 0%, #2563EB 50%, #1D4ED8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 5px rgba(96, 165, 250, 0.9)) drop-shadow(0 0 14px rgba(37, 99, 235, 0.65)) drop-shadow(0 0 24px rgba(29, 78, 216, 0.45));
+}
+
+.navbar--transparent-dark:not(.navbar--scrolled) .navbar__link {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.navbar--transparent-dark:not(.navbar--scrolled) .navbar__link:hover {
+  color: #00E5FF;
+}
+
+.navbar--transparent-dark:not(.navbar--scrolled) .navbar__link--active {
+  color: #FFFFFF;
+}
+
+.navbar--transparent-dark:not(.navbar--scrolled) .navbar__cta-btn {
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.navbar--transparent-dark:not(.navbar--scrolled) .navbar__cta-btn:hover {
+  background-color: #FFFFFF !important;
+  color: #0A0D14 !important;
+  border-color: #FFFFFF !important;
+}
+
+.navbar--transparent-dark:not(.navbar--scrolled) .navbar__toggle {
+  color: #FFFFFF;
+}
+
 .navbar__container {
   width: 100%;
   max-width: 100%;
@@ -34,18 +84,19 @@
   align-items: center;
   text-decoration: none;
   flex-shrink: 0;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
 .navbar__brand:hover {
-  opacity: 0.85;
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
 .navbar__wordmark {
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 600;
-  font-size: 1.45rem;
-  letter-spacing: 0.16em;
+  font-weight: 800;
+  font-size: 1.65rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
@@ -54,11 +105,33 @@
 }
 
 .navbar__wordmark-primary {
-  color: var(--text-primary);
+  font-weight: 800;
+  background: linear-gradient(135deg, #4ADE80 0%, #22C55E 45%, #15803D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.75)) drop-shadow(0 0 12px rgba(34, 197, 94, 0.5)) drop-shadow(0 0 20px rgba(21, 128, 61, 0.3));
+  transition: filter var(--transition-fast, 0.2s ease);
 }
 
 .navbar__wordmark-accent {
-  color: var(--accent);
+  font-weight: 900;
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 45%, #2563EB 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.75)) drop-shadow(0 0 12px rgba(29, 78, 216, 0.5)) drop-shadow(0 0 20px rgba(11, 25, 44, 0.35));
+  transition: filter var(--transition-fast, 0.2s ease);
+}
+
+.navbar__brand:hover .navbar__wordmark-primary {
+  filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.95)) drop-shadow(0 0 16px rgba(34, 197, 94, 0.7)) drop-shadow(0 0 26px rgba(21, 128, 61, 0.45));
+}
+
+.navbar__brand:hover .navbar__wordmark-accent {
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.95)) drop-shadow(0 0 16px rgba(29, 78, 216, 0.7)) drop-shadow(0 0 26px rgba(11, 25, 44, 0.5));
 }
 
 .navbar__nav {

@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- Foundation Deep Midnight Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#02050E" />
+      <stop offset="30%" stop-color="#030A1A" />
+      <stop offset="70%" stop-color="#051025" />
+      <stop offset="100%" stop-color="#020612" />
+    </linearGradient>
+
+    <!-- Luminous Cyan Wave Gradients -->
+    <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0077B6" stop-opacity="0" />
+      <stop offset="15%" stop-color="#00B4D8" stop-opacity="0.6" />
+      <stop offset="45%" stop-color="#00F0FF" stop-opacity="0.95" />
+      <stop offset="75%" stop-color="#00D5F5" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0077B6" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="waveGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#023E8A" stop-opacity="0" />
+      <stop offset="25%" stop-color="#0077B6" stop-opacity="0.7" />
+      <stop offset="55%" stop-color="#00E5FF" stop-opacity="0.9" />
+      <stop offset="85%" stop-color="#00B4D8" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#023E8A" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="waveGradUpper" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0077B6" stop-opacity="0" />
+      <stop offset="35%" stop-color="#00D5F5" stop-opacity="0.65" />
+      <stop offset="70%" stop-color="#00F0FF" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#0077B6" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Volumetric Ambient Blooms Behind Cards (Directly matching Devstree reference) -->
+    <radialGradient id="bloomCard1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00D5F5" stop-opacity="0.32" />
+      <stop offset="40%" stop-color="#0077B6" stop-opacity="0.18" />
+      <stop offset="80%" stop-color="#023E8A" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#02050E" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="bloomCard2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00F0FF" stop-opacity="0.38" />
+      <stop offset="45%" stop-color="#00B4D8" stop-opacity="0.22" />
+      <stop offset="80%" stop-color="#023E8A" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#02050E" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="bloomCard3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00D5F5" stop-opacity="0.30" />
+      <stop offset="40%" stop-color="#0077B6" stop-opacity="0.16" />
+      <stop offset="80%" stop-color="#023E8A" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#02050E" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Glowing Node Gradients -->
+    <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1" />
+      <stop offset="25%" stop-color="#00F0FF" stop-opacity="0.9" />
+      <stop offset="60%" stop-color="#00B4D8" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#0077B6" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Glow Filters -->
+    <filter id="wideGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16" result="blurWide" />
+      <feGaussianBlur stdDeviation="5" result="blurMid" />
+      <feMerge>
+        <feMergeNode in="blurWide" />
+        <feMergeNode in="blurMid" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="cardBloomBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="28" />
+    </filter>
+  </defs>
+
+  <!-- Deep Midnight Base -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)" />
+
+  <!-- Luminous Ambient Light Clouds Directly Behind The Three Cards -->
+  <!-- Behind Card 1 -->
+  <ellipse cx="420" cy="560" rx="340" ry="240" fill="url(#bloomCard1)" filter="url(#cardBloomBlur)" />
+  <!-- Behind Card 2 (Dominant central luminous bloom, like the reference) -->
+  <ellipse cx="960" cy="540" rx="420" ry="260" fill="url(#bloomCard2)" filter="url(#cardBloomBlur)" />
+  <!-- Behind Card 3 -->
+  <ellipse cx="1500" cy="570" rx="360" ry="240" fill="url(#bloomCard3)" filter="url(#cardBloomBlur)" />
+
+  <!-- ══ LUMINOUS WAVE STREAMS (Traversing directly behind all 3 cards) ══ -->
+  <g filter="url(#wideGlow)">
+    <!-- 1. Upper Light Ribbon -->
+    <path d="M-80,220 C360,140 780,310 1180,210 C1560,110 1780,260 2050,180" 
+          fill="none" stroke="url(#waveGradUpper)" stroke-width="3" />
+    <path d="M-60,280 C400,340 820,180 1240,290 C1620,380 1820,220 2050,290" 
+          fill="none" stroke="url(#waveGradUpper)" stroke-width="2" opacity="0.6" />
+
+    <!-- 2. Primary Mid-Stream (Passing straight through the center of Card 1, Card 2, and Card 3) -->
+    <!-- Soft wide outer halo -->
+    <path d="M-100,520 C320,420 680,620 1020,490 C1380,380 1660,580 2040,480" 
+          fill="none" stroke="url(#waveGrad1)" stroke-width="12" opacity="0.35" />
+    <!-- Core intense light beam -->
+    <path d="M-100,520 C320,420 680,620 1020,490 C1380,380 1660,580 2040,480" 
+          fill="none" stroke="url(#waveGrad1)" stroke-width="3.5" />
+
+    <!-- 3. Secondary Mid-Stream (Harmonic intersecting wave crossing beneath the cards) -->
+    <path d="M-80,640 C380,720 740,510 1140,650 C1520,770 1760,540 2060,610" 
+          fill="none" stroke="url(#waveGrad2)" stroke-width="10" opacity="0.3" />
+    <path d="M-80,640 C380,720 740,510 1140,650 C1520,770 1760,540 2060,610" 
+          fill="none" stroke="url(#waveGrad2)" stroke-width="2.8" />
+
+    <!-- 4. Lower Swelling Cyber Waves -->
+    <path d="M-100,820 C280,750 640,920 1040,810 C1440,710 1680,880 2050,790" 
+          fill="none" stroke="url(#waveGrad1)" stroke-width="4" />
+    <path d="M-50,910 C360,980 760,840 1200,920 C1600,990 1800,870 2050,900" 
+          fill="none" stroke="url(#waveGrad2)" stroke-width="3" />
+  </g>
+
+  <!-- Luminous Intersecting Nodes on the Paths (Bright beacons shining through the cards) -->
+  <g>
+    <!-- Upper Nodes -->
+    <circle cx="580" cy="245" r="14" fill="url(#nodeGlow)" />
+    <circle cx="580" cy="245" r="3" fill="#FFFFFF" />
+
+    <circle cx="1180" cy="210" r="15" fill="url(#nodeGlow)" />
+    <circle cx="1180" cy="210" r="3.2" fill="#FFFFFF" />
+
+    <!-- Card 1 Area Nodes (Shining right inside Card 1) -->
+    <circle cx="340" cy="425" r="18" fill="url(#nodeGlow)" />
+    <circle cx="340" cy="425" r="4" fill="#FFFFFF" />
+
+    <circle cx="520" cy="510" r="16" fill="url(#nodeGlow)" />
+    <circle cx="520" cy="510" r="3.5" fill="#FFFFFF" />
+
+    <!-- Card 2 Area Nodes (Vibrant central beacons, exactly like Devstree Card 2) -->
+    <circle cx="920" cy="530" r="24" fill="url(#nodeGlow)" />
+    <circle cx="920" cy="530" r="5" fill="#FFFFFF" />
+
+    <circle cx="1080" cy="480" r="20" fill="url(#nodeGlow)" />
+    <circle cx="1080" cy="480" r="4.2" fill="#FFFFFF" />
+
+    <!-- Card 3 Area Nodes (Shining right inside Card 3) -->
+    <circle cx="1460" cy="420" r="19" fill="url(#nodeGlow)" />
+    <circle cx="1460" cy="420" r="4" fill="#FFFFFF" />
+
+    <circle cx="1640" cy="560" r="17" fill="url(#nodeGlow)" />
+    <circle cx="1640" cy="560" r="3.5" fill="#FFFFFF" />
+
+    <!-- Lower Nodes -->
+    <circle cx="480" cy="800" r="18" fill="url(#nodeGlow)" />
+    <circle cx="480" cy="800" r="3.5" fill="#FFFFFF" />
+
+    <circle cx="1040" cy="810" r="22" fill="url(#nodeGlow)" />
+    <circle cx="1040" cy="810" r="4.5" fill="#FFFFFF" />
+
+    <circle cx="1580" cy="800" r="18" fill="url(#nodeGlow)" />
+    <circle cx="1580" cy="800" r="3.8" fill="#FFFFFF" />
+  </g>
+
+  <!-- Distributed Luminous Micro-Particles Across Full Viewport -->
+  <g opacity="0.8">
+    <circle cx="180" cy="140" r="1.6" fill="#00F0FF" />
+    <circle cx="420" cy="180" r="2.2" fill="#FFFFFF" />
+    <circle cx="680" cy="120" r="1.5" fill="#00D5F5" />
+    <circle cx="940" cy="160" r="2.4" fill="#00F0FF" />
+    <circle cx="1220" cy="110" r="1.8" fill="#FFFFFF" />
+    <circle cx="1480" cy="160" r="2.2" fill="#00F0FF" />
+    <circle cx="1740" cy="130" r="1.6" fill="#00D5F5" />
+
+    <!-- Particles in Mid Field -->
+    <circle cx="260" cy="480" r="2" fill="#00F0FF" />
+    <circle cx="440" cy="620" r="2.5" fill="#FFFFFF" />
+    <circle cx="780" cy="460" r="2.2" fill="#00F0FF" />
+    <circle cx="860" cy="600" r="2" fill="#00D5F5" />
+    <circle cx="1120" cy="440" r="2.5" fill="#FFFFFF" />
+    <circle cx="1280" cy="590" r="2" fill="#00F0FF" />
+    <circle cx="1420" cy="480" r="2.4" fill="#00D5F5" />
+    <circle cx="1660" cy="490" r="2.5" fill="#FFFFFF" />
+
+    <!-- Lower Particles -->
+    <circle cx="320" cy="880" r="2" fill="#00F0FF" />
+    <circle cx="680" cy="920" r="2.5" fill="#FFFFFF" />
+    <circle cx="1180" cy="860" r="2.2" fill="#00D5F5" />
+    <circle cx="1480" cy="940" r="2.5" fill="#00F0FF" />
+    <circle cx="1780" cy="870" r="2.2" fill="#FFFFFF" />
+  </g>
+</svg>
