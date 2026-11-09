@@ -14,6 +14,9 @@ import {
   Users,
   ShieldAlert,
   CheckCircle2,
+  Sprout,
+  Landmark,
+  Scale,
 } from 'lucide-react';
 import { CaseStudy } from '../../data/caseStudies';
 import './CaseStudyCard.css';
@@ -71,16 +74,54 @@ export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({ caseStudy }) => {
         />
       </div>
 
-      {/* Card Header: Client Logo with slug modifier */}
+      {/* Card Header: Client Logo or Industry / Product Identity */}
       <div className="case-study-card__header">
-        <div className="case-study-card__logo-wrap">
-          <img
-            src={caseStudy.logo}
-            alt={caseStudy.company}
-            className={`case-study-card__logo case-study-card__logo--${caseStudy.slug}`}
-            loading="lazy"
-          />
-        </div>
+        {caseStudy.logo ? (
+          <div className="case-study-card__logo-wrap">
+            <img
+              src={caseStudy.logo}
+              alt={caseStudy.company}
+              className={`case-study-card__logo case-study-card__logo--${caseStudy.slug}`}
+              loading="lazy"
+            />
+          </div>
+        ) : (
+          <div className="case-study-card__identity-wrap">
+            {caseStudy.slug === 'agritech' ? (
+              <div className="case-study-card__identity-badge case-study-card__identity-badge--agritech">
+                <div className="case-study-card__identity-icon-box case-study-card__identity-icon-box--agritech" aria-hidden="true">
+                  <Sprout size={16} strokeWidth={2.2} />
+                </div>
+                <span className="case-study-card__identity-label case-study-card__identity-label--agritech">
+                  Agritech
+                </span>
+              </div>
+            ) : caseStudy.slug === 'financial-services' ? (
+              <div className="case-study-card__identity-badge case-study-card__identity-badge--financial-services">
+                <div className="case-study-card__identity-icon-box case-study-card__identity-icon-box--financial-services" aria-hidden="true">
+                  <Landmark size={16} strokeWidth={2.2} />
+                </div>
+                <span className="case-study-card__identity-label case-study-card__identity-label--financial-services">
+                  Financial Services
+                </span>
+              </div>
+            ) : caseStudy.slug === 'veritas' ? (
+              <div className="case-study-card__identity-badge case-study-card__identity-badge--veritas">
+                <div className="case-study-card__identity-icon-box case-study-card__identity-icon-box--veritas" aria-hidden="true">
+                  <Scale size={16} strokeWidth={2.2} />
+                </div>
+                <span className="case-study-card__identity-label case-study-card__identity-label--veritas">
+                  VERITAS
+                </span>
+              </div>
+            ) : (
+              <span className="case-study-card__industry-badge">
+                <span className="case-study-card__industry-dot" aria-hidden="true" />
+                {caseStudy.company}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Category Pills */}

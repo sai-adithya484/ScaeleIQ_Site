@@ -299,11 +299,11 @@ export const caseStudies: CaseStudy[] = [
     },
   },
   {
-    slug: 'growindigo',
-    company: 'GrowIndigo',
-    logo: '/assets/Logos/growindigo_logo.png',
+    slug: 'agritech',
+    company: 'Agritech',
+    logo: '',
     visual: '/assets/case-studies/growindigo-visual.png',
-    industry: ['Manufacturing', 'ERP Modernization'],
+    industry: ['Agritech', 'ERP Modernization'],
     headline: 'SAP Data Migration and Semantics Conversion',
     summary:
       'Migrated 2TB+ data and converted 2,000+ queries, 150 stored procedures, and 70 ABAP reports to modernize the data landscape.',
@@ -331,12 +331,12 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     orgInfo: {
-      organization: 'GrowIndigo',
-      industry: 'AgTech & Sustainable Agriculture Manufacturing',
-      customers: 'Smallholder Farmers Across 14+ States',
+      organization: 'Agritech Enterprise Operations',
+      industry: 'AgTech & Agricultural Supply Chain',
+      customers: 'Regional Agricultural Networks Across 14+ States',
     },
     about:
-      'GrowIndigo is a sustainable agriculture enterprise founded by Mahyco Grow and Indigo Ag, providing biological crop inputs, digital retail platforms, and carbon farming solutions to farmers across India.',
+      'A leading enterprise agritech operation delivering biological crop inputs, digital agricultural logistics, and farmer service platforms across distributed rural networks.',
     servicesProvided: [
       'Automated ABAP Report & Stored Procedure Refactoring',
       'SAP ERP to HANA Semantic Schema Transformation',
@@ -355,7 +355,7 @@ export const caseStudies: CaseStudy[] = [
     ],
     solution: {
       intro:
-        'ScaeleIQ utilized code-conversion accelerators and semantic mapping agents to migrate and modernize GrowIndigo’s SAP landscape.',
+        'ScaeleIQ utilized code-conversion accelerators and semantic mapping agents to migrate and modernize the core SAP landscape.',
       sections: [
         {
           heading: 'Automated Code Modernization',
@@ -383,9 +383,9 @@ export const caseStudies: CaseStudy[] = [
     },
   },
   {
-    slug: 'mswipe',
-    company: 'Mswipe',
-    logo: '/assets/Logos/mswipe_logo.png',
+    slug: 'financial-services',
+    company: 'Financial Services',
+    logo: '',
     visual: '/assets/case-studies/mswipe-visual.png',
     industry: ['Financial Services', 'Data Migration'],
     headline: 'Hadoop Data Migration to Snowflake',
@@ -415,12 +415,12 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     orgInfo: {
-      organization: 'Mswipe Technologies',
+      organization: 'Financial Services & Payment Infrastructure',
       industry: 'Fintech, Digital Payments & POS Infrastructure',
       customers: 'Over 675,000 Merchants Nationwide',
     },
     about:
-      'Mswipe is a premier digital payments and financial services provider supplying POS terminals, QR soundboxes, and omnichannel payment gateways to businesses.',
+      'A leading financial services and digital payments provider supplying point-of-sale terminals, soundboxes, and omnichannel transaction gateways across nationwide merchant networks.',
     servicesProvided: [
       '640-Node Hadoop Cluster Deprecation & Cloud Migration',
       'Automated Spark 2.x to 3.x Modernization in 2 Weeks',
@@ -467,12 +467,12 @@ export const caseStudies: CaseStudy[] = [
     },
   },
   {
-    slug: 'district-attorney',
-    company: 'District Attorney',
-    logo: '/assets/Logos/district_attorney_logo.png',
+    slug: 'veritas',
+    company: 'Veritas',
+    logo: '',
     visual: '/assets/case-studies/district-attorney-visual.png',
-    industry: ['Public Sector', 'Justice & Safety'],
-    headline: 'IRIS360',
+    industry: ['Legal Technology', 'Case Intelligence'],
+    headline: 'Uncovering the Facts of the Case',
     summary:
       'Unified multiple data sources with an AI-powered assistant to improve case insights, reduce duplicates, and enable faster, data-driven decisions.',
     metrics: [
@@ -492,56 +492,56 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         value: '1 Min',
-        label: 'Daily ELTs completion',
+        label: 'Answer retrieval from legal records',
         icon: 'Zap',
         iconColor: '#2563EB',
         iconBg: 'rgba(37, 99, 235, 0.1)',
       },
     ],
     orgInfo: {
-      organization: "District Attorney's Office",
-      industry: 'Prosecution, Criminal Justice & Public Safety',
-      customers: 'Serving 2.3M+ Diverse Metropolitan Residents',
+      organization: 'Veritas Legal Intelligence',
+      industry: 'Legal Technology & Case Investigation',
+      customers: 'Enterprise Legal Departments & Investigative Teams',
     },
     about:
-      "One of the largest and most ethnically diverse prosecutor's offices in the United States, employing roughly 300 Assistant District Attorneys serving over 2.3 million residents.",
+      'Veritas is an advanced legal case intelligence platform purpose-built to synthesize complex judicial records, resolve entity duplicates across multi-agency databases, and empower investigators with conversational AI discovery.',
     servicesProvided: [
-      'Multi-Agency Record Unification & Resolution (NYPD, IRIS, Courts)',
-      'Natural-Language AI Agent ("Milo") for Case Inquiries',
-      'Automated Daily ELT Pipelines into Snowflake',
-      'Real-Time Caseload Aging & Disposition Dashboards',
+      'Multi-Source Case Record Unification & Cross-Entity Resolution',
+      'Natural-Language AI Case Investigation Agent',
+      'Automated Daily ELT Pipelines into Cloud Data Warehouse',
+      'Real-Time Caseload Aging & Disposition Analytics',
     ],
     challenge: [
       {
-        heading: 'Siloed Law Enforcement & Case Databases',
-        body: 'Critical case history was fragmented across the IRIS case management system, NYPD databases, and court registries, requiring manual reconciliation.',
+        heading: 'Siloed Legal & Case Investigation Databases',
+        body: 'Critical case evidence and investigative histories were fragmented across legacy case registries, public safety feeds, and court dockets, requiring manual reconciliation.',
       },
       {
-        heading: 'Reporting Bottlenecks for Legal Teams',
-        body: 'ADAs and case supervisors waited days for technical staff to assemble ad hoc case statistics and historical sentencing context.',
+        heading: 'Discovery Bottlenecks for Legal Teams',
+        body: 'Case analysts and attorneys faced multi-day turnaround times waiting for manual data pulls to synthesize timeline facts and historical case context.',
       },
     ],
     solution: {
       intro:
-        'ScaeleIQ created an integrated Snowflake data foundation and deployed "Milo," an enterprise AI assistant for prosecutors.',
+        'ScaeleIQ created an integrated Snowflake data foundation and deployed a specialized legal AI assistant for case intelligence.',
       sections: [
         {
           heading: 'Entity Resolution & Deduplication',
-          body: 'Resolved divergent individual and case identifiers across agencies, eliminating 95% of duplicate records.',
+          body: 'Resolved divergent individual and matter identifiers across disparate records, eliminating 95% of duplicate case entries.',
         },
         {
           heading: 'Conversational Case Intelligence',
-          body: 'Prosecutors query case data in plain English through Milo, receiving verified answers in minutes without manual data pulls.',
+          body: 'Legal teams query case records in plain language, surfacing verified answers, citations, and timeline facts in minutes.',
         },
       ],
     },
     results: {
       intro:
-        'Achieved 90% reduction in case reporting time and completed daily ELTs in 1 hour with $1M in annual overhead avoidance.',
+        'Achieved 90% reduction in case reporting time and enabled instant conversational discovery across complex legal records.',
       sections: [
         {
           heading: '90% Time Reduction in Reporting',
-          body: 'Leadership and courtroom attorneys access instant, real-time case visibility instead of stale manual reports.',
+          body: 'Attorneys and investigators access instant, verified factual summaries instead of waiting days for manual discovery compilation.',
         },
         {
           heading: '82% Self-Service AI Adoption',

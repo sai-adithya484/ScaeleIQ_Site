@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RevealAnimation } from '../components/ui/RevealAnimation';
 import {
@@ -11,6 +11,59 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import './AboutPage.css';
+
+export interface Leader {
+  name: string;
+  role: string;
+  initials: string;
+  image?: string | null;
+}
+
+const leadershipTeam: Leader[] = [
+  {
+    name: 'Ramakrishna S',
+    role: 'FOUNDER',
+    initials: 'RS',
+    image: null, // Set to '/assets/leadership/ramakrishna-s.webp' when photo is added
+  },
+  {
+    name: 'Warner Burzer',
+    role: 'CTO',
+    initials: 'WB',
+    image: null, // Set to '/assets/leadership/warner-burzer.webp' when photo is added
+  },
+  {
+    name: 'Jeff Mario',
+    role: 'CRO',
+    initials: 'JM',
+    image: null, // Set to '/assets/leadership/jeff-mario.webp' when photo is added
+  },
+];
+
+const LeaderAvatar: React.FC<{ leader: Leader }> = ({ leader }) => {
+  const [imgError, setImgError] = useState(false);
+  const showImage = Boolean(leader.image) && !imgError;
+
+  return (
+    <div className="about-leader-card__photo-wrap">
+      {/* 1. Initials fallback (occupies exact container space) */}
+      <div className="about-leader-card__initials" aria-hidden={showImage}>
+        {leader.initials}
+      </div>
+
+      {/* 2. Photograph (if configured and valid) */}
+      {leader.image && !imgError && (
+        <img
+          src={leader.image}
+          alt={leader.name}
+          className="about-leader-card__photo"
+          loading="lazy"
+          onError={() => setImgError(true)}
+        />
+      )}
+    </div>
+  );
+};
 
 export const AboutPage: React.FC = () => {
   useEffect(() => {
@@ -113,47 +166,18 @@ export const AboutPage: React.FC = () => {
           </RevealAnimation>
 
           <div className="about-leadership__grid">
-            {/* Card 1: Ramakrishna S */}
-            <RevealAnimation variant="up" delayMs={50}>
-              <div className="about-leader-card">
-                <div className="about-leader-card__avatar">
-                  <span className="about-leader-card__initials">RS</span>
+            {leadershipTeam.map((leader, index) => (
+              <RevealAnimation key={leader.name} variant="up" delayMs={50 * (index + 1)}>
+                <div className="about-leader-card">
+                  <LeaderAvatar leader={leader} />
+                  <div className="about-leader-card__divider" aria-hidden="true" />
+                  <div className="about-leader-card__info">
+                    <h3 className="about-leader-card__name">{leader.name}</h3>
+                    <span className="about-leader-card__role">{leader.role}</span>
+                  </div>
                 </div>
-                <div className="about-leader-card__divider" aria-hidden="true" />
-                <div className="about-leader-card__info">
-                  <h3 className="about-leader-card__name">Ramakrishna S</h3>
-                  <span className="about-leader-card__role">FOUNDER</span>
-                </div>
-              </div>
-            </RevealAnimation>
-
-            {/* Card 2: Warner Burzer */}
-            <RevealAnimation variant="up" delayMs={100}>
-              <div className="about-leader-card">
-                <div className="about-leader-card__avatar">
-                  <span className="about-leader-card__initials">WB</span>
-                </div>
-                <div className="about-leader-card__divider" aria-hidden="true" />
-                <div className="about-leader-card__info">
-                  <h3 className="about-leader-card__name">Warner Burzer</h3>
-                  <span className="about-leader-card__role">CTO</span>
-                </div>
-              </div>
-            </RevealAnimation>
-
-            {/* Card 3: Jeff Mario */}
-            <RevealAnimation variant="up" delayMs={150}>
-              <div className="about-leader-card">
-                <div className="about-leader-card__avatar">
-                  <span className="about-leader-card__initials">JM</span>
-                </div>
-                <div className="about-leader-card__divider" aria-hidden="true" />
-                <div className="about-leader-card__info">
-                  <h3 className="about-leader-card__name">Jeff Mario</h3>
-                  <span className="about-leader-card__role">CRO</span>
-                </div>
-              </div>
-            </RevealAnimation>
+              </RevealAnimation>
+            ))}
           </div>
         </div>
       </section>

@@ -12,7 +12,13 @@ import '../components/case-study/CaseStudy.css';
 
 export const CaseStudyPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const caseStudy = caseStudies.find((c) => c.slug === slug);
+  const slugAliases: Record<string, string> = {
+    growindigo: 'agritech',
+    mswipe: 'financial-services',
+    'district-attorney': 'veritas',
+  };
+  const resolvedSlug = slug ? (slugAliases[slug] || slug) : '';
+  const caseStudy = caseStudies.find((c) => c.slug === resolvedSlug);
 
   useEffect(() => {
     if (caseStudy) {

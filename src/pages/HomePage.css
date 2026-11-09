@@ -1149,31 +1149,128 @@
   margin: 0 auto;
 }
 
-/* Grids for Clients (7) and Partners (5) */
-.home-clients__grid {
-  display: grid;
-  margin: 0 auto;
+/* ── MODE 1: Static Grid (When Container Fits All Logos Comfortably) ── */
+.home-clients__static-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
   position: relative;
   z-index: 1;
 }
 
-.home-clients__grid--clients {
-  grid-template-columns: repeat(7, 1fr);
-  max-width: 1400px;
-  gap: clamp(0.85rem, 1.2vw, 1.25rem);
+.home-clients__static-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1440px;
+  box-sizing: border-box;
 }
 
-.home-clients__grid--partners {
-  grid-template-columns: repeat(5, 1fr);
-  max-width: 1100px;
-  gap: clamp(1rem, 1.5vw, 1.5rem);
+.home-clients__static-grid > div {
+  flex: 0 0 185px;
+  width: 185px;
 }
 
-/* Clean, modern enterprise logo card — restored larger scale */
+.home-clients__static-grid--reduced-motion {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem !important;
+}
+
+/* ── MODE 2: Continuous Automatic Logo Marquee (When Space Is Constrained) ── */
+.home-clients__marquee-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 0.85rem 0 1.25rem 0;
+  margin: -0.85rem 0 -1.25rem 0;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+  mask-image: linear-gradient(to right, transparent 0%, black 48px, black calc(100% - 48px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 48px, black calc(100% - 48px), transparent 100%);
+}
+
+.home-clients__marquee-container:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.home-clients__marquee-container:focus-visible {
+  outline: 2px solid rgba(0, 180, 216, 0.4);
+  outline-offset: 2px;
+}
+
+.home-clients__marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation-name: clientMarquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Pause animation on hover and keyboard focus */
+.home-clients__marquee-container:hover .home-clients__marquee-track,
+.home-clients__marquee-container:focus-within .home-clients__marquee-track {
+  animation-play-state: paused;
+}
+
+.home-clients__marquee-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.home-clients__marquee-item {
+  flex: 0 0 185px;
+  width: 185px;
+}
+
+/* Continuous, seamless loop animation (-50% maps mathematically to 1 full group length) */
+@keyframes clientMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Accessible Reduced-Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .home-clients__marquee-container {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    overflow: visible !important;
+  }
+
+  .home-clients__marquee-track {
+    animation: none !important;
+    transform: none !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 1.25rem !important;
+  }
+
+  .home-clients__marquee-group--duplicate {
+    display: none !important;
+  }
+
+  .home-clients__marquee-item {
+    margin-right: 0 !important;
+  }
+}
+
+/* Clean, modern enterprise logo card — consistent scale across viewports */
 .client-card {
   background: #FFFFFF;
   border: 1px solid rgba(226, 232, 240, 0.95);
   border-radius: 18px;
+  width: 185px;
+  min-width: 185px;
   height: 110px;
   display: flex;
   align-items: center;
@@ -1189,6 +1286,7 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .client-card:hover {
@@ -1228,7 +1326,7 @@
   transform: scale(1.03);
 }
 
-/* Optical sizing tailored for each logo to achieve balanced visual weight (+15-20% scale) */
+/* Optical sizing tailored for each logo to achieve balanced visual weight */
 .client-brand-logo--abbott {
   max-height: 36px;
   max-width: 145px;
@@ -1239,9 +1337,10 @@
   max-width: 155px;
 }
 
+/* Borosil optical enlargement: compensates for internal SVG margins */
 .client-brand-logo--borosil {
-  max-height: 32px;
-  max-width: 155px;
+  max-height: 48px;
+  max-width: 170px;
 }
 
 .client-brand-logo--raymond-realty {
@@ -1249,9 +1348,10 @@
   max-width: 175px;
 }
 
+/* Baskin Robbins optical enlargement: ensures BR circle & typography match peer prominence */
 .client-brand-logo--baskin-robbins {
-  max-height: 40px;
-  max-width: 155px;
+  max-height: 52px;
+  max-width: 170px;
 }
 
 .client-brand-logo--tata-agratas {
@@ -1290,26 +1390,7 @@
   max-width: 155px;
 }
 
-/* Responsive breakdowns */
-@media (max-width: 1200px) {
-  .home-clients__grid--clients {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 920px;
-    gap: 1rem;
-  }
-
-  .home-clients__grid--partners {
-    grid-template-columns: repeat(3, 1fr);
-    max-width: 780px;
-    gap: 1rem;
-  }
-
-  .client-card {
-    height: 102px;
-    padding: 0.8rem 1.15rem;
-  }
-}
-
+/* Responsive breakdowns preserving full logo dimensions and scrollability */
 @media (max-width: 768px) {
   .home-clients {
     padding: clamp(3.5rem, 6vw, 4.5rem) 0;
@@ -1322,60 +1403,24 @@
   .home-clients__header {
     margin-bottom: 2rem;
   }
-
-  .home-clients__grid--clients {
-    grid-template-columns: repeat(3, 1fr);
-    max-width: 640px;
-    gap: 0.85rem;
-  }
-
-  /* Center lone 7th client card in 3-column view */
-  .home-clients__grid--clients > :last-child:nth-child(3n+1) {
-    grid-column: 2 / 3;
-  }
-
-  .home-clients__grid--partners {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 480px;
-    gap: 0.85rem;
-  }
-
-  /* Center lone 5th partner card in 2-column view */
-  .home-clients__grid--partners > :last-child:nth-child(2n+1) {
-    grid-column: 1 / -1;
-    max-width: calc(50% - 0.425rem);
-    justify-self: center;
-    width: 100%;
-  }
-
-  .client-card {
-    height: 96px;
-    padding: 0.75rem 1rem;
-    border-radius: 14px;
-  }
 }
 
 @media (max-width: 560px) {
-  .home-clients__grid--clients,
-  .home-clients__grid--partners {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 100%;
-    gap: 0.75rem;
-  }
-
-  /* Center the lone odd last item in 2-column mobile view */
-  .home-clients__grid--clients > :last-child:nth-child(odd),
-  .home-clients__grid--partners > :last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    max-width: calc(50% - 0.375rem);
-    justify-self: center;
-    width: 100%;
+  .home-clients__marquee-container {
+    padding: 0.5rem 0 1rem 0;
   }
 
   .client-card {
-    height: 88px;
-    padding: 0.6rem 0.85rem;
-    border-radius: 12px;
+    width: 172px;
+    min-width: 172px;
+    height: 104px;
+    padding: 0.75rem 1.15rem;
+    border-radius: 16px;
+  }
+
+  .home-clients__marquee-item {
+    flex: 0 0 172px;
+    width: 172px;
   }
 }
 

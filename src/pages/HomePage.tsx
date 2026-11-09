@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button } from '../components/ui/Button';
 import { RevealAnimation } from '../components/ui/RevealAnimation';
 import { CTASection } from '../components/sections/CTASection';
@@ -20,6 +20,192 @@ import {
   RefreshCw
 } from 'lucide-react';
 import './HomePage.css';
+
+interface LogoItem {
+  id: string;
+  name: string;
+  logo: string;
+}
+
+const clientLogos: LogoItem[] = [
+  { id: 'abbott', name: 'Abbott', logo: '/assets/Logos/Abbott.svg' },
+  { id: 'fospha', name: 'FOSPHA', logo: '/assets/Logos/Fospha-logo-1.png' },
+  { id: 'borosil', name: 'Borosil', logo: '/assets/Logos/Borosil.svg' },
+  { id: 'raymond-realty', name: 'Raymond Realty', logo: '/assets/Logos/Raymond Realty Go Beyond Logo (1).png' },
+  { id: 'baskin-robbins', name: 'Baskin Robbins', logo: '/assets/Logos/Baskin_Robbins.svg' },
+  { id: 'tata-agratas', name: 'Tata Agratas', logo: '/assets/Logos/logo-new_dark.webp' },
+  { id: 'kec-international', name: 'KEC International', logo: '/assets/Logos/KEC Logo - hi-res jpg.jpg' },
+];
+
+const partnerLogos: LogoItem[] = [
+  { id: 'spartakus', name: 'Spartakus Tech', logo: '/assets/Logos/Spartakus-Temporaire.png' },
+  { id: 'shi', name: 'SHI', logo: '/assets/Logos/SHI_International_id1CAW25_E_1.png' },
+  { id: 'bluechip', name: 'Blue Chip Informatics', logo: '/assets/Logos/BCinformaticslogo-2.png' },
+  { id: 'crmit', name: 'CRMIT', logo: '/assets/Logos/CRMIT_logo.png' },
+  { id: 'palni', name: 'Palni', logo: '/assets/Logos/palni_logo.png' },
+];
+
+interface ResponsiveLogoShowcaseProps {
+  items: LogoItem[];
+  sectionTitle: string;
+  speedSeconds?: number;
+  gap?: number;
+  cardWidth?: number;
+}
+
+const ResponsiveLogoShowcase: React.FC<ResponsiveLogoShowcaseProps> = ({
+  items,
+  sectionTitle,
+  speedSeconds = 30,
+  gap = 20,
+  cardWidth = 185,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isMarquee, setIsMarquee] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Required width to display all cards side-by-side with gaps and padding
+    const requiredWidth = items.length * cardWidth + (items.length - 1) * gap + 24;
+
+    const updateMode = (width: number) => {
+      setIsMarquee(width < requiredWidth);
+    };
+
+    updateMode(container.clientWidth);
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        updateMode(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [items.length, cardWidth, gap]);
+
+  // Mode 1: Static row when viewport fits all logos comfortably (or when reduced motion is preferred)
+  if (!isMarquee || prefersReducedMotion) {
+    return (
+      <div ref={containerRef} className="home-clients__static-container">
+        <div
+          className={`home-clients__static-grid ${
+            prefersReducedMotion ? 'home-clients__static-grid--reduced-motion' : ''
+          }`}
+          style={{ gap: `${gap}px` }}
+        >
+          {items.map((item, index) => (
+            <RevealAnimation key={item.name} variant="up" delayMs={50 + index * 30}>
+              <div
+                className="client-card"
+                tabIndex={0}
+                role="group"
+                aria-label={item.name}
+                title={item.name}
+              >
+                <div className="client-card__logo-area">
+                  <img
+                    src={item.logo}
+                    alt={`${item.name} logo`}
+                    className={`client-brand-logo client-brand-logo--${item.id}`}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </RevealAnimation>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Mode 2: Continuous horizontal marquee without scrollbar when container is too narrow
+  return (
+    <div
+      ref={containerRef}
+      className="home-clients__marquee-container"
+      role="region"
+      aria-label={`${sectionTitle} logo carousel`}
+      tabIndex={0}
+    >
+      <div
+        className="home-clients__marquee-track"
+        style={{
+          animationDuration: `${speedSeconds}s`,
+        }}
+      >
+        {/* Sequence A (Interactive & Accessible) */}
+        <div className="home-clients__marquee-group">
+          {items.map((item) => (
+            <div
+              key={item.name}
+              className="home-clients__marquee-item"
+              style={{ marginRight: `${gap}px` }}
+            >
+              <div
+                className="client-card"
+                tabIndex={0}
+                role="group"
+                aria-label={item.name}
+                title={item.name}
+              >
+                <div className="client-card__logo-area">
+                  <img
+                    src={item.logo}
+                    alt={`${item.name} logo`}
+                    className={`client-brand-logo client-brand-logo--${item.id}`}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Sequence B (Duplicate for seamless infinite loop — hidden from screen readers) */}
+        <div
+          className="home-clients__marquee-group home-clients__marquee-group--duplicate"
+          aria-hidden="true"
+        >
+          {items.map((item) => (
+            <div
+              key={`dup-${item.name}`}
+              className="home-clients__marquee-item"
+              style={{ marginRight: `${gap}px` }}
+            >
+              <div
+                className="client-card"
+                tabIndex={-1}
+                role="presentation"
+                aria-hidden="true"
+              >
+                <div className="client-card__logo-area">
+                  <img
+                    src={item.logo}
+                    alt=""
+                    className={`client-brand-logo client-brand-logo--${item.id}`}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 /* ── Main Home Page Component ────────────────────────────── */
 export const HomePage: React.FC = () => {
@@ -333,64 +519,13 @@ export const HomePage: React.FC = () => {
               </div>
             </RevealAnimation>
 
-            <div className="home-clients__grid home-clients__grid--clients">
-              {[
-                {
-                  id: 'abbott',
-                  name: 'Abbott',
-                  logo: '/assets/Logos/Abbott.svg',
-                },
-                {
-                  id: 'fospha',
-                  name: 'FOSPHA',
-                  logo: '/assets/Logos/Fospha-logo-1.png',
-                },
-                {
-                  id: 'borosil',
-                  name: 'Borosil',
-                  logo: '/assets/Logos/Borosil.svg',
-                },
-                {
-                  id: 'raymond-realty',
-                  name: 'Raymond Realty',
-                  logo: '/assets/Logos/Raymond Realty Go Beyond Logo (1).png',
-                },
-                {
-                  id: 'baskin-robbins',
-                  name: 'Baskin Robbins',
-                  logo: '/assets/Logos/Baskin_Robbins.svg',
-                },
-                {
-                  id: 'tata-agratas',
-                  name: 'Tata Agratas',
-                  logo: '/assets/Logos/logo-new_dark.webp',
-                },
-                {
-                  id: 'kec-international',
-                  name: 'KEC International',
-                  logo: '/assets/Logos/KEC Logo - hi-res jpg.jpg',
-                },
-              ].map((client, index) => (
-                <RevealAnimation key={client.name} variant="up" delayMs={50 + index * 30}>
-                  <div
-                    className="client-card"
-                    tabIndex={0}
-                    role="group"
-                    aria-label={client.name}
-                    title={client.name}
-                  >
-                    <div className="client-card__logo-area">
-                      <img
-                        src={client.logo}
-                        alt={`${client.name} logo`}
-                        className={`client-brand-logo client-brand-logo--${client.id}`}
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                </RevealAnimation>
-              ))}
-            </div>
+            <ResponsiveLogoShowcase
+              items={clientLogos}
+              sectionTitle="Clients"
+              speedSeconds={32}
+              gap={20}
+              cardWidth={185}
+            />
           </div>
 
           {/* PARTNERS BLOCK */}
@@ -409,54 +544,13 @@ export const HomePage: React.FC = () => {
               </div>
             </RevealAnimation>
 
-            <div className="home-clients__grid home-clients__grid--partners">
-              {[
-                {
-                  id: 'spartakus',
-                  name: 'Spartakus Tech',
-                  logo: '/assets/Logos/Spartakus-Temporaire.png',
-                },
-                {
-                  id: 'shi',
-                  name: 'SHI',
-                  logo: '/assets/Logos/SHI_International_id1CAW25_E_1.png',
-                },
-                {
-                  id: 'bluechip',
-                  name: 'Blue Chip Informatics',
-                  logo: '/assets/Logos/BCinformaticslogo-2.png',
-                },
-                {
-                  id: 'crmit',
-                  name: 'CRMIT',
-                  logo: '/assets/Logos/CRMIT_logo.png',
-                },
-                {
-                  id: 'palni',
-                  name: 'Palni',
-                  logo: '/assets/Logos/palni_logo.png',
-                },
-              ].map((partner, index) => (
-                <RevealAnimation key={partner.name} variant="up" delayMs={50 + index * 35}>
-                  <div
-                    className="client-card"
-                    tabIndex={0}
-                    role="group"
-                    aria-label={partner.name}
-                    title={partner.name}
-                  >
-                    <div className="client-card__logo-area">
-                      <img
-                        src={partner.logo}
-                        alt={`${partner.name} logo`}
-                        className={`client-brand-logo client-brand-logo--${partner.id}`}
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                </RevealAnimation>
-              ))}
-            </div>
+            <ResponsiveLogoShowcase
+              items={partnerLogos}
+              sectionTitle="Partners"
+              speedSeconds={24}
+              gap={24}
+              cardWidth={185}
+            />
           </div>
         </div>
       </section>
