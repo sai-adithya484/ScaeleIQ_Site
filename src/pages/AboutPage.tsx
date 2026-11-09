@@ -45,13 +45,13 @@ const LeaderAvatar: React.FC<{ leader: Leader }> = ({ leader }) => {
   const showImage = Boolean(leader.image) && !imgError;
 
   return (
-    <div className="about-leader-card__photo-wrap">
-      {/* 1. Initials fallback (occupies exact container space) */}
+    <div className="about-leader-card__portrait-wrap">
+      {/* 1. Full 4:5 Initials Fallback */}
       <div className="about-leader-card__initials" aria-hidden={showImage}>
-        {leader.initials}
+        <span className="about-leader-card__initials-text">{leader.initials}</span>
       </div>
 
-      {/* 2. Photograph (if configured and valid) */}
+      {/* 2. Full 4:5 Photograph (if configured and valid) */}
       {leader.image && !imgError && (
         <img
           src={leader.image}
@@ -170,8 +170,7 @@ export const AboutPage: React.FC = () => {
               <RevealAnimation key={leader.name} variant="up" delayMs={50 * (index + 1)}>
                 <div className="about-leader-card">
                   <LeaderAvatar leader={leader} />
-                  <div className="about-leader-card__divider" aria-hidden="true" />
-                  <div className="about-leader-card__info">
+                  <div className="about-leader-card__content">
                     <h3 className="about-leader-card__name">{leader.name}</h3>
                     <span className="about-leader-card__role">{leader.role}</span>
                   </div>

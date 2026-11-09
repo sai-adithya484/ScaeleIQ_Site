@@ -50,7 +50,6 @@ interface ResponsiveLogoShowcaseProps {
   sectionTitle: string;
   speedSeconds?: number;
   gap?: number;
-  cardWidth?: number;
 }
 
 const ResponsiveLogoShowcase: React.FC<ResponsiveLogoShowcaseProps> = ({
@@ -58,7 +57,6 @@ const ResponsiveLogoShowcase: React.FC<ResponsiveLogoShowcaseProps> = ({
   sectionTitle,
   speedSeconds = 30,
   gap = 20,
-  cardWidth = 185,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMarquee, setIsMarquee] = useState(false);
@@ -76,8 +74,12 @@ const ResponsiveLogoShowcase: React.FC<ResponsiveLogoShowcaseProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
-    // Required width to display all cards side-by-side with gaps and padding
-    const requiredWidth = items.length * cardWidth + (items.length - 1) * gap + 24;
+    // Minimum required width to display all cards side-by-side without cramping:
+    // - Clients (7 logos): 1300px threshold ensures 1440px, 1600px, and 1920px desktops display ONE static row.
+    // - Partners (5 logos): 980px threshold ensures wide viewports display ONE static row.
+    const minCardWidth = items.length === 7 ? 172 : 180;
+    const minGap = items.length === 7 ? 16 : 20;
+    const requiredWidth = items.length * minCardWidth + (items.length - 1) * minGap;
 
     const updateMode = (width: number) => {
       setIsMarquee(width < requiredWidth);
@@ -93,17 +95,16 @@ const ResponsiveLogoShowcase: React.FC<ResponsiveLogoShowcaseProps> = ({
 
     observer.observe(container);
     return () => observer.disconnect();
-  }, [items.length, cardWidth, gap]);
+  }, [items.length]);
 
   // Mode 1: Static row when viewport fits all logos comfortably (or when reduced motion is preferred)
   if (!isMarquee || prefersReducedMotion) {
     return (
       <div ref={containerRef} className="home-clients__static-container">
         <div
-          className={`home-clients__static-grid ${
-            prefersReducedMotion ? 'home-clients__static-grid--reduced-motion' : ''
-          }`}
-          style={{ gap: `${gap}px` }}
+          className={`home-clients__static-grid home-clients__static-grid--${
+            items.length === 7 ? 'clients' : 'partners'
+          } ${prefersReducedMotion ? 'home-clients__static-grid--reduced-motion' : ''}`}
         >
           {items.map((item, index) => (
             <RevealAnimation key={item.name} variant="up" delayMs={50 + index * 30}>
@@ -524,7 +525,6 @@ export const HomePage: React.FC = () => {
               sectionTitle="Clients"
               speedSeconds={32}
               gap={20}
-              cardWidth={185}
             />
           </div>
 
@@ -549,7 +549,6 @@ export const HomePage: React.FC = () => {
               sectionTitle="Partners"
               speedSeconds={24}
               gap={24}
-              cardWidth={185}
             />
           </div>
         </div>
