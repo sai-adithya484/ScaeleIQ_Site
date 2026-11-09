@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../components/ui/Button';
 import {
   LucideIcon,
@@ -187,46 +187,59 @@ const frameworkPhases: FrameworkPhase[] = [
   }
 ];
 
-/* ── ELT Framework Showcase Steps ── */
-interface ShowcaseStep {
+/* ── ELT Framework Showcase Features ── */
+interface ShowcaseFeature {
   number: string;
   title: string;
   desc: string;
 }
 
-const showcaseSteps: ShowcaseStep[] = [
+const showcaseFeatures: ShowcaseFeature[] = [
   {
     number: '01',
-    title: 'Data Discovery',
-    desc: 'Evaluate legacy systems, schemas, source environments and business requirements to define target architectures, integration priorities and modernization milestones.'
+    title: 'Pre-Built Connectors',
+    desc: 'Connect enterprise databases, applications, cloud platforms and source systems through ready-to-use integrations.'
   },
   {
     number: '02',
-    title: 'Data Ingestion',
-    desc: 'Deploy automated connectors and high-throughput ingestion pipelines that stream and batch structured, semi-structured and unstructured enterprise data reliably.'
+    title: 'Reusable Transformation Models',
+    desc: 'Accelerate data preparation with pre-configured transformation logic and reusable models.'
   },
   {
     number: '03',
-    title: 'Data Transformation',
-    desc: 'Cleanse, standardize and enrich disparate datasets using pre-tested models and business logic, transforming raw inputs into analytics-ready data structures.'
+    title: 'Automated Pipeline Orchestration',
+    desc: 'Coordinate pipeline execution, dependencies and schedules through a unified workflow.'
   },
   {
     number: '04',
-    title: 'Pipeline Development',
-    desc: 'Configure end-to-end workflow orchestration, dependency management, automated data validation checks and alert mechanisms for seamless execution.'
+    title: 'Built-In Data Quality',
+    desc: 'Apply validation, standardization and consistency checks throughout data processing.'
   },
   {
     number: '05',
-    title: 'Data Deployment',
-    desc: 'Deliver production-grade data pipelines into enterprise warehouses, data lakes and cloud environments — optimized for reporting, AI and business intelligence.'
+    title: 'Enterprise-Ready Architecture',
+    desc: 'Support scalable data processing across cloud data platforms and enterprise environments.'
+  },
+  {
+    number: '06',
+    title: 'Analytics-Ready Data',
+    desc: 'Prepare governed, structured data for reporting, business intelligence and AI workloads.'
   }
 ];
 
 export const DataPage: React.FC = () => {
   const [activePhase, setActivePhase] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     document.title = 'Enterprise Data Infrastructure & Modernization | SCAELEIQ';
+  }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
   }, []);
 
   return (
@@ -486,23 +499,23 @@ export const DataPage: React.FC = () => {
 
           {/* Main Showcase Panel */}
           <div className="data-showcase__panel">
-            {/* Left Side — ELT framework content */}
+            {/* Left Side — ELT framework features */}
             <div className="data-showcase__content">
               <h3 className="data-showcase__panel-title">
                 The SCAELEIQ Pre-Built ELT Framework
               </h3>
               <p className="data-showcase__panel-desc">
-                Modernize complex data environments through a connected workflow that takes data from discovery to production deployment, with less manual engineering effort.
+                Accelerate enterprise data modernization with reusable integrations, intelligent automation, built-in quality controls and a scalable architecture designed for analytics-ready data.
               </p>
 
-              {/* 5 Compact Numbered Steps */}
-              <div className="data-showcase__steps">
-                {showcaseSteps.map((step) => (
-                  <div key={step.number} className="data-showcase__step">
-                    <span className="data-showcase__step-num">{step.number}</span>
-                    <div className="data-showcase__step-body">
-                      <h4 className="data-showcase__step-title">{step.title}</h4>
-                      <p className="data-showcase__step-desc">{step.desc}</p>
+              {/* 6 Feature Areas */}
+              <div className="data-showcase__features">
+                {showcaseFeatures.map((feat) => (
+                  <div key={feat.number} className="data-showcase__feature">
+                    <span className="data-showcase__feature-num">{feat.number}</span>
+                    <div className="data-showcase__feature-body">
+                      <h4 className="data-showcase__feature-title">{feat.title}</h4>
+                      <p className="data-showcase__feature-desc">{feat.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -522,14 +535,21 @@ export const DataPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Side — Framework Visual */}
+            {/* Right Side — Framework Visual (Video) */}
             <div className="data-showcase__visual">
-              <img
-                src="/assets/data/framework-showcase.jpg"
-                alt="Enterprise Data Engineering Operations and ELT Modernization Infrastructure"
-                className="data-showcase__img"
-                loading="eager"
-              />
+              <video
+                ref={videoRef}
+                className="data-showcase__video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                poster="/assets/data/framework-video-poster.jpg"
+                aria-label="SCAELEIQ Pre-Built ELT Framework Architecture and Operations"
+              >
+                <source src="/assets/183108-870151713.mp4" type="video/mp4" />
+              </video>
               <div className="data-showcase__visual-overlay" aria-hidden="true" />
             </div>
           </div>

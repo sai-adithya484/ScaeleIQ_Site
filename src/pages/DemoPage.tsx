@@ -116,7 +116,7 @@ export const DemoPage: React.FC = () => {
             <RevealAnimation variant="up" delayMs={150}>
               <div
                 style={{
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: 'var(--bg-primary)',
                   border: '1px solid var(--border-card)',
                   borderRadius: 'var(--radius-xl)',
                   padding: '2.5rem',

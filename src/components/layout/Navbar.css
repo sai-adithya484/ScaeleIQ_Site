@@ -25,19 +25,19 @@
 }
 
 .navbar--transparent-dark:not(.navbar--scrolled) .navbar__wordmark-primary {
-  background: linear-gradient(135deg, #86EFAC 0%, #22C55E 45%, #16A34A 100%);
+  background: linear-gradient(135deg, #07FA27 0%, #04ED17 40%, #03BE07 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 5px rgba(134, 239, 172, 0.85)) drop-shadow(0 0 14px rgba(34, 197, 94, 0.65)) drop-shadow(0 0 24px rgba(22, 163, 74, 0.45));
+  filter: drop-shadow(0 0 4px rgba(7, 250, 39, 0.85)) drop-shadow(0 0 12px rgba(4, 237, 23, 0.60)) drop-shadow(0 0 20px rgba(3, 190, 7, 0.35));
 }
 
 .navbar--transparent-dark:not(.navbar--scrolled) .navbar__wordmark-accent {
-  background: linear-gradient(135deg, #60A5FA 0%, #2563EB 50%, #1D4ED8 100%);
+  background: linear-gradient(135deg, #2BE9FE 0%, #1ADDFD 45%, #03BCFA 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 5px rgba(96, 165, 250, 0.9)) drop-shadow(0 0 14px rgba(37, 99, 235, 0.65)) drop-shadow(0 0 24px rgba(29, 78, 216, 0.45));
+  filter: drop-shadow(0 0 4px rgba(43, 233, 254, 0.90)) drop-shadow(0 0 12px rgba(26, 221, 253, 0.65)) drop-shadow(0 0 20px rgba(3, 188, 250, 0.40));
 }
 
 .navbar--transparent-dark:not(.navbar--scrolled) .navbar__link {
@@ -106,32 +106,32 @@
 
 .navbar__wordmark-primary {
   font-weight: 800;
-  background: linear-gradient(135deg, #4ADE80 0%, #22C55E 45%, #15803D 100%);
+  background: var(--brand-scaele-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: inline-block;
-  filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.75)) drop-shadow(0 0 12px rgba(34, 197, 94, 0.5)) drop-shadow(0 0 20px rgba(21, 128, 61, 0.3));
+  filter: var(--brand-scaele-glow);
   transition: filter var(--transition-fast, 0.2s ease);
 }
 
 .navbar__wordmark-accent {
   font-weight: 900;
-  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 45%, #2563EB 100%);
+  background: var(--brand-iq-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: inline-block;
-  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.75)) drop-shadow(0 0 12px rgba(29, 78, 216, 0.5)) drop-shadow(0 0 20px rgba(11, 25, 44, 0.35));
+  filter: var(--brand-iq-glow);
   transition: filter var(--transition-fast, 0.2s ease);
 }
 
 .navbar__brand:hover .navbar__wordmark-primary {
-  filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.95)) drop-shadow(0 0 16px rgba(34, 197, 94, 0.7)) drop-shadow(0 0 26px rgba(21, 128, 61, 0.45));
+  filter: var(--brand-scaele-glow-hover);
 }
 
 .navbar__brand:hover .navbar__wordmark-accent {
-  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.95)) drop-shadow(0 0 16px rgba(29, 78, 216, 0.7)) drop-shadow(0 0 26px rgba(11, 25, 44, 0.5));
+  filter: var(--brand-iq-glow-hover);
 }
 
 .navbar__nav {

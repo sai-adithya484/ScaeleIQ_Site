@@ -49,8 +49,8 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <div>
                     <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-muted)' }}>EMAIL SALES</div>
-                    <a href="mailto:sales@scaeleiq.ai" style={{ fontSize: '1.0625rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                      sales@scaeleiq.ai
+                    <a href="mailto:sales@scaeleiq.com" style={{ fontSize: '1.0625rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                      sales@scaeleiq.com
                     </a>
                   </div>
                 </div>
@@ -84,7 +84,7 @@ export const ContactPage: React.FC = () => {
             <RevealAnimation variant="up" delayMs={150}>
               <div
                 style={{
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: 'var(--bg-primary)',
                   border: '1px solid var(--border-card)',
                   borderRadius: 'var(--radius-xl)',
                   padding: '2.5rem',
@@ -92,7 +92,7 @@ export const ContactPage: React.FC = () => {
                 }}
               >
                 <h2 className="heading-sm" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Sparkles size={20} color="#00B4D8" />
+                  <Sparkles size={20} color="var(--accent)" />
                   Request Platform Briefing
                 </h2>
                 <ContactForm />

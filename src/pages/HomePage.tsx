@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '../components/ui/Button';
 import { RevealAnimation } from '../components/ui/RevealAnimation';
 import { CTASection } from '../components/sections/CTASection';
@@ -7,6 +7,7 @@ import { DataOrganizationVisual } from '../components/home/DataOrganizationVisua
 import { AIAgentsSection } from '../components/home/AIAgentsSection';
 import { Govern360Visual } from '../components/home/Govern360Visual';
 import { DataIntelligenceVisual } from '../components/home/DataIntelligenceVisual';
+import { useCountUp, useInView } from '../hooks';
 import {
   Database,
   ShieldCheck,
@@ -19,40 +20,6 @@ import {
   RefreshCw
 } from 'lucide-react';
 import './HomePage.css';
-
-/* ── Animated counter hook ───────────────────────────────── */
-function useCountUp(end: number, duration = 1200, trigger = false, start = 0) {
-  const [count, setCount] = useState(start);
-  const rafRef = useRef<number>(0);
-  useEffect(() => {
-    if (!trigger) return;
-    const startTime = performance.now();
-    const step = (time: number) => {
-      const elapsed = time - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.round(start + eased * (end - start)));
-      if (progress < 1) rafRef.current = requestAnimationFrame(step);
-    };
-    rafRef.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [trigger, end, duration, start]);
-  return count;
-}
-
-/* ── Intersection observer hook ──────────────────────────── */
-function useInView(threshold = 0.2) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.unobserve(el); } }, { threshold });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, inView };
-}
 
 /* ── Main Home Page Component ────────────────────────────── */
 export const HomePage: React.FC = () => {
@@ -347,69 +314,149 @@ export const HomePage: React.FC = () => {
       {/* ═══════════════ 5. AI AGENTS + EXPERTS ═══════════════ */}
       <AIAgentsSection />
 
-      {/* ═══════════════ 6. TRUE CLIENTS. TRUE RESULTS. ═══════════════ */}
-      <section className="home-clients">
+      {/* ═══════════════ 6. OUR CLIENTS & OUR PARTNERS ═══════════════ */}
+      <section className="home-clients" id="clients-partners">
         <div className="container">
-          <RevealAnimation variant="up">
-            <div className="home-clients__header">
-              <div className="home-clients__badge">
-                <span className="home-clients__badge-dot" />
-                <span>TRUSTED ENTERPRISE PARTNERSHIPS</span>
-              </div>
-              <h2 className="home-clients__title">True Clients. True Results.</h2>
-              <p className="home-clients__subtitle">
-                Leading enterprises across industries trust SCAELEIQ to modernize data,
-                unify their architecture, and accelerate AI-driven transformation.
-              </p>
-            </div>
-          </RevealAnimation>
-
-          <div className="home-clients__grid">
-            {[
-              {
-                id: 'abbott',
-                name: 'Abbott',
-                logo: '/assets/Logos/Abbott_Logo_1.png',
-              },
-              {
-                id: 'fospha',
-                name: 'FOSPHA',
-                logo: '/assets/Logos/Fospha-logo-1.png',
-              },
-              {
-                id: 'shi',
-                name: 'SHI',
-                logo: '/assets/Logos/SHI_International_id1CAW25_E_1.png',
-              },
-              {
-                id: 'bluechip',
-                name: 'BlueChip Informatics',
-                logo: '/assets/Logos/BCinformaticslogo-2.png',
-              },
-              {
-                id: 'crmit',
-                name: 'CRMIT',
-                logo: '/assets/Logos/CRMIT_logo.png',
-              },
-              {
-                id: 'palni',
-                name: 'Palni',
-                logo: '/assets/Logos/palni_logo.png',
-              },
-            ].map((client, index) => (
-              <RevealAnimation key={client.name} variant="up" delayMs={60 + index * 40}>
-                <div className="client-card" title={client.name}>
-                  <div className="client-card__logo-area">
-                    <img
-                      src={client.logo}
-                      alt={client.name}
-                      className={`client-brand-logo client-brand-logo--${client.id}`}
-                      loading="lazy"
-                    />
-                  </div>
+          {/* CLIENTS BLOCK */}
+          <div className="home-clients__block">
+            <RevealAnimation variant="up">
+              <div className="home-clients__header">
+                <div className="home-clients__pill">
+                  <span className="home-clients__pill-dot" aria-hidden="true" />
+                  <span>OUR CLIENTS</span>
                 </div>
-              </RevealAnimation>
-            ))}
+                <h2 className="home-clients__title">Trusted by Leading Organizations</h2>
+                <p className="home-clients__subtitle">
+                  Organizations across industries trust SCAELEIQ to modernize their data landscapes,
+                  improve operational performance and build strong foundations for AI-led business transformation.
+                </p>
+              </div>
+            </RevealAnimation>
+
+            <div className="home-clients__grid home-clients__grid--clients">
+              {[
+                {
+                  id: 'abbott',
+                  name: 'Abbott',
+                  logo: '/assets/Logos/Abbott.svg',
+                },
+                {
+                  id: 'fospha',
+                  name: 'FOSPHA',
+                  logo: '/assets/Logos/Fospha-logo-1.png',
+                },
+                {
+                  id: 'borosil',
+                  name: 'Borosil',
+                  logo: '/assets/Logos/Borosil.svg',
+                },
+                {
+                  id: 'raymond-realty',
+                  name: 'Raymond Realty',
+                  logo: '/assets/Logos/Raymond Realty Go Beyond Logo (1).png',
+                },
+                {
+                  id: 'baskin-robbins',
+                  name: 'Baskin Robbins',
+                  logo: '/assets/Logos/Baskin_Robbins.svg',
+                },
+                {
+                  id: 'tata-agratas',
+                  name: 'Tata Agratas',
+                  logo: '/assets/Logos/logo-new_dark.webp',
+                },
+                {
+                  id: 'kec-international',
+                  name: 'KEC International',
+                  logo: '/assets/Logos/KEC Logo - hi-res jpg.jpg',
+                },
+              ].map((client, index) => (
+                <RevealAnimation key={client.name} variant="up" delayMs={50 + index * 30}>
+                  <div
+                    className="client-card"
+                    tabIndex={0}
+                    role="group"
+                    aria-label={client.name}
+                    title={client.name}
+                  >
+                    <div className="client-card__logo-area">
+                      <img
+                        src={client.logo}
+                        alt={`${client.name} logo`}
+                        className={`client-brand-logo client-brand-logo--${client.id}`}
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </RevealAnimation>
+              ))}
+            </div>
+          </div>
+
+          {/* PARTNERS BLOCK */}
+          <div className="home-clients__block home-clients__block--partners">
+            <RevealAnimation variant="up">
+              <div className="home-clients__header">
+                <div className="home-clients__pill">
+                  <span className="home-clients__pill-dot" aria-hidden="true" />
+                  <span>OUR PARTNERS</span>
+                </div>
+                <h2 className="home-clients__title">Partnered with Industry Leaders</h2>
+                <p className="home-clients__subtitle">
+                  We partner with established organizations to combine expertise, share capabilities
+                  and create greater value for businesses through meaningful, long-term partnerships.
+                </p>
+              </div>
+            </RevealAnimation>
+
+            <div className="home-clients__grid home-clients__grid--partners">
+              {[
+                {
+                  id: 'spartakus',
+                  name: 'Spartakus Tech',
+                  logo: '/assets/Logos/Spartakus-Temporaire.png',
+                },
+                {
+                  id: 'shi',
+                  name: 'SHI',
+                  logo: '/assets/Logos/SHI_International_id1CAW25_E_1.png',
+                },
+                {
+                  id: 'bluechip',
+                  name: 'Blue Chip Informatics',
+                  logo: '/assets/Logos/BCinformaticslogo-2.png',
+                },
+                {
+                  id: 'crmit',
+                  name: 'CRMIT',
+                  logo: '/assets/Logos/CRMIT_logo.png',
+                },
+                {
+                  id: 'palni',
+                  name: 'Palni',
+                  logo: '/assets/Logos/palni_logo.png',
+                },
+              ].map((partner, index) => (
+                <RevealAnimation key={partner.name} variant="up" delayMs={50 + index * 35}>
+                  <div
+                    className="client-card"
+                    tabIndex={0}
+                    role="group"
+                    aria-label={partner.name}
+                    title={partner.name}
+                  >
+                    <div className="client-card__logo-area">
+                      <img
+                        src={partner.logo}
+                        alt={`${partner.name} logo`}
+                        className={`client-brand-logo client-brand-logo--${partner.id}`}
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </RevealAnimation>
+              ))}
+            </div>
           </div>
         </div>
       </section>

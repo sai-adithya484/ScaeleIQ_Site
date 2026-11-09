@@ -16,8 +16,8 @@ export const Footer: React.FC = () => {
 
         {/* Links */}
         <div className="footer__links">
-          <a href="mailto:sales@scaeleiq.ai" className="footer__link">
-            sales@scaeleiq.ai
+          <a href="mailto:sales@scaeleiq.com" className="footer__link">
+            sales@scaeleiq.com
           </a>
           <span className="footer__divider" aria-hidden="true">•</span>
           <Link to="/privacy-policy" className="footer__link">

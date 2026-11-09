@@ -118,7 +118,7 @@ export const CaseStudyPage: React.FC = () => {
                       alignItems: 'center',
                       gap: '0.75rem',
                       padding: '1rem 1.25rem',
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: 'var(--bg-primary)',
                       border: '1px solid var(--border-card)',
                       borderRadius: 'var(--radius-md)',
                       fontSize: '0.9375rem',
@@ -126,7 +126,7 @@ export const CaseStudyPage: React.FC = () => {
                       color: 'var(--text-primary)',
                     }}
                   >
-                    <CheckCircle2 size={18} color="#00B4D8" />
+                    <CheckCircle2 size={18} color="var(--accent)" />
                     <span>{service}</span>
                   </div>
                 ))}
